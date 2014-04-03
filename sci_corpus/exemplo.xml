@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Tags para inserir nova frase:
+   <INFOPIECE>
+      <PHRASE></PHRASE>
+      <FUNCTION></FUNCTION>
+      <REF></REF>
+   </INFOPIECE>
+-->
+
+<ARTINFO>
+
+
+
+   <INFOPIECE>
+      <PHRASE>{It has been demonstrated that it is possible to} influence the crystal structure of particle-seeded NWs {by} interrupting the source-material supply during growth.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{For a recent and extensive review of} the current crystal phase control in III-V NWs, {see [3] and references within.}</PHRASE>
+      <FUNCTION>introref</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{For the realization of} NW-based devices {using} crystal phase engineering {it is, however, crucial} to be able to controllably mix the crystal phases within single NWs.</PHRASE>
+      <FUNCTION>gap</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{There are also reports suggesting that} the polarization of the photoluminescence from NWs {could be} controlled using crystal phase engineering.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{For example,} homostructure superlattices {have been} theoretically evaluated and type-II band-alignment {and the realization of} crystal phase quantum dots in randomly organized polytypic NWs {were recently demonstrated.}</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Recent reports show that} great advancements in controlling the crystal structure of particle-seeded NWs {have been made}.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{In recent years, extensive efforts have therefore been devoted} to achieving pure and controlled crystal phases within the NWs.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{It is observed that} wurtzite segments {with} controlled length {and} position {can be} inserted on demand {into} a pure InAs zincblende nanowire.</PHRASE>
+      <FUNCTION>showres</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>The nanowires {are} grown {by} metalorganic vapor phase epitaxy {usin}g gold particles as seeds {and are analyzed by} transmission electron microscopy.</PHRASE>
+      <FUNCTION>methodology</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Here we investigate a} supply interruption method {for} precise crystal phase control {in} single nanowires.</PHRASE>
+      <FUNCTION>justpur</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>Crystal phase control {in} single III-V semiconductor nanowires {has emerged recently as an important} challenge {and possible complement to conventional} bandgap engineering {in} single material systems.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>nanotechnology-22-265606</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{A clear} PL emission shift, {depending on} the substrate, {is observed and attributed to} the substrate-induced strain, {generated due to the difference in} the thermal expansion coefficients of the InP NWs and the host-substrate during the sample cooling.</PHRASE>
+      <FUNCTION>disres</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>Semiconductor nanowires (NWs) {have attracted considerable interest due to} their {intriguing physical properties and potential applications} in nanoelectronics, optoelectronics, and sensors.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Possible integration of} nanowires {in} electronic, photonic, or electromechanical systems {at nanoscale requires detail knowledge of} structural, electronic, and optical properties of these nanomaterials.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Despite its} importance{, only few works have been published} on the optical properties of mechanically strained NWs, {though} strain effects {can have an important role in} electronic and optical characteristics {and should be taken into consideration} when experimental results are analyzed.</PHRASE>
+      <FUNCTION>gap</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Let us now consider the impact of} the strain {on the} emission energy of a NW lying on a substrate.</PHRASE>
+      <FUNCTION>methodology</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Due to the small value of} the substrate induced strain, {only} terms of first order in the strain {are taken into account}.</PHRASE>
+      <FUNCTION>methodology</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{From these results, we make the assumption that} the blueshift {could be the consequence of} a band bending in the NWs at the NW host-substrate interface {due to} carriers trapped at surface states.</PHRASE>
+      <FUNCTION>disres</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{In summary, we wish to emphasize that} the influence of a host-substrate {can have a significant impact on} the optical properties of NWs, as due to the strain, created by the difference in the LTECs of the NWs and host-substrate, and as due to some other surface effects.</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{More specifically,} the energy of lPL emission {can be changed depending on} the host-substrate material, {while} its shift as a function of excitation power and its FWHM {can be related to} the surface states affecting the band bending and be different from one substrate to another and from one day to another.</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>Authors are gratefully acknowledging facilities and technological staffs from Nanolyon platform.</PHRASE>
+      <FUNCTION>acknow</FUNCTION>
+      <REF>apl-101-072101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{We believe that} the conditions {for this to} happen are met in many systems{, with consequences going far beyond the particular problem studied here}.
+</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>PRL-99-146101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{We believe that} the conditions {for this to} happen are met in many systems{, with consequences going far beyond the particular problem studied here}.
+</PHRASE>
+      <FUNCTION>motval</FUNCTION>
+      <REF>PRL-99-146101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Probably the most surprising feature of these} nanowires {is that, in contrast to} their bulk counterparts{, they often} adopt the hexagonal wurtzite (WZ) structure.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>PRL-99-146101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{The present} Letter {deals with} the epitaxial growth of nanowires of III-V semiconductors on a hot substrate.</PHRASE>
+      <FUNCTION>justpur</FUNCTION>
+      <REF>PRL-99-146101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>Free-standing wires {with} diameters {ranging from} hundreds down {to a few} nanometers {are nowadays commonly} fabricated from a large range of semiconductor materials.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>PRL-99-146101</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{In conclusion, by performing} local-density calculations {we have shown that} there are significant changes in the bands of hexagonal diamond {as compared to} cubic diamond {in spite of} the similar tetrahedra1 atom coordination in the two structures.</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>PRB-41-3048</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Apart from} the band-gap reduction{, the figure shows} clear changes in the features in the DOS.</PHRASE>
+      <FUNCTION>showres</FUNCTION>
+      <REF>PRB-41-3048</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Since the nature of} wave functions {is unchanged between} the two structures{, we expect} the corrections {to our calculated results to be} very similar between the cubic and hexagonal structures.</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>PRB-41-3048</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{The nature of} the wave functions {remains virtually the same between} the two forms{, as seen from} Table II{, where} the wave-function characters of a few relevant states in the gap region {are given}.</PHRASE>
+      <FUNCTION>disres</FUNCTION>
+      <REF>PRB-41-3048</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{The primary differences in} the bands {are due to} changes in the structure constants.</PHRASE>
+      <FUNCTION>disres</FUNCTION>
+      <REF>PRB-41-3048</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Our} cubic diamond bands{, although presented here in a nonconventional fashion} for direct comparison with the hexagonal bands{, are in excellent agreement with} those obtained by earlier authors.</PHRASE>
+      <FUNCTION>compres</FUNCTION>
+      <REF>PRB-41-3048</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{In the present paper, we calculate} the band offsets at WZ/ZB interfaces of various semiconductors {using} the first-principles method {based on} density-functional theory{, then clarify} which mechanism produces the band offset{, and how} it changes in various semiconductors.</PHRASE>
+      <FUNCTION>purres</FUNCTION>
+      <REF>PRB-49-4710</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{In the present paper, we calculate} the band offsets at WZ/ZB interfaces of various semiconductors {using} the first-principles method {based on} density-functional theory{, then clarify} which mechanism produces the band offset{, and how} it changes in various semiconductors.</PHRASE>
+      <FUNCTION>purmet</FUNCTION>
+      <REF>PRB-49-4710</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Here, however, we examine} heterocrystalline (homomaterial) semiconductor systems of wurtzite (WZ)/zinc blende (ZB).</PHRASE>
+      <FUNCTION>justpur</FUNCTION>
+      <REF>PRB-49-4719</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Here, however, we examine} heterocrystalline (homomaterial) semiconductor systems of wurtzite (WZ)/zinc blende (ZB).</PHRASE>
+      <FUNCTION>gap</FUNCTION>
+      <REF>PRB-49-4719</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Numerous theoretical and experimental studies of} semiconductor heterosystems {have been carried out, with} subsequent results {elucidating their physics}.</PHRASE>
+      <FUNCTION>introstuff</FUNCTION>
+      <REF>PRB-49-4719</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{These phenomena occur because the former} offsets {are caused by} the phase matching of a wave function through the first-nearest-neighboring site{, whereas the latter are caused by} the difference between the position of the third-nearest-neighboring site in WZ and ZB structures.</PHRASE>
+      <FUNCTION>compres</FUNCTION>
+      <REF>PRB-49-4710</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>The double-group {formulation outlined above may be compared with} the single-group formulation.</PHRASE>
+      <FUNCTION>methodology</FUNCTION>
+      <REF>PRB-83-165210-2011</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Within the framework of} double group, these energy eigenstates form the bases of [sim], [sim], and [sim] IRs of the Oh group.</PHRASE>
+      <FUNCTION>methodology</FUNCTION>
+      <REF>PRB-83-165210-2011</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{FIG. X. Band structure of} the wurtzite III-V semiconductors AlN (a), GaN (b), and InN (c). {The dotted lines are a reference} calculation based on the empirical pseudopotential approach with 123 plane wave states. {The solid lines show the results using} a set of renormalized momentum matrix elements among only the first 23 Bloch states at the zone center.</PHRASE>
+      <FUNCTION>caption</FUNCTION>
+      <REF>JAP-95-6216-2004</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{The main goal of the present work is to demonstrate that} a method of intermediate complexity between the standard, [sim]-centered single-expansion-point FBZ k.p models[cit] and a general approach such as FPLAPW+k.p {may be an effective compromise between accuracy and computational cost}.</PHRASE>
+      <FUNCTION>purmet</FUNCTION>
+      <REF>JAP-108-033701-2010</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{That trade-off is reasonable given the typical applications of} envelope-function theory.</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>JAP-95-6216-2004</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Compared to envelope functions derived from a conventional} eight-band k.p perturbation {calculation, these envelope functions would not be restricted to a small interval} near the center {of the Brillouin zone but instead could be used throughout the zone}.</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>JAP-95-6216-2004</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Thus, the results are in the most useful form for applications of} envelope-function theory.</PHRASE>
+      <FUNCTION>conclusions</FUNCTION>
+      <REF>JAP-95-6216-2004</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{The basic result of this work is} a representation of the wurtzite band structure in a set of matrix elements for the 23 direct states arising from reciprocal lattice vectors up to G41/12.</PHRASE>
+      <FUNCTION>showres</FUNCTION>
+      <REF>JAP-95-6216-2004</REF>
+   </INFOPIECE>
+
+
+   <INFOPIECE>
+      <PHRASE>{Following the prescriptions given in the preceding section, values for} the momentum matrix elements {are extracted from} the eigenvectors of the pseudopotential calculation at the zone center.</PHRASE>
+      <FUNCTION>methodology</FUNCTION>
+      <REF>JAP-95-6216-2004</REF>
+   </INFOPIECE>
+
+
+   
+</ARTINFO>
