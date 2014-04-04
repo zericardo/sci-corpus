@@ -39,8 +39,14 @@ class MainWindow(QMainWindow):
         self.ui.actionAddSection.clicked.connect(self.addSection)
         
         # subsection
+        self.ui.pushButtonAddSubsection.clicked.connect(self.addSubsection)
+        self.ui.pushButtonRemoveSubsection.clicked.connect(self.removeSubsection)
+        self.ui.pushButtonUpdateSubsection.clicked.connect(self.updateSubsection)
         
         # how to
+        self.ui.pushButtonAddHowTo.clicked.connect(self.addHowTo)
+        self.ui.pushButtonRemoveHowTo.clicked.connect(self.removeHowTo)
+        self.ui.pushButtonUpdateHowTo.clicked.connect(self.updateHowTo)
         
     def addSection(self):
         """
