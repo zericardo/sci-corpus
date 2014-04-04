@@ -31,22 +31,48 @@ class MainWindow(QMainWindow):
         # file
         
         self.ui.actionOpen.clicked.connect(self.openFile)
+        self.ui.actionSave.clicked.connect(self.saveFile)
+        self.ui.actionSaveAs.clicked.connect(self.saveFileAs)
+        self.ui.actionPrint.clicked.connect(self.printFile)
+        self.ui.actionClose.clicked.connect(self.closeFile)
+        self.ui.actionQuit.clicked.connect(self.quitFile)
+        self.ui.actionAbout.clicked.connect(self.about)
+        self.ui.actionTips.clicked.connect(self.tips)
         
         # section
         self.ui.pushButtonAddSection.clicked.connect(self.addSection)
         self.ui.pushButtonRemoveSection.clicked.connect(self.removeSection)
         self.ui.pushButtonUpdateSection.clicked.connect(self.updateSection)
         self.ui.actionAddSection.clicked.connect(self.addSection)
+        self.ui.actionRemoveSection.clicked.connect(self.removeSection)
+        self.ui.actionUpdateSection.clicked.connect(self.updateSection)
+        
+
         
         # subsection
         self.ui.pushButtonAddSubsection.clicked.connect(self.addSubsection)
         self.ui.pushButtonRemoveSubsection.clicked.connect(self.removeSubsection)
         self.ui.pushButtonUpdateSubsection.clicked.connect(self.updateSubsection)
+        self.ui.actionAddSubSection.clicked.connect(self.addSubSection)
+        self.ui.actionRemoveSubSection.clicked.connect(self.removeSubSection)
+        self.ui.actionUpdateSubSection.clicked.connect(self.updateSubSection)
         
         # how to
         self.ui.pushButtonAddHowTo.clicked.connect(self.addHowTo)
         self.ui.pushButtonRemoveHowTo.clicked.connect(self.removeHowTo)
         self.ui.pushButtonUpdateHowTo.clicked.connect(self.updateHowTo)
+        self.ui.actionAddHowTo.clicked.connect(self.addHowTo)
+        self.ui.actionRemoveHowTo.clicked.connect(self.removeHowTo)
+        self.ui.actionUpdateHowTo.clicked.connect(self.updateHowTo)
+        
+        #Sentence
+        self.ui.pushButtonAddSentence.clicked.connect(self.addSentence)
+        self.ui.pushButtonRemoveSentence.clicked.connect(self.removeSentence)
+        self.ui.pushButtonUpdateSentence.clicked.connect(self.updateSentence)
+        self.ui.actionAddSentence.clicked.connect(self.addSentence)
+        self.ui.actionRemoveSentence.clicked.connect(self.removeSentence)
+        self.ui.actionUpdateSentence.clicked.connect(self.updateSentence)
+        
         
     def addSection(self):
         """
