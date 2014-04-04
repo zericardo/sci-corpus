@@ -26,12 +26,25 @@ class MainWindow(QMainWindow):
         self.setAttribute(WA_DeleteOnClose)
         self.ui = main_window.MainWindow()
         self.ui.setupUi(self)
+        # fazer igual pra todos pushbuttom e action
         
+        # file
+        
+        self.ui.actionOpen.clicked.connect(self.openFile)
+        
+        # section
         self.ui.pushButtonAddSection.clicked.connect(self.addSection)
+        self.ui.pushButtonRemoveSection.clicked.connect(self.removeSection)
+        self.ui.pushButtonUpdateSection.clicked.connect(self.updateSection)
+        self.ui.actionAddSection.clicked.connect(self.addSection)
+        
+        # subsection
+        
+        # how to
         
     def addSection(self):
         """
-        Add a new section.
+        Add a new section. fazer add, remove, update para todos
         """
         section = self.ui.lineEditSection.text()
         #chama metodo tiago inserir secao (section)
