@@ -9,35 +9,71 @@ Date: 04/04/2014
 This script provides a graphical interface for sci-corpus program standalone.
 """
 
-from PySide.QtGui import QApplication
+from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
+from PySide.QtCore import WA_DeleteOnClose
 from sci_corpus.ui import main_window
 
 if __name__ == '__main__':
-    
-    app = QApplication('Personal Corpora Trainner')
+
+    app = QApplication('Sci Corpus')
     main_window = main_window.MainWindow()
     main_window.show()
     exit(app.exec_())
 
-    def aboutToRM(self):
+class MainWindow(QMainWindow):
+    def __init__(self, argv=None, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.setAttribute(WA_DeleteOnClose)
+        self.ui = main_window.MainWindow()
+        self.ui.setupUi(self)
+        
+        self.ui.pushButtonAddSection.clicked.connect(self.addSection)
+        
+    def addSection(self):
+        """
+        Add a new section.
+        """
+        section = self.ui.lineEditSection.text()
+        #chama metodo tiago inserir secao (section)
+        self.updateSectionView()
+        
+    def removeSection(self):
+        """
+        """
+        section = self.ui.lineEditSection.text()
+        
+        
+    def updateSection(self):
+        """
+        """
+        
+    def updateSectionView(self):
+        """
+        """
+        # chama metodo do tiago que retorna lista de secoes
+        sections = [] 
+        self.ui.listWidgetSection.clear()
+        for row, value in enumerate(sections):
+            item = QListWidgetItem(str(value))
+            self.ui.listWidgetSection.addItem(item)
+
+        
+    def about(self):
         """
         Show the dialog About.
         """
         QMessageBox.about(
                           self,
-                          self.tr('About ToRM IDE'),
-                          self.tr('<h2>ToRM IDE {} </h2>'
-                                  '<p>Copyright &copy; CIERMag'
-                                  '<p>ToRM IDE is a Integrated Development Environment '
-                                  'for pulse sequences in Resonance Magnetic.').format(__version__))
-    def closeAll(self):
+                          self.tr('Sci Corpus'),
+                          self.tr(''))
+                          
+    def close(self):
         answer = QMessageBox.question(  self, 
                                          self.tr('Close'),
-                                         self.tr('Do you want to exit ToRM IDE?'),
+                                         self.tr('Do you want to exit Sci Corpus?'),
                                          QMessageBox.Yes | QMessageBox.No, 
                                          QMessageBox.No)
         if answer == QMessageBox.Yes:
-            self.project.closeAll()
             return True
         else:
             return False
