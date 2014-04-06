@@ -105,12 +105,12 @@ class MainWindow(QMainWindow):
         
     def updateSection(self, (old_section, new_section)):
         """
-        Update old section with new section.
+        Updates old section with new section.
         """
         
     def updateSectionView(self):
         """
-        Update section view.
+        Updates section view.
         """
         # chama metodo do tiago que retorna lista de secoes
         sections = [] 
@@ -133,6 +133,59 @@ class MainWindow(QMainWindow):
     # Sub section methods
     # -----------------------------------------------------------------------
 
+    def addSubsection(self):
+        """
+        Add a new Subsection
+        """
+        
+    def removeSubsection(self, subsection=''):
+        """
+        Remove one subsection
+        """
+
+    def updateSubsection(self):
+        """
+        Updates one subsection
+        """
+
+    def updateSubsectionView(self):
+        """
+        Updates subsection view
+        """
+
+    def tipsSubsection(self):
+        """
+        Show tips for Subsection
+        """
+
+    # -----------------------------------------------------------------------
+    # How to methods
+    # -----------------------------------------------------------------------
+
+    def addHowTo(self):
+        """
+        Add a new How To
+        """
+        
+    def removeHowTo(self, howTo=''):
+        """
+        Remove one How To
+        """
+
+    def updateHowTo(self):
+        """
+        Updates one How To
+        """
+
+    def updateHowToView(self):
+        """
+        Updates How To view
+        """
+
+    def tipsHowTo(self):
+        """
+        Show tips for How To
+        """
 
     # -----------------------------------------------------------------------
     # Application methods
