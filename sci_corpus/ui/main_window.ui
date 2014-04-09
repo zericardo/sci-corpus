@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>990</width>
-    <height>821</height>
+    <width>1042</width>
+    <height>796</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,73 +17,14 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayoutMainWindow">
-      <item row="4" column="1">
-       <widget class="QPushButton" name="pushButtonSubSectionAdd">
+      <item row="0" column="3">
+       <widget class="QLabel" name="labelSentence">
         <property name="maximumSize">
          <size>
-          <width>30</width>
+          <width>100</width>
           <height>16777215</height>
          </size>
         </property>
-        <property name="text">
-         <string>+</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="4">
-       <widget class="QListWidget" name="listWidgetSection">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>130</height>
-         </size>
-        </property>
-        <property name="inputMethodHints">
-         <set>Qt::ImhPreferUppercase</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>false</bool>
-        </property>
-        <property name="movement">
-         <enum>QListView::Free</enum>
-        </property>
-        <property name="selectionRectVisible">
-         <bool>true</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Abstract</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Introduction</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Methodology</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Results</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Discussion</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Conclusion</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="labelSentence">
         <property name="font">
          <font>
           <weight>75</weight>
@@ -93,97 +34,6 @@
         <property name="text">
          <string>Sentece</string>
         </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="4">
-       <widget class="QLabel" name="labelSubSection">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string> Sub Section</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="4">
-       <widget class="QLabel" name="labelHowTo">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>How To</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLineEdit" name="lineEditSection">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLineEdit" name="lineEditSubSection"/>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLineEdit" name="lineEditHowTo"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="labelSection">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string> Section</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="pushButtonAddSection">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>+</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0" colspan="4">
-       <widget class="QListWidget" name="listWidgetHowTo">
-        <property name="midLineWidth">
-         <number>0</number>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>false</bool>
-        </property>
-        <property name="movement">
-         <enum>QListView::Free</enum>
-        </property>
-        <property name="selectionRectVisible">
-         <bool>true</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Cite previous research</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Present a hipotesys</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="0" column="5">
@@ -199,21 +49,21 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
-       <widget class="QPushButton" name="pushButtonHotToAdd">
+      <item row="0" column="7">
+       <widget class="QPushButton" name="pushButtonUpdateSentence">
         <property name="maximumSize">
          <size>
-          <width>30</width>
+          <width>85</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="text">
-         <string>+</string>
+         <string>Update</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="pushButtonRemove">
+      <item row="0" column="6">
+       <widget class="QPushButton" name="pushButtonRemoveSentence">
         <property name="maximumSize">
          <size>
           <width>30</width>
@@ -225,7 +75,30 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="4" rowspan="6" colspan="4">
+      <item row="1" column="3" rowspan="2" colspan="5">
+       <widget class="QTextEdit" name="textEdit">
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="html">
+         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Type here your sentence and press enter to add.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3" rowspan="6" colspan="5">
        <widget class="QTableWidget" name="tableWidgetSentence">
         <property name="alternatingRowColors">
          <bool>true</bool>
@@ -279,144 +152,15 @@
         </item>
        </widget>
       </item>
-      <item row="7" column="3">
-       <widget class="QPushButton" name="pushButtonHowToUpdate">
+      <item row="3" column="3">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>Update</string>
+         <string>Reference</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="4">
-       <widget class="QListWidget" name="listWidgetSebSection">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>150</height>
-         </size>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>false</bool>
-        </property>
-        <property name="movement">
-         <enum>QListView::Free</enum>
-        </property>
-        <property name="selectionRectVisible">
-         <bool>true</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Context</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Gap</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Propose</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Methodology</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Result</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Conclusion</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="pushButtonSectionUpdate">
-        <property name="text">
-         <string>Update</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QPushButton" name="pushButtonSubSectionRemove">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>-</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="2">
-       <widget class="QPushButton" name="pushButtonHowToRemove">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>-</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
-       <widget class="QPushButton" name="pushButtonSubSectionUpdate">
-        <property name="text">
-         <string>Update</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="7">
-       <widget class="QPushButton" name="pushButtonUpdateSentence">
-        <property name="maximumSize">
-         <size>
-          <width>85</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Update</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6">
-       <widget class="QPushButton" name="pushButtonRemoveSentence">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>-</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4" rowspan="2" colspan="4">
-       <widget class="QTextEdit" name="textEdit">
-        <property name="minimumSize">
-         <size>
-          <width>500</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="html">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Type here your sentence and press enter to add.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
+      <item row="3" column="4" colspan="4">
+       <widget class="QLineEdit" name="lineEdit"/>
       </item>
      </layout>
     </item>
@@ -427,7 +171,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>990</width>
+     <width>1042</width>
      <height>25</height>
     </rect>
    </property>
@@ -477,7 +221,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuHowTo">
     <property name="title">
-     <string>How To</string>
+     <string>Function</string>
     </property>
     <addaction name="actionAddHowTo"/>
     <addaction name="actionRemoveHowTo"/>
@@ -499,6 +243,281 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>  Section</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLineEdit" name="lineEditSection">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButtonAddSection">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pushButtonRemove">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButtonSectionUpdate">
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="4">
+      <widget class="QListWidget" name="listWidgetSection">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhPreferUppercase</set>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>false</bool>
+       </property>
+       <property name="movement">
+        <enum>QListView::Free</enum>
+       </property>
+       <property name="selectionRectVisible">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Abstract</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Introduction</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Methodology</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Results</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Discussion</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Conclusion</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <property name="windowTitle">
+    <string>  Sub Section</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QLineEdit" name="lineEditSubSection"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButtonSubSectionAdd">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pushButtonSubSectionRemove">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButtonSubSectionUpdate">
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="4">
+      <widget class="QListWidget" name="listWidgetSebSection">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>false</bool>
+       </property>
+       <property name="movement">
+        <enum>QListView::Free</enum>
+       </property>
+       <property name="selectionRectVisible">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Context</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Gap</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Propose</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Methodology</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Result</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Conclusion</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3">
+   <property name="windowTitle">
+    <string>  Function</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout_4">
+     <item row="0" column="0">
+      <widget class="QLineEdit" name="lineEditHowTo"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButtonHotToAdd">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pushButtonHowToRemove">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButtonHowToUpdate">
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="4">
+      <widget class="QListWidget" name="listWidgetHowTo">
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>false</bool>
+       </property>
+       <property name="movement">
+        <enum>QListView::Free</enum>
+       </property>
+       <property name="selectionRectVisible">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Cite previous research</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Present a hipotesys</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
