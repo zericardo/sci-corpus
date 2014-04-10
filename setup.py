@@ -18,7 +18,7 @@ setup(name='sci_corpus',
       description='Scientific Corpus Manager',
       
       author='Daniel Cosmo Pizetta, Jose Ricardo Furlan Ronqui, Tiago Campo', 
-      author_email='daniel.pizett@usp.br, zericardo182@gmail.com, xx@usp.br',
+      author_email='daniel.pizett@usp.br, xxx@usp.br, xx@usp.br',
 
       packages=['sci_corpus', 
                 'sci_corpus.xxx'],
