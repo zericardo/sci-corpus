@@ -204,6 +204,15 @@ class MainWindow(QMainWindow):
             '''
             Saves the file that is being used.
             '''
+
+        def saveFileAs2():
+            """http://qt-project.org/doc/qt-4.8/qfiledialog.html"""
+            
+            path = QFileDialog.getSaveFileName(self,
+                                               self.tr('Save As'),
+                                               self.tr(self.container.path))
+            if path != '':
+                self.container.write(path)
             
         def saveFileAs(self):
             '''
@@ -220,16 +229,18 @@ class MainWindow(QMainWindow):
     # Application methods
     # -----------------------------------------------------------------------
 
-
     def about(self):
         """
         About shows the main information about the application.
         """
-        QMessageBox.about(
-                          self,
+        QMessageBox.about(self,
                           self.tr('About Sci Corpus'),
-                          self.tr('Version:{}')).format(__version__)
-
+                          self.tr('This software is a corpus manager,\
+                                   that allows you to trainer.\
+                                   For more information, please, \
+                                   visite the page: xxx.xxx.xxx. \
+                                   Version:{}')).format(__version__)
+    
     def quit(self):
         """
         Quit current application.
@@ -248,3 +259,23 @@ class MainWindow(QMainWindow):
         '''
         Show tips about aplication
         '''
+
+    def closeFile(self):
+        """
+        Closes current file.
+        """
+        
+        if self.container.isModified:
+            answer = QMessageBox.question(self,
+                                          self.tr('Save'),
+                                          self.tr('Do you want to save the current work?'),
+                                          QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+                                          QMessageBox.Yes)
+            
+            if answer == QMessageBox.Yes:
+                self.container.write()
+                self.container.close()
+            elif answer == QMessageBox.No:
+                self.container.close()
+        else:
+            self.container.close()

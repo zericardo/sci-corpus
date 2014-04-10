@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *.e4p
 .eric5project
+*~
 
 # C extensions
 *.so
