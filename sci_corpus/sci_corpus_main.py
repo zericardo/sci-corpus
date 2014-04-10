@@ -63,8 +63,10 @@ class MainWindow(QMainWindow):
         self.ui.actionAddSubSection.clicked.connect(self.addSubSection)
         self.ui.actionRemoveSubSection.clicked.connect(self.removeSubSection)
         self.ui.actionUpdateSubSection.clicked.connect(self.updateSubSection)
-        
-        # how to
+        self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
+
+
+        # how to - Mudar para function depois!
         
         self.ui.pushButtonAddHowTo.clicked.connect(self.addHowTo)
         self.ui.pushButtonRemoveHowTo.clicked.connect(self.removeHowTo)
@@ -72,6 +74,8 @@ class MainWindow(QMainWindow):
         self.ui.actionAddHowTo.clicked.connect(self.addHowTo)
         self.ui.actionRemoveHowTo.clicked.connect(self.removeHowTo)
         self.ui.actionUpdateHowTo.clicked.connect(self.updateHowTo)
+        self.ui.listWidgetHowTo.doubleClicked.connect(self.tipsHowTo)
+
         
         # sentence
         
@@ -81,6 +85,8 @@ class MainWindow(QMainWindow):
         self.ui.actionAddSentence.clicked.connect(self.addSentence)
         self.ui.actionRemoveSentence.clicked.connect(self.removeSentence)
         self.ui.actionUpdateSentence.clicked.connect(self.updateSentence)
+        self.ui.listWidgetSentence.doubleClicked.connect(self.tipsSentence)
+
        
     # -----------------------------------------------------------------------
     # Section methods
@@ -188,6 +194,31 @@ class MainWindow(QMainWindow):
         """
 
     # -----------------------------------------------------------------------
+    # File methods
+    # -----------------------------------------------------------------------
+       
+        def openFile(self):
+            '''
+            Opens a new file.
+            '''
+
+        def saveFile(self):
+            '''
+            Saves the file that is being used.
+            '''
+            
+        def saveFileAs(self):
+            '''
+            Saves a new file.
+            '''
+            
+        def printFile(self):
+            '''
+            Generates a PDF file with all sentences included in database.
+            '''
+
+
+    # -----------------------------------------------------------------------
     # Application methods
     # -----------------------------------------------------------------------
 
@@ -214,3 +245,8 @@ class MainWindow(QMainWindow):
             return True
         else:
             return False
+
+    def tips(self):
+        '''
+        Show tips about aplication
+        '''
