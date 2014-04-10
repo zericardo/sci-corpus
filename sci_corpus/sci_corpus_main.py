@@ -28,7 +28,6 @@ class MainWindow(QMainWindow):
         self.setAttribute(WA_DeleteOnClose)
         self.ui = main_window.MainWindow()
         self.ui.setupUi(self)
-        # fazer igual pra todos pushbuttom e action
         
         # file
         
@@ -52,7 +51,6 @@ class MainWindow(QMainWindow):
         self.ui.actionAddSection.clicked.connect(self.addSection)
         self.ui.actionRemoveSection.clicked.connect(self.removeSection)
         self.ui.actionUpdateSection.clicked.connect(self.updateSection)
-        # ZE POE UM DESSES TBM EM TODOS
         self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
 
         # subsection
