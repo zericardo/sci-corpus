@@ -12,6 +12,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
 from PySide.QtCore import WA_DeleteOnClose
 from sci_corpus.ui import main_window
+from sci_corpus import container
 
 __version__='0.1.B'
 
@@ -28,6 +29,9 @@ class MainWindow(QMainWindow):
         self.setAttribute(WA_DeleteOnClose)
         self.ui = main_window.MainWindow()
         self.ui.setupUi(self)
+        # fazer igual pra todos pushbuttom e action
+        
+        self.container = container.Container()
         
         # file
         
@@ -51,6 +55,7 @@ class MainWindow(QMainWindow):
         self.ui.actionAddSection.clicked.connect(self.addSection)
         self.ui.actionRemoveSection.clicked.connect(self.removeSection)
         self.ui.actionUpdateSection.clicked.connect(self.updateSection)
+        # ZE POE UM DESSES TBM EM TODOS
         self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
 
         # subsection
@@ -61,10 +66,8 @@ class MainWindow(QMainWindow):
         self.ui.actionAddSubSection.clicked.connect(self.addSubSection)
         self.ui.actionRemoveSubSection.clicked.connect(self.removeSubSection)
         self.ui.actionUpdateSubSection.clicked.connect(self.updateSubSection)
-        self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
-
-
-        # how to - Mudar para function depois!
+        
+        # how to
         
         self.ui.pushButtonAddHowTo.clicked.connect(self.addHowTo)
         self.ui.pushButtonRemoveHowTo.clicked.connect(self.removeHowTo)
@@ -72,8 +75,6 @@ class MainWindow(QMainWindow):
         self.ui.actionAddHowTo.clicked.connect(self.addHowTo)
         self.ui.actionRemoveHowTo.clicked.connect(self.removeHowTo)
         self.ui.actionUpdateHowTo.clicked.connect(self.updateHowTo)
-        self.ui.listWidgetHowTo.doubleClicked.connect(self.tipsHowTo)
-
         
         # sentence
         
@@ -83,8 +84,6 @@ class MainWindow(QMainWindow):
         self.ui.actionAddSentence.clicked.connect(self.addSentence)
         self.ui.actionRemoveSentence.clicked.connect(self.removeSentence)
         self.ui.actionUpdateSentence.clicked.connect(self.updateSentence)
-        self.ui.listWidgetSentence.doubleClicked.connect(self.tipsSentence)
-
        
     # -----------------------------------------------------------------------
     # Section methods
@@ -192,31 +191,6 @@ class MainWindow(QMainWindow):
         """
 
     # -----------------------------------------------------------------------
-    # File methods
-    # -----------------------------------------------------------------------
-       
-        def openFile(self):
-            '''
-            Opens a new file.
-            '''
-
-        def saveFile(self):
-            '''
-            Saves the file that is being used.
-            '''
-            
-        def saveFileAs(self):
-            '''
-            Saves a new file.
-            '''
-            
-        def printFile(self):
-            '''
-            Generates a PDF file with all sentences included in database.
-            '''
-
-
-    # -----------------------------------------------------------------------
     # Application methods
     # -----------------------------------------------------------------------
 
@@ -228,7 +202,41 @@ class MainWindow(QMainWindow):
         QMessageBox.about(
                           self,
                           self.tr('About Sci Corpus'),
-                          self.tr('Version:{}')).format(__version__)
+                          self.tr('This software is a corpus manager,\
+                                   that allows you to trainer.\
+                                   For more information, please, \
+                                   visite the page: xxx.xxx.xxx. \
+                                   Version:{}')).format(__version__)
+                                   
+    def saveFileAs2():
+        """http://qt-project.org/doc/qt-4.8/qfiledialog.html"""
+        
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Save As'),
+                                           self.tr(self.container.path))
+        if path != '':
+            self.container.write(path)
+        
+    
+    def closeFile(self):
+        """
+        Closes current file.
+        """
+        
+        if self.container.isModified:
+            answer = QMessageBox.question(self, 
+                                      self.tr('Save'),
+                                      self.tr('Do you want to save the current work?'),
+                                      QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
+                                      QMessageBox.Yes)
+                                      
+            if answer == QMessageBox.Yes:
+                self.container.write()
+                self.container.close()
+            elif answer == QMessageBox.No:
+                self.container.close()
+        else:
+            self.container.close()
 
     def quit(self):
         """
@@ -240,11 +248,8 @@ class MainWindow(QMainWindow):
                                       QMessageBox.Yes | QMessageBox.No, 
                                       QMessageBox.No)
         if answer == QMessageBox.Yes:
+            self.fileClose()
+
             return True
         else:
             return False
-
-    def tips(self):
-        '''
-        Show tips about aplication
-        '''
