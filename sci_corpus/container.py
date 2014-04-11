@@ -1,4 +1,3 @@
-
 import os
 
 
@@ -8,9 +7,26 @@ class Container():
     """
     self.__path = ''
     self.__isModified = False
+    #{Section1: [SubSection1, SubSection2], }
+    self.__sections = {}
+    self.__subSections = {}
+    self.__functions = {}
+    
+    def listCategories():
+        """
+        Do the deep update from db for categories Section, Sub Section and Function.
+        """
+        
+    def listSentences((Section, SubSection, Function)):
+        """
+        Do the deep update from db for Sentences. [((Section, SubSection, Function),Sentence), ((),)]
+        """
     
     @property
     def path(self):
+        """
+        Filepath to read and write.
+        """
         return self.__path
         
     @path.setter
@@ -19,27 +35,31 @@ class Container():
         
     @property
     def isModified(self):
+        """
+        Shows the answer for is modified question.
+        """
         return self.__isModified
         
     @isModified.setter
     def isModified(self, state):
         self.__isModified = state
         
-    def _write(path=''):
+    def write_(path=''):
         """
-        writes file.
+        writes file in path or in self.path if not passed.
         """
-    def _read(path):
+        
+    def read_(path):
         """
         Reads file.
         """
         
-    def _import(path=''):
+    def import_(path=''):
         """
         Import file as XML, JSON, DB.
         """
         
-    def _export(path=''):
+    def export_(path=''):
         """
         Export file as XML, JSON, DB.
         """
