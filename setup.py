@@ -24,12 +24,8 @@ setup(name='sci_corpus',
                 'sci_corpus.xxx'],
 
       package_data={'':['README.txt', 
-                        'torm_translator/dummy/*.f', 
-                        'torm_translator/dialogs/ui/*.ui']}, 
+                        'sci_corpus/ui/*.ui']}, 
       
-      scripts=['torm_translator/scripts/translate_f_json.py', 
-               'torm_translator/scripts/translate_json_xml.py',  
-               'torm_translator/scripts/translate_f_xml.py', 
-               'torm_translator/scripts/translator_gui.py'], 
+      scripts=['sci_corpus/scripts/sci_corpus.py'], 
                
       download_url='')
