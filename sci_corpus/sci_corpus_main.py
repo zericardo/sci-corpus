@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         self.ui.actionAbout.clicked.connect(self.about)
         self.ui.actionTips.clicked.connect(self.tips)
         
-        # section
+        #Section
         
         self.ui.pushButtonAddSection.clicked.connect(self.addSection)
         self.ui.pushButtonRemoveSection.clicked.connect(self.removeSection)
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSection.clicked.connect(self.updateSection)
         self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
 
-        # subsection
+        #Subsection
         
         self.ui.pushButtonAddSubsection.clicked.connect(self.addSubsection)
         self.ui.pushButtonRemoveSubsection.clicked.connect(self.removeSubsection)
@@ -64,18 +64,18 @@ class MainWindow(QMainWindow):
         self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
 
 
-        # how to - Mudar para function depois!
+        #Function
         
-        self.ui.pushButtonAddHowTo.clicked.connect(self.addHowTo)
-        self.ui.pushButtonRemoveHowTo.clicked.connect(self.removeHowTo)
-        self.ui.pushButtonUpdateHowTo.clicked.connect(self.updateHowTo)
-        self.ui.actionAddHowTo.clicked.connect(self.addHowTo)
-        self.ui.actionRemoveHowTo.clicked.connect(self.removeHowTo)
-        self.ui.actionUpdateHowTo.clicked.connect(self.updateHowTo)
-        self.ui.listWidgetHowTo.doubleClicked.connect(self.tipsHowTo)
+        self.ui.pushButtonAddFunction.clicked.connect(self.addFunction)
+        self.ui.pushButtonRemoveFunction.clicked.connect(self.removeFunction)
+        self.ui.pushButtonUpdateFunction.clicked.connect(self.updateFunction)
+        self.ui.actionAddFunction.clicked.connect(self.addFunction)
+        self.ui.actionRemoveFunction.clicked.connect(self.removeFunction)
+        self.ui.actionUpdateFunction.clicked.connect(self.updateFunction)
+        self.ui.listWidgetFunction.doubleClicked.connect(self.tipsFunction)
 
         
-        # sentence
+        #Sentence
         
         self.ui.pushButtonAddSentence.clicked.connect(self.addSentence)
         self.ui.pushButtonRemoveSentence.clicked.connect(self.removeSentence)
@@ -104,7 +104,11 @@ class MainWindow(QMainWindow):
         """
         Remove a section.
         """
-        section = self.ui.lineEditSection.text()
+        if section != '':
+            section = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("section",section) == QMessageBox.Yes:
+                # chama função remove Tiago
         
         
     def updateSection(self, (old_section, new_section)):
@@ -134,7 +138,7 @@ class MainWindow(QMainWindow):
                                 QMessageBox.Ok)
                                 
     # -----------------------------------------------------------------------
-    # Sub section methods
+    # Subsection methods
     # -----------------------------------------------------------------------
 
     def addSubsection(self):
@@ -146,6 +150,11 @@ class MainWindow(QMainWindow):
         """
         Remove one subsection
         """
+        if subsection != '':
+            subsection = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("subsection",subsection) == QMessageBox.Yes:
+                # chama função remove Tiago
 
     def updateSubsection(self):
         """
@@ -163,33 +172,72 @@ class MainWindow(QMainWindow):
         """
 
     # -----------------------------------------------------------------------
-    # How to methods
+    # Function methods
     # -----------------------------------------------------------------------
 
-    def addHowTo(self):
+    def addFunction(self):
         """
-        Add a new How To
+        Adds a new function.
         """
         
-    def removeHowTo(self, howTo=''):
+    def removeFunction(self, function=''):
         """
-        Remove one How To
+        Removes a function.
+        """
+        if function != '':
+            section = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("function",function) == QMessageBox.Yes:
+                # chama função remove Tiago
+
+    def updateFunction(self):
+        """
+        Updates a function.
         """
 
-    def updateHowTo(self):
+    def updateFunctionView(self):
         """
-        Updates one How To
-        """
-
-    def updateHowToView(self):
-        """
-        Updates How To view
+        Updates a function view.
         """
 
-    def tipsHowTo(self):
+    def tipsFunction(self):
         """
-        Show tips for How To
+        Show tips for function.
         """
+
+    # -----------------------------------------------------------------------
+    # Sentence methods
+    # -----------------------------------------------------------------------
+
+    def addSentence(self):
+        """
+        Adds a new sentence.
+        """
+        
+    def removeSentence(self, sentence=''):
+        """
+        Removes a sentence.
+        """
+        if sentence != '':
+            section = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
+                # chama função remove Tiago
+
+    def updateSentence(self):
+        """
+        Updates a sentence.
+        """
+
+    def updateSentenceView(self):
+        """
+        Updates a sentence view.
+        """
+
+    def tipsSentence(self):
+        """
+        Show tips for sentence.
+        """ 
 
     # -----------------------------------------------------------------------
     # File methods
@@ -199,25 +247,31 @@ class MainWindow(QMainWindow):
             '''
             Opens a new file.
             '''
+            
+            path = QFileDialog.getOpenFileName(self,
+                                               self.tr('Open File'),
+                                               self.tr(self.container.path))
+
+            if path != '':
+                self.conteiner.read_(path)
 
         def saveFile(self):
             '''
             Saves the file that is being used.
             '''
+            self.container.write_()
 
-        def saveFileAs2():
-            """http://qt-project.org/doc/qt-4.8/qfiledialog.html"""
+        def saveFileAs(self):
+            '''
+            Saves a new file
+            '''
             
             path = QFileDialog.getSaveFileName(self,
                                                self.tr('Save As'),
                                                self.tr(self.container.path))
             if path != '':
-                self.container.write(path)
+                self.container.write_(path)
             
-        def saveFileAs(self):
-            '''
-            Saves a new file.
-            '''
             
         def printFile(self):
             '''
@@ -273,9 +327,29 @@ class MainWindow(QMainWindow):
                                           QMessageBox.Yes)
             
             if answer == QMessageBox.Yes:
-                self.container.write()
-                self.container.close()
+                self.container.write_()
+                self.container.close_()
             elif answer == QMessageBox.No:
-                self.container.close()
+                self.container.close_()
         else:
-            self.container.close()
+            self.container.close_()
+
+    def removeQuestion(self, what='', who=''):
+        """
+        Removes a section item
+        """
+        return QMessageBox.question(self,
+                                    self.tr('Remove'),
+                                    self.tr('Do you want to remove item {} from {}?'.format(who, what)),
+                                    QMessageBox.Yes | QMessageBox.No,
+                                    QMessageBox.No)
+
+    def updateQuestion(self, section=([], []), subsection=([], []), function=([], [])):
+        """
+        Updates a section item
+        """
+        return QMessageBox.question(self,
+                                    self.tr('Update'),
+                                    self.tr('Do you want to update item {} to {} in {}?'.format(oldWho,newWho,what)),
+                                    QMessageBox.Yes | QMessageBox.No,
+                                    QMessageBox.No)
