@@ -17,66 +17,8 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayoutMainWindow">
-      <item row="0" column="3">
-       <widget class="QLabel" name="labelSentence">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Sentece</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="pushButtonAddSentence">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>+</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="7">
-       <widget class="QPushButton" name="pushButtonUpdateSentence">
-        <property name="maximumSize">
-         <size>
-          <width>85</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Update</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6">
-       <widget class="QPushButton" name="pushButtonRemoveSentence">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>-</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="3" rowspan="2" colspan="5">
-       <widget class="QTextEdit" name="textEdit">
+       <widget class="QTextEdit" name="textEditSentence">
         <property name="minimumSize">
          <size>
           <width>500</width>
@@ -98,7 +40,75 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="4" column="3" rowspan="6" colspan="5">
+      <item row="0" column="3">
+       <widget class="QLabel" name="labelSentence">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Sentece</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="pushButtonSentenceAdd">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>+</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
+       <widget class="QPushButton" name="pushButtonSentenceUpdate">
+        <property name="maximumSize">
+         <size>
+          <width>85</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Update</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QPushButton" name="pushButtonSentenceRemove">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QLabel" name="labelReference">
+        <property name="text">
+         <string>Reference</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="4" colspan="4">
+       <widget class="QLineEdit" name="lineEditReference"/>
+      </item>
+      <item row="4" column="3" rowspan="6" colspan="6">
        <widget class="QTableWidget" name="tableWidgetSentence">
         <property name="alternatingRowColors">
          <bool>true</bool>
@@ -152,15 +162,61 @@ p, li { white-space: pre-wrap; }
         </item>
        </widget>
       </item>
-      <item row="3" column="3">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Reference</string>
+      <item row="0" column="8" rowspan="4">
+       <widget class="QGroupBox" name="groupBox">
+        <property name="maximumSize">
+         <size>
+          <width>180</width>
+          <height>16777215</height>
+         </size>
         </property>
+        <property name="title">
+         <string>Table View</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QCheckBox" name="checkBoxStrip">
+             <property name="text">
+              <string>Strip Sentence</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxReference">
+             <property name="text">
+              <string>Reference</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxFunction">
+             <property name="text">
+              <string>Function</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxSubSection">
+             <property name="text">
+              <string>Sub Section</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxSection">
+             <property name="text">
+              <string>Section</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+        <zorder></zorder>
+        <zorder>horizontalLayoutWidget</zorder>
        </widget>
-      </item>
-      <item row="3" column="4" colspan="4">
-       <widget class="QLineEdit" name="lineEdit"/>
       </item>
      </layout>
     </item>
@@ -187,13 +243,11 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="actionPrint"/>
     <addaction name="separator"/>
-    <addaction name="actionImportXML"/>
-    <addaction name="actionExportXML"/>
-    <addaction name="separator"/>
-    <addaction name="actionImportJSON"/>
-    <addaction name="actionExportJSON"/>
+    <addaction name="actionImport"/>
+    <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -210,6 +264,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAddSection"/>
     <addaction name="actionRemoveSection"/>
     <addaction name="actionUpdateSection"/>
+    <addaction name="separator"/>
+    <addaction name="actionTipsSection"/>
    </widget>
    <widget class="QMenu" name="menuSubSection">
     <property name="title">
@@ -218,14 +274,18 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAddSubSection"/>
     <addaction name="actionRemoveSubSection"/>
     <addaction name="actionUpdateSubSection"/>
+    <addaction name="separator"/>
+    <addaction name="actionTipsSubSection"/>
    </widget>
-   <widget class="QMenu" name="menuHowTo">
+   <widget class="QMenu" name="menuFunction">
     <property name="title">
      <string>Function</string>
     </property>
-    <addaction name="actionAddHowTo"/>
-    <addaction name="actionRemoveHowTo"/>
-    <addaction name="actionUpdateHowTo"/>
+    <addaction name="actionAddFunction"/>
+    <addaction name="actionRemoveFunction"/>
+    <addaction name="actionUpdateFunction"/>
+    <addaction name="separator"/>
+    <addaction name="actionTipsFunction"/>
    </widget>
    <widget class="QMenu" name="menuSentence">
     <property name="title">
@@ -234,23 +294,25 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAddSentence"/>
     <addaction name="actionRemoveSentence"/>
     <addaction name="actionUpdateSentence"/>
+    <addaction name="separator"/>
+    <addaction name="actionTipsSentence"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSection"/>
    <addaction name="menuSubSection"/>
-   <addaction name="menuHowTo"/>
+   <addaction name="menuFunction"/>
    <addaction name="menuSentence"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="dockWidgetSection">
    <property name="windowTitle">
     <string>  Section</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QWidget" name="dockWidgetContentsSection">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
       <widget class="QLineEdit" name="lineEditSection">
@@ -260,7 +322,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="pushButtonAddSection">
+      <widget class="QPushButton" name="pushButtonSectionAdd">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -273,7 +335,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="pushButtonRemove">
+      <widget class="QPushButton" name="pushButtonSectionRemove">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -347,14 +409,14 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_2">
+  <widget class="QDockWidget" name="dockWidgetSubSection">
    <property name="windowTitle">
     <string>  Sub Section</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2">
+   <widget class="QWidget" name="dockWidgetContentsSubSection">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
       <widget class="QLineEdit" name="lineEditSubSection"/>
@@ -393,7 +455,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="1" column="0" colspan="4">
-      <widget class="QListWidget" name="listWidgetSebSection">
+      <widget class="QListWidget" name="listWidgetSubSection">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -444,20 +506,20 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_3">
+  <widget class="QDockWidget" name="dockWidgetFunction">
    <property name="windowTitle">
     <string>  Function</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3">
+   <widget class="QWidget" name="dockWidgetContentsFunction">
     <layout class="QGridLayout" name="gridLayout_4">
      <item row="0" column="0">
-      <widget class="QLineEdit" name="lineEditHowTo"/>
+      <widget class="QLineEdit" name="lineEditFunction"/>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="pushButtonHotToAdd">
+      <widget class="QPushButton" name="pushButtonFunctionAdd">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -470,7 +532,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="pushButtonHowToRemove">
+      <widget class="QPushButton" name="pushButtonFunctionRemove">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -483,14 +545,14 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QPushButton" name="pushButtonHowToUpdate">
+      <widget class="QPushButton" name="pushButtonFunctionUpdate">
        <property name="text">
         <string>Update</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0" colspan="4">
-      <widget class="QListWidget" name="listWidgetHowTo">
+      <widget class="QListWidget" name="listWidgetFunction">
        <property name="midLineWidth">
         <number>0</number>
        </property>
@@ -588,17 +650,17 @@ p, li { white-space: pre-wrap; }
     <string>Update</string>
    </property>
   </action>
-  <action name="actionAddHowTo">
+  <action name="actionAddFunction">
    <property name="text">
     <string>Add</string>
    </property>
   </action>
-  <action name="actionRemoveHowTo">
+  <action name="actionRemoveFunction">
    <property name="text">
     <string>Remove</string>
    </property>
   </action>
-  <action name="actionUpdateHowTo">
+  <action name="actionUpdateFunction">
    <property name="text">
     <string>Update</string>
    </property>
@@ -618,9 +680,9 @@ p, li { white-space: pre-wrap; }
     <string>Update</string>
    </property>
   </action>
-  <action name="actionImportXML">
+  <action name="actionImport">
    <property name="text">
-    <string>Import XML</string>
+    <string>Import ...</string>
    </property>
   </action>
   <action name="actionExportXML">
@@ -633,9 +695,29 @@ p, li { white-space: pre-wrap; }
     <string>Import JSON</string>
    </property>
   </action>
-  <action name="actionExportJSON">
+  <action name="actionExport">
    <property name="text">
-    <string>Export JSON</string>
+    <string>Export ...</string>
+   </property>
+  </action>
+  <action name="actionTipsSection">
+   <property name="text">
+    <string>Tips</string>
+   </property>
+  </action>
+  <action name="actionTipsSubSection">
+   <property name="text">
+    <string>Tips</string>
+   </property>
+  </action>
+  <action name="actionTipsFunction">
+   <property name="text">
+    <string>Tips</string>
+   </property>
+  </action>
+  <action name="actionTipsSentence">
+   <property name="text">
+    <string>Tips</string>
    </property>
   </action>
  </widget>
