@@ -21,7 +21,6 @@ __version__='0.1.B'
 class MainWindow(QMainWindow):
     def __init__(self, argv=None, parent=None):
         super(MainWindow, self).__init__(parent)
-        #self.setAttribute(WA_DeleteOnClose)
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
         
@@ -55,6 +54,7 @@ class MainWindow(QMainWindow):
         self.ui.actionTipsSection.triggered.connect(self.tipsSection)
         
         self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
+        self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSubSectionView)
 
         # Subsection
         
@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         self.ui.actionTipsSubSection.triggered.connect(self.tipsSubSection)
         
         self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
+        self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateFunctionView)
 
         # Function
         
@@ -81,6 +82,7 @@ class MainWindow(QMainWindow):
         self.ui.actionTipsFunction.triggered.connect(self.tipsFunction)
         
         self.ui.listWidgetFunction.doubleClicked.connect(self.tipsFunction)
+        self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSentenceView)
 
         # Sentence
         
@@ -93,9 +95,21 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
         self.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
         
+        self.updateSectionView()
+        
+    def selectedTitles(self,  selected_items):
+        """
+        Return a list of selected titles.
+        """
+        titles = []
+        for item in  selected_items:
+            titles.append(str(item.text()))
+        return titles  
+        
     # -----------------------------------------------------------------------
     # Section methods
     # -----------------------------------------------------------------------
+
         
     def addSection(self):
         """
@@ -123,13 +137,13 @@ class MainWindow(QMainWindow):
         Updates old section with new section.
         """
         self.container.isModified(True)
+        self.updateSectionView()
         
     def updateSectionView(self):
         """
         Updates section view.
         """
-        # chama metodo do tiago que retorna lista de secoes
-        sections = [] 
+        sections = self.container.sections()
         self.ui.listWidgetSection.clear()
         for row, value in enumerate(sections):
             item = QListWidgetItem(str(value))
@@ -148,7 +162,9 @@ In summary, they are the titles of each section.'),
     # -----------------------------------------------------------------------
     # Subsection methods
     # -----------------------------------------------------------------------
+    
 
+        
     def addSubSection(self):
         """
         Add a new Subsection
@@ -177,7 +193,14 @@ In summary, they are the titles of each section.'),
         """
         Updates subsection view
         """
-
+        sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subsections = self.container.subSections(sections)
+        self.ui.listWidgetSubSection.clear()
+        
+        for row, value in enumerate(subsections):
+            item = QListWidgetItem(str(value))
+            self.ui.listWidgetSubSection.addItem(item)
+            
     def tipsSubSection(self):
         """
         Show tips for Subsection
@@ -218,6 +241,7 @@ in an article.'),
         """
         Updates a function view.
         """
+        print self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
 
     def tipsFunction(self):
         """
@@ -257,6 +281,12 @@ in an article.'),
         """
         Updates a sentence view.
         """
+        sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
+        print 'Updating sentences view from \n Sections: {} \n SubSections: {}\n Function: {}'.format(sections,  sub_sections, functions)
+        # Chamar funcao listar sentencas
+        self.container.listSentences(sections, sub_sections, functions)
 
     def tipsSentence(self):
         """

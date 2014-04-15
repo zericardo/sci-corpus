@@ -215,7 +215,6 @@ p, li { white-space: pre-wrap; }
          </item>
         </layout>
         <zorder></zorder>
-        <zorder>horizontalLayoutWidget</zorder>
        </widget>
       </item>
      </layout>
@@ -368,6 +367,9 @@ p, li { white-space: pre-wrap; }
        <property name="alternatingRowColors">
         <bool>false</bool>
        </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
        <property name="movement">
         <enum>QListView::Free</enum>
        </property>
@@ -465,6 +467,9 @@ p, li { white-space: pre-wrap; }
        <property name="alternatingRowColors">
         <bool>false</bool>
        </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
        <property name="movement">
         <enum>QListView::Free</enum>
        </property>
@@ -558,6 +563,9 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
        </property>
        <property name="movement">
         <enum>QListView::Free</enum>
