@@ -10,82 +10,89 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
-from PySide.QtCore import WA_DeleteOnClose
-from sci_corpus.ui import main_window
+from PySide.QtGui import QFileDialog
+import container
+from ui import main_window_ui
 
 __version__='0.1.B'
 
-if __name__ == '__main__':
 
-    app = QApplication('Sci Corpus')
-    main_window = main_window.MainWindow()
-    main_window.show()
-    exit(app.exec_())
 
 class MainWindow(QMainWindow):
     def __init__(self, argv=None, parent=None):
         super(MainWindow, self).__init__(parent)
-        self.setAttribute(WA_DeleteOnClose)
-        self.ui = main_window.MainWindow()
+        #self.setAttribute(WA_DeleteOnClose)
+        self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
         
-        # file
+        self.container = container.Container()
         
-        self.ui.actionOpen.clicked.connect(self.openFile)
-        self.ui.actionSave.clicked.connect(self.saveFile)
-        self.ui.actionSaveAs.clicked.connect(self.saveFileAs)
-        self.ui.actionPrint.clicked.connect(self.printFile)
-        self.ui.actionClose.clicked.connect(self.closeFile)
+        # File
         
-        # application
+        self.ui.actionOpen.triggered.connect(self.openFile)
+        self.ui.actionSave.triggered.connect(self.saveFile)
+        self.ui.actionSaveAs.triggered.connect(self.saveFileAs)
+        self.ui.actionPrint.triggered.connect(self.printFile)
+        self.ui.actionImport.triggered.connect(self.importFile)
+        self.ui.actionExport.triggered.connect(self.exportFile)
+        self.ui.actionClose.triggered.connect(self.closeFile)
         
-        self.ui.actionQuit.clicked.connect(self.quit)
-        self.ui.actionAbout.clicked.connect(self.about)
-        self.ui.actionTips.clicked.connect(self.tips)
+        # Application
         
-        #Section
+        self.ui.actionQuit.triggered.connect(self.quit)
+        self.ui.actionAbout.triggered.connect(self.about)
+        self.ui.actionTips.triggered.connect(self.tips)
         
-        self.ui.pushButtonAddSection.clicked.connect(self.addSection)
-        self.ui.pushButtonRemoveSection.clicked.connect(self.removeSection)
-        self.ui.pushButtonUpdateSection.clicked.connect(self.updateSection)
-        self.ui.actionAddSection.clicked.connect(self.addSection)
-        self.ui.actionRemoveSection.clicked.connect(self.removeSection)
-        self.ui.actionUpdateSection.clicked.connect(self.updateSection)
+        # Section
+        
+        self.ui.pushButtonSectionAdd.clicked.connect(self.addSection)
+        self.ui.pushButtonSectionRemove.clicked.connect(self.removeSection)
+        self.ui.pushButtonSectionUpdate.clicked.connect(self.updateSection)
+        
+        self.ui.actionAddSection.triggered.connect(self.addSection)
+        self.ui.actionRemoveSection.triggered.connect(self.removeSection)
+        self.ui.actionUpdateSection.triggered.connect(self.updateSection)
+        self.ui.actionTipsSection.triggered.connect(self.tipsSection)
+        
         self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
 
-        #Subsection
+        # Subsection
         
-        self.ui.pushButtonAddSubsection.clicked.connect(self.addSubsection)
-        self.ui.pushButtonRemoveSubsection.clicked.connect(self.removeSubsection)
-        self.ui.pushButtonUpdateSubsection.clicked.connect(self.updateSubsection)
-        self.ui.actionAddSubSection.clicked.connect(self.addSubSection)
-        self.ui.actionRemoveSubSection.clicked.connect(self.removeSubSection)
-        self.ui.actionUpdateSubSection.clicked.connect(self.updateSubSection)
+        self.ui.pushButtonSubSectionAdd.clicked.connect(self.addSubSection)
+        self.ui.pushButtonSubSectionRemove.clicked.connect(self.removeSubSection)
+        self.ui.pushButtonSubSectionUpdate.clicked.connect(self.updateSubSection)
+        
+        self.ui.actionAddSubSection.triggered.connect(self.addSubSection)
+        self.ui.actionRemoveSubSection.triggered.connect(self.removeSubSection)
+        self.ui.actionUpdateSubSection.triggered.connect(self.updateSubSection)
+        self.ui.actionTipsSubSection.triggered.connect(self.tipsSubSection)
+        
         self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
 
-
-        #Function
+        # Function
         
-        self.ui.pushButtonAddFunction.clicked.connect(self.addFunction)
-        self.ui.pushButtonRemoveFunction.clicked.connect(self.removeFunction)
-        self.ui.pushButtonUpdateFunction.clicked.connect(self.updateFunction)
-        self.ui.actionAddFunction.clicked.connect(self.addFunction)
-        self.ui.actionRemoveFunction.clicked.connect(self.removeFunction)
-        self.ui.actionUpdateFunction.clicked.connect(self.updateFunction)
+        self.ui.pushButtonFunctionAdd.clicked.connect(self.addFunction)
+        self.ui.pushButtonFunctionRemove.clicked.connect(self.removeFunction)
+        self.ui.pushButtonFunctionUpdate.clicked.connect(self.updateFunction)
+        
+        self.ui.actionAddFunction.triggered.connect(self.addFunction)
+        self.ui.actionRemoveFunction.triggered.connect(self.removeFunction)
+        self.ui.actionUpdateFunction.triggered.connect(self.updateFunction)
+        self.ui.actionTipsFunction.triggered.connect(self.tipsFunction)
+        
         self.ui.listWidgetFunction.doubleClicked.connect(self.tipsFunction)
 
+        # Sentence
         
-        #Sentence
+        self.ui.pushButtonSentenceAdd.clicked.connect(self.addSentence)
+        self.ui.pushButtonSentenceRemove.clicked.connect(self.removeSentence)
+        self.ui.pushButtonSentenceUpdate.clicked.connect(self.updateSentence)
         
-        self.ui.pushButtonAddSentence.clicked.connect(self.addSentence)
-        self.ui.pushButtonRemoveSentence.clicked.connect(self.removeSentence)
-        self.ui.pushButtonUpdateSentence.clicked.connect(self.updateSentence)
-        self.ui.actionAddSentence.clicked.connect(self.addSentence)
-        self.ui.actionRemoveSentence.clicked.connect(self.removeSentence)
-        self.ui.actionUpdateSentence.clicked.connect(self.updateSentence)
-        self.ui.listWidgetSentence.doubleClicked.connect(self.tipsSentence)
-
-       
+        self.ui.actionAddSentence.triggered.connect(self.addSentence)
+        self.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
+        self.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
+        self.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
+        
     # -----------------------------------------------------------------------
     # Section methods
     # -----------------------------------------------------------------------
@@ -97,9 +104,9 @@ class MainWindow(QMainWindow):
         # fazer add, remove, update para todos
         section = self.ui.lineEditSection.text()
         #chama metodo tiago inserir secao (section)
+        self.container.isModified(True)
         self.updateSectionView()
-        
-        
+
     def removeSection(self, section=''):
         """
         Remove a section.
@@ -108,13 +115,14 @@ class MainWindow(QMainWindow):
             section = self.ui.lineEditSection.text()
         else: 
             if self.removeQuestion("section",section) == QMessageBox.Yes:
-                # chama função remove Tiago
-        
-        
+                return
+        self.container.isModified(True)
+                
     def updateSection(self, (old_section, new_section)):
         """
         Updates old section with new section.
         """
+        self.container.isModified(True)
         
     def updateSectionView(self):
         """
@@ -127,26 +135,30 @@ class MainWindow(QMainWindow):
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSection.addItem(item)
             
-            
     def tipsSection(self):
         """
         Show tips for the section.
         """    
         QMessageBox.information(self, 
                                 self.tr('Section Tips'),
-                                self.tr('Do you want to exit Sci Corpus?'),
+                                self.tr('Sections are the main division of a scientific text.\
+In summary, they are the titles of each section.'),
                                 QMessageBox.Ok)
                                 
     # -----------------------------------------------------------------------
     # Subsection methods
     # -----------------------------------------------------------------------
 
-    def addSubsection(self):
+    def addSubSection(self):
         """
         Add a new Subsection
         """
+        sentence = self.ui.lineEditSentence.text()
+        #chama metodo tiago inserir secao (section)
+        self.container.isModified(True)
+        self.updateSectionView()
         
-    def removeSubsection(self, subsection=''):
+    def removeSubSection(self, subsection=''):
         """
         Remove one subsection
         """
@@ -154,22 +166,28 @@ class MainWindow(QMainWindow):
             subsection = self.ui.lineEditSection.text()
         else: 
             if self.removeQuestion("subsection",subsection) == QMessageBox.Yes:
-                # chama função remove Tiago
-
-    def updateSubsection(self):
+                return
+                
+    def updateSubSection(self):
         """
         Updates one subsection
         """
 
-    def updateSubsectionView(self):
+    def updateSubSectionView(self):
         """
         Updates subsection view
         """
 
-    def tipsSubsection(self):
+    def tipsSubSection(self):
         """
         Show tips for Subsection
         """
+        QMessageBox.information(self, 
+                                self.tr('Sub Section Tips'),
+                                self.tr('Sub section are a sub division of the section.\
+\n\nAs an example, section Introduction has a Contextualization, Gap and Propose sub sections \
+in an article.'),
+                                QMessageBox.Ok)
 
     # -----------------------------------------------------------------------
     # Function methods
@@ -188,6 +206,7 @@ class MainWindow(QMainWindow):
             section = self.ui.lineEditSection.text()
         else: 
             if self.removeQuestion("function",function) == QMessageBox.Yes:
+                return
                 # chama função remove Tiago
 
     def updateFunction(self):
@@ -204,6 +223,10 @@ class MainWindow(QMainWindow):
         """
         Show tips for function.
         """
+        QMessageBox.information(self, 
+                        self.tr('Function Tips'),
+                        self.tr('Function explain what each sentence is.'),
+                        QMessageBox.Ok)
 
     # -----------------------------------------------------------------------
     # Sentence methods
@@ -222,6 +245,7 @@ class MainWindow(QMainWindow):
             section = self.ui.lineEditSection.text()
         else: 
             if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
+                return
                 # chama função remove Tiago
 
     def updateSentence(self):
@@ -238,87 +262,60 @@ class MainWindow(QMainWindow):
         """
         Show tips for sentence.
         """ 
+        QMessageBox.information(self, 
+                self.tr('Sentence Tips'),
+                self.tr('Sentences are extracted from scientific documents.\
+ \n\nTo remove specific words or sub sentences, please, use {{}}.\
+ \n\nExample: Here, we demonstrate the {{capacity of imaging spectroscopy}} to discriminate among \
+ {{genotypes of Populus tremuloides}}.\
+ \n\nThis will provide you a short view like: Here, we demonstrate the ... to discriminate among ...\
+ \n\nNote that the original sentence remains unbroken.'),
+                QMessageBox.Ok)
 
     # -----------------------------------------------------------------------
     # File methods
     # -----------------------------------------------------------------------
        
-        def openFile(self):
-            '''
-            Opens a new file.
-            '''
-            
-            path = QFileDialog.getOpenFileName(self,
-                                               self.tr('Open File'),
-                                               self.tr(self.container.path))
+    def openFile(self):
+        '''
+        Opens a new file.
+        '''
+        path = QFileDialog.getOpenFileName(self,
+                                           self.tr('Open File'),
+                                           self.tr(self.container.path))
 
-            if path != '':
-                self.conteiner.read_(path)
+        if path != '':
+            self.container.read_(path)
 
-        def saveFile(self):
-            '''
-            Saves the file that is being used.
-            '''
+    def saveFile(self):
+        '''
+        Saves the file that is being used.
+        '''
+        if self.container.path == '':
+            self.saveFileAs()
+        else:
             self.container.write_()
 
-        def saveFileAs(self):
-            '''
-            Saves a new file
-            '''
-            
-            path = QFileDialog.getSaveFileName(self,
-                                               self.tr('Save As'),
-                                               self.tr(self.container.path))
-            if path != '':
-                self.container.write_(path)
-            
-            
-        def printFile(self):
-            '''
-            Generates a PDF file with all sentences included in database.
-            '''
-
-
-    # -----------------------------------------------------------------------
-    # Application methods
-    # -----------------------------------------------------------------------
-
-    def about(self):
-        """
-        About shows the main information about the application.
-        """
-        QMessageBox.about(self,
-                          self.tr('About Sci Corpus'),
-                          self.tr('This software is a corpus manager,\
-                                   that allows you to trainer.\
-                                   For more information, please, \
-                                   visite the page: xxx.xxx.xxx. \
-                                   Version:{}')).format(__version__)
-    
-    def quit(self):
-        """
-        Quit current application.
-        """
-        answer = QMessageBox.question(self, 
-                                      self.tr('Quit'),
-                                      self.tr('Do you want to exit Sci Corpus?'),
-                                      QMessageBox.Yes | QMessageBox.No, 
-                                      QMessageBox.No)
-        if answer == QMessageBox.Yes:
-            return True
-        else:
-            return False
-
-    def tips(self):
+    def saveFileAs(self):
         '''
-        Show tips about aplication
+        Saves a new file
         '''
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Save As'),
+                                           self.tr(self.container.path))
+        if path != '':
+            self.container.write_(path)
+        
+    def printFile(self):
+        '''
+        Generates a PDF file with all sentences included in database.
+        '''
+        self.notImplementedYet()
 
     def closeFile(self):
         """
         Closes current file.
         """
-        
         if self.container.isModified:
             answer = QMessageBox.question(self,
                                           self.tr('Save'),
@@ -333,14 +330,70 @@ class MainWindow(QMainWindow):
                 self.container.close_()
         else:
             self.container.close_()
+            
+    def exportFile(self):
+        '''
+        Export file with extension.
+        '''
+        self.notImplementedYet()
+        
+    def importFile(self):
+        '''
+        Import file with extension.
+        '''
+        self.notImplementedYet()
+    # -----------------------------------------------------------------------
+    # Application methods
+    # -----------------------------------------------------------------------
 
-    def removeQuestion(self, what='', who=''):
+    def about(self):
+        """
+        About shows the main information about the application.
+        """
+        QMessageBox.about(self,
+                          self.tr('About Sci Corpus'),
+                          self.tr('This software is a corpus manager, that allows you to trainer.\
+\n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
+\n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
+\n\nVersion:{}'.format(__version__)))
+    
+    def quit(self):
+        """
+        Quit current application.
+        """
+        answer = QMessageBox.question(self, 
+                                      self.tr('Quit'),
+                                      self.tr('Do you want to exit Sci Corpus?'),
+                                      QMessageBox.Yes | QMessageBox.No, 
+                                      QMessageBox.No)
+        if answer == QMessageBox.Yes:
+            self.close()
+            return True
+        else:
+            return False
+
+    def tips(self):
+        '''
+        Show tips about aplication
+        '''
+        self.notImplementedYet()
+        
+    def notImplementedYet(self):
+        """
+        Show tips for function.
+        """
+        QMessageBox.information(self, 
+                        self.tr('Sorry'),
+                        self.tr('We have no implemented this function yet.'),
+                        QMessageBox.Ok)
+
+    def removeQuestion(self, category='', who=''):
         """
         Removes a section item
         """
         return QMessageBox.question(self,
                                     self.tr('Remove'),
-                                    self.tr('Do you want to remove item {} from {}?'.format(who, what)),
+                                    self.tr('Do you want to remove item {} from {}?'.format(who, category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
 
@@ -353,3 +406,10 @@ class MainWindow(QMainWindow):
                                     self.tr('Do you want to update item {} to {} in {}?'.format(oldWho,newWho,what)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
+
+
+if __name__ == '__main__':
+    app = QApplication('Sci Corpus')
+    main_window = MainWindow()
+    main_window.show()
+    exit(app.exec_())

@@ -1,23 +1,23 @@
 import os
 
-
 class Container():
     """
     Class container.
     """
-    self.__path = ''
-    self.__isModified = False
-    #{Section1: [SubSection1, SubSection2], }
-    self.__sections = {}
-    self.__subSections = {}
-    self.__functions = {}
+    def __init__(self):
+        self.__path = ''
+        self.__isModified = False
+        #{Section1: [SubSection1, SubSection2], }
+        self.__sections = {}
+        self.__subSections = {}
+        self.__functions = {}
     
-    def listCategories():
+    def listCategories(self):
         """
         Do the deep update from db for categories Section, Sub Section and Function.
         """
         
-    def listSentences((Section, SubSection, Function)):
+    def listSentences(self, (Section, SubSection, Function)):
         """
         Do the deep update from db for Sentences. [((Section, SubSection, Function),Sentence), ((),)]
         """
@@ -44,22 +44,27 @@ class Container():
     def isModified(self, state):
         self.__isModified = state
         
-    def write_(path=''):
+    def write_(self, path=''):
         """
         writes file in path or in self.path if not passed.
         """
         
-    def read_(path):
+    def read_(self,  path):
         """
         Reads file.
         """
         
-    def import_(path=''):
+    def close(self):
+        """
+        
+        """
+        
+    def import_(self,  path=''):
         """
         Import file as XML, JSON, DB.
         """
         
-    def export_(path=''):
+    def export_(self,  path=''):
         """
         Export file as XML, JSON, DB.
         """
