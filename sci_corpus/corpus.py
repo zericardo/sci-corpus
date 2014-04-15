@@ -1,26 +1,112 @@
-#!/usr/bin/python3
-
-# ------Tiago de Campos------
-# This script will handle the CORPUS required by Scientific Writing course.
-# I will use a sqlite database to store the data.
-# The data discrimination will be BASED (NOT THE SAME) on the ScipoFarmacia tool.
-# www.nilc.icmc.usp.br/scipo-farmacia
-
+#!/usr/bin/python
 
 import sqlite3
-from aux_functions import *
+
+
+def add(**kwargs):
+	'''
+	'''
+	db = sqlite3.connect('CORPUS.db')
+	cursor = db.cursor()
+	
+	if kwargs is not None:
+                        
+                ''' Adds a new section (if it doesnt exists)'''       
+                sections = kwargs.get('section',[])
+                
+                cursor.execute("SELECT sectionName from section")
+                sectionListRaw = cursor.fetchall()
+                sectionList = []
+                
+                for sec in sectionListRaw:
+                        sectionList.append(sec[0])
+                
+                for sec in sections:
+                        if sec not in sectionList:
+                                cursor.execute('''INSERT INTO section (sectionName) VALUES(?)''', (sec,))
+                
+                
+                subsections = kwargs.get('subsection',[])
+                
+                cursor.execute("SELECT subSecName from subsec")
+                subSectionListRaw = cursor.fetchall()
+                subSectionList = []
+                
+                for subsec in subSectionListRaw:
+                        subSectionList.append(subsec[0])
+                
+                for subsec in subsections:
+                        if subsec not in subSectionList:
+                                cursor.execute('''INSERT INTO subsec(subSecName) VALUES(?)''', (subsec,))
+        
+        
+        
+                newSectionList = list(set(sectionList+sections))
+                print newSectionList
+                for sec in sections:
+                        cursor.execute("SELECT section_id FROM section WHERE sectionName=?",(sec,))
+                
+        
+        
+
+                functions = kwargs.get('function',[])
+                
+                cursor.execute("SELECT functionName from function")
+                functionListRaw = cursor.fetchall()
+                functionList = []
+                
+                for func in functionListRaw:
+                        functionList.append(func[0])
+                
+                for func in functions:
+                        if func not in functionList:
+                                cursor.execute('''INSERT INTO function(functionName) VALUES(?)''', (func,) )
+    
+	db.commit()
+	db.close()
 
 try:
    #Creates or open the database
    db = sqlite3.connect('CORPUS.db')
    cur = db.cursor()
-   #cur.execute('''DROP TABLE CORPUS''')
-   cur.execute('''CREATE TABLE IF NOT EXISTS
-                     CORPUS(id INTEGER PRIMARY KEY, phrase TEXT, function TEXT, ref TEXT)''')
-                     
-   db.commit()
    
+   cur.execute("DROP TABLE section")
+   cur.execute("DROP TABLE subsec")
+   cur.execute("DROP TABLE function")
+   cur.execute("DROP TABLE secSubSec")
+   
+   cur.execute('''CREATE TABLE IF NOT EXISTS
+                     section(section_id INTEGER PRIMARY KEY, sectionName TEXT)''')
+                     
+   cur.execute('''CREATE TABLE IF NOT EXISTS
+                     subsec(subsec_id INTEGER PRIMARY KEY, subSecName TEXT)''')
+   
+   cur.execute('''CREATE TABLE IF NOT EXISTS
+                     secSubSec( relSection_id INTEGER, relSubSec_id INTEGER,
+                                FOREIGN KEY (relSection_id) REFERENCES section(section_id),
+                                FOREIGN KEY (relSubSec_id) REFERENCES subsec(subsec_id)) ''' )
+                     
+   cur.execute('''CREATE TABLE IF NOT EXISTS
+                     function(function_id INTEGER PRIMARY KEY, functionName TEXT)''')
+   
+   #cur.execute('''CREATE TABLE IF NOT EXISTS
+   #                 secSubSecFunction(secSubSecFunction_id INTEGER PRIMARY KEY, 
+   #                 secSubSecId INTEGER, functionId INTEGER )''')
+
+   #cur.execute('''CREATE TABLE IF NOT EXISTS
+   #                  phrase(phrase_id INTEGER PRIMARY KEY, sentence TEXT, ref TEXT)''')
+
+   #cur.execute('''CREATE TABLE IF NOT EXISTS
+   #                 secSubSecFunctionPhrase(secSubSecFunctionPhrase_id INTEGER PRIMARY KEY,
+   #                 secSubSecFunctionId INTEGER, phraseId INTEGER )''')
+   
+   
+                    
+   db.commit()
    print('Connected to the database!\n')
+   db.close()
+   
+
    
 except Excecption as e:
    cb.rollback()
@@ -28,69 +114,47 @@ except Excecption as e:
 
 finally:
    
-   ans=True
+	db = sqlite3.connect('CORPUS.db')
+	cur = db.cursor()
    
-   while ans:
-      
-      print("""
-      
-                  @@@@@@@@@@ TIAGO DE CAMPOS @@@@@@@@@@
-                  
-                     !!!!!! BETA TEST VERSION !!!!!!!
-                     
-            IF YOU CHOOSE TO INSET BY A XML FILE, MAKE SURE TO NOT INCLUDE
-            THE SAME PHRASE AGAIN. THIS PROGRAMA DOESNT HANDLE DUPLICATED
-            PHRASES!
-            
-      """)
-      
-      
-      print("""
-      1. Help
-      2. Add manually a phrase
-      3. Select a file to import
-      4. Make a search
-      5. Print all entries (use with care)
-      6. Exit/Quit
-      """)
-      
-      ans=input("What would you like to do? ")
-      
-      if ans=="1":
-         call_help()
-      
-      elif ans=="2":
-         print("Add manually a phrase \n")
-         add_phrase(db)
+	add(section=['teuso','teusa'],subsection=['charlinho'],function=['exuxu'])
+        
+        add(section=['teuso','charle'])
+        
+        add(subsection=['charlinho','teusinho'])
+        
+        add(function=['exuxu','ze'])
+        
+	cur.execute("SELECT * FROM section")
          
-      elif ans=="3":
-         print("Select a file to import \n")
-         filename=input('Enter with a path/name to the XML file:\n')
-         bulk_add(db,filename)
+	rows = cur.fetchall()
+        
+        print "section"
+        
+	for row in rows:
+		print(row)
+                
+        print "sub section"
+                
+	cur.execute("SELECT * FROM subsec")
          
-      elif ans=="4":
-         print("Make a search \n")
-         phrases_searh(db)
-      
-      elif ans=="5":
-         print("Print all entries \n")
-          
-         cur.execute("SELECT * FROM CORPUS")
+	rows = cur.fetchall()
          
-         rows = cur.fetchall()
+	for row in rows:
+		print(row)
+                
+        print "function"
+                
+	cur.execute("SELECT * FROM function")
          
-         for row in rows:
-            print(row)
+	rows = cur.fetchall()
          
-      elif ans=="6":
-         print("Goodbye \n") 
-         ans = None
-         
-      else:
-         print("Not Valid Choice Try again \n")
+	for row in rows:
+		print(row)
+	
+	db.close()
 
 
-   db.close()
 
 
-   
+
