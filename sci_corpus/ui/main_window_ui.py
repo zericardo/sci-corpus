@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Apr 15 14:27:22 2014
+# Created: Tue Apr 15 22:21:28 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
         self.listWidgetSection.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.listWidgetSection.setInputMethodHints(QtCore.Qt.ImhPreferUppercase)
         self.listWidgetSection.setAlternatingRowColors(False)
-        self.listWidgetSection.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+        self.listWidgetSection.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.listWidgetSection.setMovement(QtGui.QListView.Free)
         self.listWidgetSection.setSelectionRectVisible(True)
         self.listWidgetSection.setObjectName("listWidgetSection")
@@ -179,7 +179,7 @@ class Ui_MainWindow(object):
         self.listWidgetSubSection = QtGui.QListWidget(self.dockWidgetContentsSubSection)
         self.listWidgetSubSection.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.listWidgetSubSection.setAlternatingRowColors(False)
-        self.listWidgetSubSection.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+        self.listWidgetSubSection.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.listWidgetSubSection.setMovement(QtGui.QListView.Free)
         self.listWidgetSubSection.setSelectionRectVisible(True)
         self.listWidgetSubSection.setObjectName("listWidgetSubSection")
@@ -215,7 +215,7 @@ class Ui_MainWindow(object):
         self.listWidgetFunction = QtGui.QListWidget(self.dockWidgetContentsFunction)
         self.listWidgetFunction.setMidLineWidth(0)
         self.listWidgetFunction.setAlternatingRowColors(False)
-        self.listWidgetFunction.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+        self.listWidgetFunction.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.listWidgetFunction.setMovement(QtGui.QListView.Free)
         self.listWidgetFunction.setSelectionRectVisible(True)
         self.listWidgetFunction.setObjectName("listWidgetFunction")

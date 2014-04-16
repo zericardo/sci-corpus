@@ -10,7 +10,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
-from PySide.QtGui import QFileDialog
+from PySide.QtGui import QFileDialog,  QTableWidgetItem
 import container
 from ui import main_window_ui
 
@@ -96,6 +96,9 @@ class MainWindow(QMainWindow):
         self.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
         
         self.updateSectionView()
+        self.updateSubSectionView()
+        self.updateFunctionView()
+        self.updateSentenceView()
         
     def selectedTitles(self,  selected_items):
         """
@@ -241,7 +244,15 @@ in an article.'),
         """
         Updates a function view.
         """
-        print self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        sub_sections = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        
+        functions = self.container.functions(sections, sub_sections)
+        self.ui.listWidgetFunction.clear()
+        
+        for row, value in enumerate(functions):
+            item = QListWidgetItem(str(value))
+            self.ui.listWidgetFunction.addItem(item)
 
     def tipsFunction(self):
         """
@@ -284,9 +295,21 @@ in an article.'),
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
-        print 'Updating sentences view from \n Sections: {} \n SubSections: {}\n Function: {}'.format(sections,  sub_sections, functions)
-        # Chamar funcao listar sentencas
-        self.container.listSentences(sections, sub_sections, functions)
+        sentences = self.container.sentences(sections, sub_sections, functions)
+        self.ui.tableWidgetSentence.clear()
+        
+        self.ui.tableWidgetSentence.setColumnCount(2)
+        self.ui.tableWidgetSentence.setRowCount(len(sentences))
+        
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem(str('Sentence')))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem(str('Reference')))
+        
+        for row, (sentence, reference) in enumerate(sentences):
+            item_sentence = QTableWidgetItem(str(sentence))
+            self.ui.tableWidgetSentence.setItem(row,0,item_sentence)
+            item_reference = QTableWidgetItem(str(reference))
+            self.ui.tableWidgetSentence.setItem(row,1,item_reference)
+            
 
     def tipsSentence(self):
         """
@@ -312,10 +335,12 @@ in an article.'),
         '''
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Open File'),
-                                           self.tr(self.container.path))
+                                           self.tr(self.container.path))[0]
 
         if path != '':
+            # precisa salvar se tiver algo aberto antes
             self.container.read_(path)
+            self.updateSectionView()
 
     def saveFile(self):
         '''
@@ -332,7 +357,7 @@ in an article.'),
         '''
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Save As'),
-                                           self.tr(self.container.path))
+                                           self.tr(self.container.path))[0]
         if path != '':
             self.container.write_(path)
         
@@ -355,23 +380,35 @@ in an article.'),
             
             if answer == QMessageBox.Yes:
                 self.container.write_()
-                self.container.close_()
+                self.container.clear_()
             elif answer == QMessageBox.No:
-                self.container.close_()
+                self.container.clear_()
         else:
-            self.container.close_()
+            self.container.clear_()
+            
             
     def exportFile(self):
         '''
         Export file with extension.
         '''
-        self.notImplementedYet()
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Export JSON File'),
+                                           self.tr(self.container.path))
+        if path != '':
+            self.container.write_(path)
+        
         
     def importFile(self):
         '''
         Import file with extension.
         '''
-        self.notImplementedYet()
+        path = QFileDialog.getOpenFileName(self,
+                                           self.tr('Open JSON File'),
+                                           self.tr(self.container.path))
+
+        if path != '':
+            self.container.read_(path)
+            
     # -----------------------------------------------------------------------
     # Application methods
     # -----------------------------------------------------------------------
@@ -397,6 +434,7 @@ in an article.'),
                                       QMessageBox.Yes | QMessageBox.No, 
                                       QMessageBox.No)
         if answer == QMessageBox.Yes:
+            self.closeFile()
             self.close()
             return True
         else:
