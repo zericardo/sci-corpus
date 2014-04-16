@@ -23,6 +23,34 @@ class Container():
         We use this just with a insertion, remove or update in sentence.
         """
         
+    def add(self, section='Not Classified', sub_section='Not Classified', function='Not Classified', sentence='', reference=''):
+        """
+        
+        """
+        try:
+            self.__dict[section]
+        except KeyError:
+            print 'Add section: ', section
+            self.__dict[section] = {}
+        finally:
+            try:
+                self.__dict[section][sub_section]
+            except KeyError:
+                print 'Add sub section: ', sub_section
+                self.__dict[section][sub_section] = {}
+            finally:
+                try:
+                    self.__dict[section][sub_section][function]
+                except KeyError:
+                    print 'Add function: ', function
+                    self.__dict[section][sub_section][function] = []
+                finally:
+                    if sentence != '':
+                        self.__dict[section][sub_section][function].append((sentence, reference))
+                        print self.__dict[section][sub_section][function]
+        self.isModified  = True
+        
+        
     def sections(self):
         """
         Return sections.

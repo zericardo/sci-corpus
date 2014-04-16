@@ -118,10 +118,9 @@ class MainWindow(QMainWindow):
         """
         Add a new section.
         """
-        # fazer add, remove, update para todos
-        section = self.ui.lineEditSection.text()
-        #chama metodo tiago inserir secao (section)
-        self.container.isModified(True)
+        section = str(self.ui.lineEditSection.text())
+        if section != '':
+            self.container.add(section)
         self.updateSectionView()
 
     def removeSection(self, section=''):
@@ -172,10 +171,13 @@ In summary, they are the titles of each section.'),
         """
         Add a new Subsection
         """
-        sentence = self.ui.lineEditSentence.text()
-        #chama metodo tiago inserir secao (section)
-        self.container.isModified(True)
-        self.updateSectionView()
+
+        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
+        sub_section = str(self.ui.lineEditSubSection.text())
+        
+        if sub_section != '':
+            self.container.add(section, sub_section)
+        self.updateSubSectionView()
         
     def removeSubSection(self, subsection=''):
         """
@@ -223,6 +225,12 @@ in an article.'),
         """
         Adds a new function.
         """
+        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
+        sub_section = str(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())[0])
+        function = str(self.ui.lineEditFunction.text())
+        if function != '':
+            self.container.add(section, sub_section, function)
+        self.updateFunctionView()
         
     def removeFunction(self, function=''):
         """
@@ -271,6 +279,14 @@ in an article.'),
         """
         Adds a new sentence.
         """
+        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
+        sub_section = str(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())[0])
+        function = str(self.selectedTitles(self.ui.listWidgetFunction.selectedItems())[0])
+        sentence = str(self.ui.textEditSentence.toPlainText())
+        reference = str(self.ui.lineEditReference.text())
+        if section != '':
+            self.container.add(section, sub_section, function, sentence, reference)
+        self.updateSentenceView()
         
     def removeSentence(self, sentence=''):
         """
