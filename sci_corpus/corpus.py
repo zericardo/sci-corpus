@@ -126,7 +126,7 @@ def update(section=[('NULL','NULL')],subsection=[('NULL','NULL')],function=[('NU
 
         if section == [('NULL','NULL')] and subsection == [('NULL','NULL')] and function == [('NULL','NULL')] and phrase != [('NULL','NULL')]:
            cursor.execute('''UPDATE corpus 
-                          SET phrase=? WHERE phrase=?''',phrase[0]) 
+                          SET phrase=? WHERE phrase=?''',phrase[0]Ad) 
         
         db.commit()
         db.close()
