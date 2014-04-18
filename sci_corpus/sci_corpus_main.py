@@ -11,7 +11,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
-from PySide.QtGui import QFileDialog,  QTableWidgetItem
+from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
 import container
 from ui import main_window_ui
 
@@ -56,6 +56,7 @@ class MainWindow(QMainWindow):
         
         self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
         self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSubSectionView)
+        self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSentenceView)
 
         # Subsection
         
@@ -70,6 +71,7 @@ class MainWindow(QMainWindow):
         
         self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateFunctionView)
+        self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateSentenceView)
 
         # Function
         
@@ -121,37 +123,40 @@ class MainWindow(QMainWindow):
         """
         section = str(self.ui.lineEditSection.text())
         if section != '':
-            #section = list(str(section))
             self.container.addDB(sect=[section])
         self.ui.listWidgetSection.clear()
         self.updateSectionView()
         self.updateSentenceView()
 
-    def removeSection(self, section=''):
+    def removeSection(self):
         """
         Remove a section.
         """
-        if section != '':
-            section = str(self.ui.lineEditSection.text())
-        else: 
+        section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        if section != []:
             if self.removeQuestion("section",section) == QMessageBox.Yes:
-                print section
-                self.container.remove(sect=[section])
-        self.container.isModified(True)
+                self.container.remove(sect=section)
+        self.updateSectionView()
                 
-    def updateSection(self, (old_section, new_section)):
+    def updateSection(self):
         """
         Updates old section with new section.
         """
-        self.container.update(section=[(old_section, new_section)])
-        self.container.isModified(True)
+        
+        old_section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        new_section = str(self.ui.lineEditSection.text())
+        
+        if self.updateQuestion("section",(new_section,old_section)):
+           self.container.update(section=[(new_section,old_section[0])])
+        
         self.updateSectionView()
         
     def updateSectionView(self):
         """
         Updates section view.
         """
-        #sections = self.container.sections()
+        self.ui.listWidgetSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.ui.listWidgetSection.setDragEnabled(False)
         sections = self.container.listCategories()
         sections = sections[0]
         self.ui.listWidgetSection.clear()
@@ -181,33 +186,41 @@ In summary, they are the titles of each section.'),
         Add a new Subsection
         """
 
-        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
-        sub_section = str(self.ui.lineEditSubSection.text())        
+        section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sub_section = str(self.ui.lineEditSubSection.text())
         if sub_section != '':
-            self.container.addDB(sect=[section], subsect=[sub_section])
+            self.container.addDB(sect=section, subsect=[sub_section])
         self.updateSubSectionView()
         self.updateSentenceView()
         
-    def removeSubSection(self, subsection=''):
+    def removeSubSection(self):
         """
         Remove one subsection
         """
-        if subsection != '':
-            subsection = self.ui.lineEditSection.text()
-        else: 
+        subsection = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        if subsection != []:
             if self.removeQuestion("subsection",subsection) == QMessageBox.Yes:
-                self.container.remove(subsect=[subsection])
-        self.container.isModified(True)
+                self.container.remove(subsect=subsection)
+        self.updateSubSectionView()
                 
     def updateSubSection(self):
         """
         Updates one subsection
         """
+        old_subsection = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        new_subsection = str(self.ui.lineEditSubSection.text())
+        
+        if self.updateQuestion("subsection",(new_subsection,old_subsection)):
+           self.container.update(subsection=[(new_subsection,old_subsection[0])])
+        
+        self.updateSubSectionView()
 
     def updateSubSectionView(self):
         """
         Updates subsection view
         """
+        self.ui.listWidgetSubSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.ui.listWidgetSubSection.setDragEnabled(False)
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sections = list(sections)
         subsections = self.container.listCategories(section=sections)
@@ -238,14 +251,11 @@ in an article.'),
         """
         Adds a new function.
         """
-        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
-        sub_section = str(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())[0])
+        section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sub_section = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         function = str(self.ui.lineEditFunction.text())
-        
-        print function
-        
         if function != '':
-            self.container.addDB(sect=[section], subsect=[sub_section], funct=[function])
+            self.container.addDB(sect=section, subsect=sub_section, funct=[function])
         self.updateFunctionView()
         self.updateSentenceView()
         
@@ -253,23 +263,30 @@ in an article.'),
         """
         Removes a function.
         """
-        if function != '':
-            section = self.ui.lineEditSection.text()
-        else: 
+        function = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        if function != []:
             if self.removeQuestion("function",function) == QMessageBox.Yes:
-                self.container.remove(funct=[function])
-        self.container.isModified(True)
+                self.container.remove(funct=function)
+        self.updateFunctionView()
 
     def updateFunction(self):
         """
         Updates a function.
         """
+        old_function = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        new_function = str(self.ui.lineEditFunction.text())
+        
+        if self.updateQuestion("function",(new_function,old_function)):
+           self.container.update(function=[(new_function,old_function[0])])
+        
+        self.updateSubSectionView()
 
     def updateFunctionView(self):
         """
         Updates a function view.
         """
-
+        self.ui.listWidgetFunction.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.ui.listWidgetFunction.setDragEnabled(False)
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sub_sections = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         sections = list(sections)
@@ -300,26 +317,26 @@ in an article.'),
         """
         Adds a new sentence.
         """
-        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
-        sub_section = str(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())[0])
-        function = str(self.selectedTitles(self.ui.listWidgetFunction.selectedItems())[0])
+        section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sub_section = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        function = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
         sentence = str(self.ui.textEditSentence.toPlainText())
         reference = str(self.ui.lineEditReference.text())
         
         if section != '':
-            self.container.addDB(sect=[section], subsect=[sub_section], funct=[function], phrase=[sentence], ref=[reference])
+            self.container.addDB(sect=section, subsect=sub_section, funct=function, phrase=[sentence], ref=[reference])
         self.updateSentenceView()
         
-    def removeSentence(self, sentence=''):
+    def removeSentence(self):
         """
         Removes a sentence.
         """
-        if sentence != '':
-            section = self.ui.lineEditSection.text()
-        else: 
+        sentence = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
+        #sentence = list(self.selectedTitles(self.ui.listWidgetSentence.selectedItems()))
+        if sentence != []:
             if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
-                self.container.remove(phrase=[sentence])
-        self.container.isModified(True)
+                self.container.remove(phrase=sentence)
+        self.updateSentenceView()
 
     def updateSentence(self):
         """
@@ -330,6 +347,8 @@ in an article.'),
         """
         Updates a sentence view.
         """
+        self.ui.tableWidgetSentence.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.ui.tableWidgetSentence.setDragEnabled(False)
         sentencesFinal = []
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
@@ -339,7 +358,7 @@ in an article.'),
         self.ui.tableWidgetSentence.clear()
         
         for i in range(len(sentences[0])):
-            if sentences[0][i] != (u'NULL',u'NULL'):
+            if sentences[0][i][0] != u'NULL':
                sentencesFinal.append(sentences[0][i])
         
         self.ui.tableWidgetSentence.setColumnCount(2)
@@ -448,11 +467,18 @@ in an article.'),
         Import file with extension.
         '''
         path = QFileDialog.getOpenFileName(self,
-                                           self.tr('Open JSON File'),
-                                           self.tr(self.container.path))
+                                           self.tr('Open File'),
+                                           self.tr(self.container.path),
+                                           self.tr("Files (*.json *.xml)"))
 
         if path != '':
             self.container.read_(path)
+        
+        self.updateSectionView()
+        self.updateSubSectionView()
+        self.updateFunctionView()
+        self.updateSentenceView()
+        
             
     # -----------------------------------------------------------------------
     # Application methods
@@ -510,14 +536,30 @@ in an article.'),
                                     self.tr('Do you want to remove item {} from {}?'.format(who, category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
-    #Have to change for [(,)]
-    def updateQuestion(self, section=([], []), subsection=([], []), function=([], [])):
+                                    
+    def updateQuestion(self, section=(), subsection=(), function=()):
         """
         Updates a section item
         """
+        
+        if section != ():
+           category = 'section'
+           oldWho = section[1]
+           newWho = section[0]
+
+        if subsection != ():
+           category = 'subsection'
+           oldWho = subsection[1]
+           newWho = subsection[0]
+        
+        if function != ():
+           category = 'function'
+           oldWho = function[1]
+           newWho = function[0]
+        
         return QMessageBox.question(self,
                                     self.tr('Update'),
-                                    self.tr('Do you want to update item {} to {} in {}?'.format(oldWho,newWho,what)),
+                                    self.tr('Do you want to update item {} to {} in {}?'.format(oldWho,newWho,category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
 

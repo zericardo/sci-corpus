@@ -110,40 +110,6 @@ class ContainerDB():
                 
         return phrases
         
-        
-    def remove(sect=[],subsect=[],funct=[],phrase=[]):
-
-        cursor = self.__db.cursor()
-        
-        #whatrm = [(a,b,c,d) for a in section for b in subsection for c in function for d in phrase]
-        
-        if sect != [] and subsect == [] and funct == [] and phrase == []:
-           whatrm = [(a,) for a in sect]
-           whatup = [('Not Classified',a) for a in sect]
-           cursor.executemany('DELETE FROM corpus WHERE sec=?',whatrm)
-           update(section=whatup)
-        
-        if sect == [] and subsect != [] and funct == [] and phrase == []:
-           whatrm = [(a,) for a in subsect]
-           whatup = [('Not Classified',a) for a in subsect]
-           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
-           update(subsection=whatup)
-           
-        if sect == [] and subsect == [] and funct != [] and phrase == []:
-           whatrm = [(a,) for a in funct]
-           whatup = [('Not Classified',a) for a in funct]
-           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
-           update(function=whatup)
-           
-        if sect == [] and subsect == [] and funct == [] and phrase != []:
-           whatrm = [(a,) for a in phrase]
-           whatup = [('Not Classified',a) for a in phrase]
-           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
-           update(phrase=whatup)
-             
-        self.__db.commit()
-        self.isModified  = True
-
     def update(self, section=[('NULL','NULL')],subsection=[('NULL','NULL')],function=[('NULL','NULL')],phrase=[('NULL','NULL')],ref=[('NULL','NULL')]):
         
         cursor = self.__db.cursor()
@@ -170,21 +136,53 @@ class ContainerDB():
         
         self.__db.commit()
         self.isModified  = True  
-
-'''
-    def bulk_add(db,filename):
-            
-        cursor = db.cursor()
         
-        tree = ET.parse(filename)      
+    def remove(self,sect=[],subsect=[],funct=[],phrase=[]):
+
+        cursor = self.__db.cursor()
+        
+        if sect != [] and subsect == [] and funct == [] and phrase == []:
+           whatrm = [(a,) for a in sect]
+           whatup = [('Not Classified',a) for a in sect]
+           cursor.executemany('DELETE FROM corpus WHERE sec=?',whatrm)
+           self.update(section=whatup)
+        
+        if sect == [] and subsect != [] and funct == [] and phrase == []:
+           whatrm = [(a,) for a in subsect]
+           whatup = [('Not Classified',a) for a in subsect]
+           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
+           self.update(subsection=whatup)
+           
+        if sect == [] and subsect == [] and funct != [] and phrase == []:
+           whatrm = [(a,) for a in funct]
+           whatup = [('Not Classified',a) for a in funct]
+           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
+           self.update(function=whatup)
+           
+        if sect == [] and subsect == [] and funct == [] and phrase != []:
+           whatrm = [(a,) for a in phrase]
+           whatup = [('NULL',a) for a in phrase]
+           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
+           self.update(phrase=whatup)
+
+
+        self.__db.commit()
+        self.isModified  = True
+
+
+    def bulk_add(self, path):
+            
+        cursor = self.__db.cursor()
+        
+        tree = ET.parse(path)      
         root = tree.getroot()
         
-        info = [(w.find('PHRASE').text, w.find('FUNCTION').text, w.find('REF').text) for w in root.findall('INFOPIECE')]
+        info = [(w.find('SECTION').text, w.find('SUBSECTION').text, w.find('FUNCTION').text, w.find('PHRASE').text, w.find('REF').text) for w in root.findall('INFOPIECE')]
         
-        cursor.executemany('INSERT INTO CORPUS(phrase, function, ref) VALUES(?,?,?)',info)
+        cursor.executemany('INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)',info)
         
-        db.commit()
-'''        
+        self.__db.commit()
+      
     
     @property
     def path(self):
@@ -223,7 +221,7 @@ class ContainerDB():
         """
         Reads file.
         """
-        self.import_(path)
+        self.import_(path[0])
         self.path = path
         self.isModified = False
         
@@ -239,11 +237,12 @@ class ContainerDB():
         """
         Import file as XML, JSON, DB.
         """
-        print path
-        with codecs.open(path, 'rb', 'utf-8') as fp:
-            text = fp.read()
-            self.__dict = json.loads(str(text))
-        self.isModified = False
+        extension = path.split('.')[1]
+        
+        if extension == 'xml' or 'XML':
+           self.bulk_add(path)
+        
+        self.isModified = True
         
     def export_(self,  path=''):
         """
@@ -253,6 +252,9 @@ class ContainerDB():
         with codecs.open(path, 'wb',  'utf-8') as project_file:
             json.dump(self.__dict, project_file,  indent=4,  sort_keys=True)
         self.isModified = False
+
+
+
 
 class Container():
     """
