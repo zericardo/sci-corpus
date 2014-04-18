@@ -146,8 +146,9 @@ class MainWindow(QMainWindow):
         old_section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         new_section = str(self.ui.lineEditSection.text())
         
-        if self.updateQuestion("section",(new_section,old_section)):
-           self.container.update(section=[(new_section,old_section[0])])
+        if old_section != [] and new_section != '':
+           if self.updateQuestion("section",(new_section,old_section)):
+              self.container.update(section=[(new_section,old_section[0])])
         
         self.updateSectionView()
         
@@ -210,8 +211,9 @@ In summary, they are the titles of each section.'),
         old_subsection = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         new_subsection = str(self.ui.lineEditSubSection.text())
         
-        if self.updateQuestion("subsection",(new_subsection,old_subsection)):
-           self.container.update(subsection=[(new_subsection,old_subsection[0])])
+        if old_subsection != [] and new_subsection != '':
+           if self.updateQuestion("subsection",(new_subsection,old_subsection)):
+              self.container.update(subsection=[(new_subsection,old_subsection[0])])
         
         self.updateSubSectionView()
 
@@ -276,10 +278,12 @@ in an article.'),
         old_function = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
         new_function = str(self.ui.lineEditFunction.text())
         
-        if self.updateQuestion("function",(new_function,old_function)):
-           self.container.update(function=[(new_function,old_function[0])])
+        if old_function != [] and new_function != '':
+           if self.updateQuestion("function",(new_function,old_function)):
+              self.container.update(function=[(new_function,old_function[0])])
         
-        self.updateSubSectionView()
+        self.updateFunctionView()
+
 
     def updateFunctionView(self):
         """

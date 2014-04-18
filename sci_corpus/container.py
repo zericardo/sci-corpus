@@ -124,7 +124,7 @@ class ContainerDB():
 
         if section == [('NULL','NULL')] and subsection == [('NULL','NULL')] and function != [('NULL','NULL')] and phrase == [('NULL','NULL')] and ref == [('NULL','NULL')]:
            cursor.execute('''UPDATE corpus 
-                          SET function=? WHERE function=?''',function[0]) 
+                          SET func=? WHERE func=?''',function[0]) 
 
         if section == [('NULL','NULL')] and subsection == [('NULL','NULL')] and function == [('NULL','NULL')] and phrase != [('NULL','NULL')] and ref == [('NULL','NULL')]:
            cursor.execute('''UPDATE corpus 
