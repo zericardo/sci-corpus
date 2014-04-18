@@ -3,7 +3,7 @@
 import sqlite3
 
 
-def add(section=['NULL'],subsection=['NULL'],function=['NULL'],phrase=['NULL']):
+def add(section=['Not Classified'],subsection=['Not Classified'],function=['Not Classified'],phrase=['NULL']):
         
         db = sqlite3.connect('CORPUS.db')
         cursor = db.cursor()
@@ -14,6 +14,7 @@ def add(section=['NULL'],subsection=['NULL'],function=['NULL'],phrase=['NULL']):
                 
         db.commit()
         db.close()
+
 
 def listCategories(section=[],subsection=[],function=[]):
         
@@ -58,7 +59,6 @@ def listCategories(section=[],subsection=[],function=[]):
         return [sectionsFinal,subsectionsFinal,functionsFinal]
 
    
-
 def listSentences(section=[],subsection=[],function=[]):
 
         db = sqlite3.connect('CORPUS.db')
@@ -95,7 +95,8 @@ def listSentences(section=[],subsection=[],function=[]):
         
         return phrasesFinal
         
-def removePhrase(section=['NULL'],subsection=['NULL'],function=['NULL'],phrase=['NULL']):
+        
+def removePhrase(section=['Not Classified'],subsection=['Not Classified'],function=['Not Classified'],phrase=['NULL']):
 
         db = sqlite3.connect('CORPUS.db')
         cursor = db.cursor()
@@ -106,6 +107,7 @@ def removePhrase(section=['NULL'],subsection=['NULL'],function=['NULL'],phrase=[
         
         db.commit()
         db.close()
+
 
 def update(section=[('NULL','NULL')],subsection=[('NULL','NULL')],function=[('NULL','NULL')],phrase=[('NULL','NULL')]):
         
