@@ -98,10 +98,24 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
         self.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
         
+        # Signals
+        self.ui.checkBoxSection.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(0, not self.ui.checkBoxSection.isChecked()))
+        self.ui.checkBoxSubSection.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(1, not self.ui.checkBoxSubSection.isChecked()))
+        self.ui.checkBoxFunction.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(2, not self.ui.checkBoxFunction.isChecked()))
+        self.ui.checkBoxReference.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(4, not self.ui.checkBoxReference.isChecked()))
+        
+        self.ui.tableWidgetSentence.setColumnWidth(4,50)
+        
         self.updateSectionView()
         self.updateSubSectionView()
         self.updateFunctionView()
         self.updateSentenceView()
+        
+        # When initialize
+        self.ui.tableWidgetSentence.setColumnHidden(0, not self.ui.checkBoxSection.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(1, not self.ui.checkBoxSubSection.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(2, not self.ui.checkBoxFunction.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(4, not self.ui.checkBoxReference.isChecked())
         
     def selectedTitles(self,  selected_items):
         """
@@ -124,6 +138,7 @@ class MainWindow(QMainWindow):
         section = str(self.ui.lineEditSection.text())
         if section != '':
             self.container.addDB(sect=[section])
+            self.writeStatusBar('A new section "{}" has already added.'.format(section))
         self.ui.listWidgetSection.clear()
         self.updateSectionView()
         self.updateSentenceView()
@@ -191,6 +206,7 @@ In summary, they are the titles of each section.'),
         sub_section = str(self.ui.lineEditSubSection.text())
         if sub_section != '':
             self.container.addDB(sect=section, subsect=[sub_section])
+            self.writeStatusBar('A new sub section "{}" has already added.'.format(sub_section))
         self.updateSubSectionView()
         self.updateSentenceView()
         
@@ -258,6 +274,7 @@ in an article.'),
         function = str(self.ui.lineEditFunction.text())
         if function != '':
             self.container.addDB(sect=section, subsect=sub_section, funct=[function])
+            self.writeStatusBar('A new function "{}" has already added.'.format(function))
         self.updateFunctionView()
         self.updateSentenceView()
         
@@ -329,6 +346,7 @@ in an article.'),
         
         if section != '':
             self.container.addDB(sect=section, subsect=sub_section, funct=function, phrase=[sentence], ref=[reference])
+            self.writeStatusBar('A new sentence has already added.')
         self.updateSentenceView()
         
     def removeSentence(self):
@@ -365,18 +383,21 @@ in an article.'),
             if sentences[0][i][0] != u'NULL':
                sentencesFinal.append(sentences[0][i])
         
-        self.ui.tableWidgetSentence.setColumnCount(2)
+        self.ui.tableWidgetSentence.setColumnCount(5)
         self.ui.tableWidgetSentence.setRowCount(len(sentencesFinal))
         
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem(str('Sentence')))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem(str('Reference')))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem(str('Section')))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem(str('Sub Section')))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(2,QTableWidgetItem(str('Function')))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(3,QTableWidgetItem(str('Sentence')))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(4,QTableWidgetItem(str('Reference')))
                       
         for row, sentence in enumerate(sentencesFinal):
             if sentence[0] != 'NULL' and sentence[1] != 'NULL':
                item_sentence = QTableWidgetItem(str(sentence[0]))
-               self.ui.tableWidgetSentence.setItem(row,0,item_sentence)
+               self.ui.tableWidgetSentence.setItem(row,3,item_sentence)
                item_reference = QTableWidgetItem(str(sentence[1]))
-               self.ui.tableWidgetSentence.setItem(row,1,item_reference)
+               self.ui.tableWidgetSentence.setItem(row,4,item_reference)
             
 
     def tipsSentence(self):
@@ -498,10 +519,13 @@ in an article.'),
 \n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
 \n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
 \n\nVersion:{}'.format(__version__)))
-    
+
     def quit(self):
+        self.closeEvent()
+        
+    def closeEvent(self, event):
         """
-        Quit current application.
+        Close event.
         """
         answer = QMessageBox.question(self, 
                                       self.tr('Quit'),
@@ -509,12 +533,22 @@ in an article.'),
                                       QMessageBox.Yes | QMessageBox.No, 
                                       QMessageBox.No)
         if answer == QMessageBox.Yes:
-            self.__db.close()
+            
+            # Isto esta errado...fazer um metodo para fechar...
+            self.container.__db.close()
             self.closeFile()
             self.close()
-            return True
+            event.accept()
         else:
-            return False
+            event.ignore()
+            
+    def writeStatusBar(self,  msg):
+        """
+        Display message on status bar.
+        """
+        status_bar = self.statusBar()
+        status_bar.clearMessage()
+        status_bar.showMessage(str(msg), 5000)
 
     def tips(self):
         '''
