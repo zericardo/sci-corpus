@@ -4,8 +4,13 @@
 """
 Graphical interface for sci-corpus program.
 Author: Daniel Pizetta <daniel.pizetta@usp.br>
+<<<<<<< HEAD
         Tiago de Campos <tiago.campos@usp.br>
         José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
+=======
+        Tiago de Campos <tiago.campo@usp.br>
+        José Ricardo Furlan Ronqui <>
+>>>>>>> 28e9f3114fb09a016324f701703e3ba62dea2b46
 Date: 04/04/2014
 
 This script provides a graphical interface for sci-corpus program standalone.
@@ -373,7 +378,10 @@ in an article.'),
             
         return sent
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 28e9f3114fb09a016324f701703e3ba62dea2b46
     def addSentence(self):
         """
         Adds a new sentence.
