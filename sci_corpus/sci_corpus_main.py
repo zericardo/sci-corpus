@@ -5,7 +5,7 @@
 Graphical interface for sci-corpus program.
 Author: Daniel Pizetta <daniel.pizetta@usp.br>
         Tiago de Campos <tiago.campo@usp.br>
-        José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
+        José Ricardo Furlan Ronqui <>
 Date: 04/04/2014
 
 This script provides a graphical interface for sci-corpus program standalone.
@@ -373,14 +373,6 @@ in an article.'),
             raise AssertionError("Delimiter number doesnt match! =(")
 
         return sent
-
-    def adjustSentence(sentence="", begin="", end="", hideMarked=True):
-        """
-        Adjusts sentences to be displayed on the screen.
-        """
-        sentence.split(begin).split(end)
-        for i in sentence:
-            print i
 
     def addSentence(self):
         """
