@@ -5,6 +5,7 @@
 Graphical interface for sci-corpus program.
 Author: Daniel Pizetta <daniel.pizetta@usp.br>
         Tiago de Campos <tiago.campo@usp.br>
+        José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
 Date: 04/04/2014
 
 This script provides a graphical interface for sci-corpus program standalone.
@@ -13,6 +14,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
 from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
 import container
+import re
 from ui import main_window_ui
 
 __version__='0.1.B'
@@ -333,6 +335,52 @@ in an article.'),
     # -----------------------------------------------------------------------
     # Sentence methods
     # -----------------------------------------------------------------------
+
+    def adjustSentence(sent="", begin="", end="", hideMarked=True):
+        """
+        Adjusts sentences to be displayed on the screen.
+        """
+        b  = [match.start() for match in re.finditer(re.escape(begin), sent)]
+        e  = [match.end() for match in re.finditer(re.escape(end), sent)]
+        
+        #exception here b and e must have the same size!
+        if(len(b) == len(e)):
+            
+            replace = []
+        
+            if(hideMarked):
+                for i in range(0,len(b)):
+                    replace.append(sent[b[i]:e[i]])
+            
+                for substring in replace:
+                    sent = sent.replace(substring, "...")
+            else:
+                aux=''
+
+                if 0 not in b:
+                    aux += " ... "
+
+                for i in range(0,len(b)-1):
+                    aux += sent[b[i]:e[i]]+" ... "
+            
+                if(e[len(b)-1]==len(sent)-1):
+                    aux += sent[b[len(b)-1]:e[len(e)-1]]
+                else:
+                    aux += sent[b[len(b)-1]:e[len(e)-1]]+" ... "
+                
+                sent = aux.replace(begin,"").replace(end,"")
+        else:
+            raise AssertionError("Delimiter number doesnt match! =(")
+
+        return sent
+
+    def adjustSentence(sentence="", begin="", end="", hideMarked=True):
+        """
+        Adjusts sentences to be displayed on the screen.
+        """
+        sentence.split(begin).split(end)
+        for i in sentence:
+            print i
 
     def addSentence(self):
         """
