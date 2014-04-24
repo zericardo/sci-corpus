@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Wed Apr 16 17:42:33 2014
+# Created: Thu Apr 24 16:09:49 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -80,21 +80,21 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
+        self.checkBoxSection = QtGui.QCheckBox(self.groupBox)
+        self.checkBoxSection.setObjectName("checkBoxSection")
+        self.verticalLayout.addWidget(self.checkBoxSection)
+        self.checkBoxSubSection = QtGui.QCheckBox(self.groupBox)
+        self.checkBoxSubSection.setObjectName("checkBoxSubSection")
+        self.verticalLayout.addWidget(self.checkBoxSubSection)
+        self.checkBoxFunction = QtGui.QCheckBox(self.groupBox)
+        self.checkBoxFunction.setObjectName("checkBoxFunction")
+        self.verticalLayout.addWidget(self.checkBoxFunction)
         self.checkBoxStrip = QtGui.QCheckBox(self.groupBox)
         self.checkBoxStrip.setObjectName("checkBoxStrip")
         self.verticalLayout.addWidget(self.checkBoxStrip)
         self.checkBoxReference = QtGui.QCheckBox(self.groupBox)
         self.checkBoxReference.setObjectName("checkBoxReference")
         self.verticalLayout.addWidget(self.checkBoxReference)
-        self.checkBoxFunction = QtGui.QCheckBox(self.groupBox)
-        self.checkBoxFunction.setObjectName("checkBoxFunction")
-        self.verticalLayout.addWidget(self.checkBoxFunction)
-        self.checkBoxSubSection = QtGui.QCheckBox(self.groupBox)
-        self.checkBoxSubSection.setObjectName("checkBoxSubSection")
-        self.verticalLayout.addWidget(self.checkBoxSubSection)
-        self.checkBoxSection = QtGui.QCheckBox(self.groupBox)
-        self.checkBoxSection.setObjectName("checkBoxSection")
-        self.verticalLayout.addWidget(self.checkBoxSection)
         self.verticalLayout_2.addLayout(self.verticalLayout)
         self.gridLayoutMainWindow.addWidget(self.groupBox, 0, 8, 4, 1)
         self.gridLayout_2.addLayout(self.gridLayoutMainWindow, 0, 0, 1, 1)
@@ -142,9 +142,12 @@ class Ui_MainWindow(object):
         self.listWidgetSection = QtGui.QListWidget(self.dockWidgetContentsSection)
         self.listWidgetSection.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.listWidgetSection.setInputMethodHints(QtCore.Qt.ImhPreferUppercase)
+        self.listWidgetSection.setDragDropMode(QtGui.QAbstractItemView.NoDragDrop)
         self.listWidgetSection.setAlternatingRowColors(False)
-        self.listWidgetSection.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.listWidgetSection.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.listWidgetSection.setMovement(QtGui.QListView.Free)
+        self.listWidgetSection.setModelColumn(0)
+        self.listWidgetSection.setUniformItemSizes(False)
         self.listWidgetSection.setSelectionRectVisible(True)
         self.listWidgetSection.setObjectName("listWidgetSection")
         QtGui.QListWidgetItem(self.listWidgetSection)
@@ -178,8 +181,9 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.pushButtonSubSectionUpdate, 0, 3, 1, 1)
         self.listWidgetSubSection = QtGui.QListWidget(self.dockWidgetContentsSubSection)
         self.listWidgetSubSection.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.listWidgetSubSection.setDragDropMode(QtGui.QAbstractItemView.NoDragDrop)
         self.listWidgetSubSection.setAlternatingRowColors(False)
-        self.listWidgetSubSection.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.listWidgetSubSection.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.listWidgetSubSection.setMovement(QtGui.QListView.Free)
         self.listWidgetSubSection.setSelectionRectVisible(True)
         self.listWidgetSubSection.setObjectName("listWidgetSubSection")
@@ -214,8 +218,9 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.pushButtonFunctionUpdate, 0, 3, 1, 1)
         self.listWidgetFunction = QtGui.QListWidget(self.dockWidgetContentsFunction)
         self.listWidgetFunction.setMidLineWidth(0)
+        self.listWidgetFunction.setDragDropMode(QtGui.QAbstractItemView.NoDragDrop)
         self.listWidgetFunction.setAlternatingRowColors(False)
-        self.listWidgetFunction.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.listWidgetFunction.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.listWidgetFunction.setMovement(QtGui.QListView.Free)
         self.listWidgetFunction.setSelectionRectVisible(True)
         self.listWidgetFunction.setObjectName("listWidgetFunction")
@@ -280,6 +285,8 @@ class Ui_MainWindow(object):
         self.actionTipsFunction.setObjectName("actionTipsFunction")
         self.actionTipsSentence = QtGui.QAction(MainWindow)
         self.actionTipsSentence.setObjectName("actionTipsSentence")
+        self.actionStripOptions = QtGui.QAction(MainWindow)
+        self.actionStripOptions.setObjectName("actionStripOptions")
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addSeparator()
@@ -315,6 +322,8 @@ class Ui_MainWindow(object):
         self.menuSentence.addAction(self.actionRemoveSentence)
         self.menuSentence.addAction(self.actionUpdateSentence)
         self.menuSentence.addSeparator()
+        self.menuSentence.addAction(self.actionStripOptions)
+        self.menuSentence.addSeparator()
         self.menuSentence.addAction(self.actionTipsSentence)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuSection.menuAction())
@@ -333,12 +342,9 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Type here your sentence and press enter to add. Specific parts of the sentence can be smart ommited by using {{ }}, see an example:</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> </p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Nowadays it is dangerous {{to shit}} in the forest</p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Nowadays it is dangerous {{to shit}} in the forest.</span></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">In a future version we will able to show like this: </p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Nowadays it is dangerous ... in the forest</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Nowadays it is dangerous ... in the forest.</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.labelSentence.setText(QtGui.QApplication.translate("MainWindow", "Sentece", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonSentenceAdd.setText(QtGui.QApplication.translate("MainWindow", "+", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonSentenceUpdate.setText(QtGui.QApplication.translate("MainWindow", "Update", None, QtGui.QApplication.UnicodeUTF8))
@@ -356,11 +362,11 @@ class Ui_MainWindow(object):
         self.tableWidgetSentence.item(2, 0).setText(QtGui.QApplication.translate("MainWindow", "c teste", None, QtGui.QApplication.UnicodeUTF8))
         self.tableWidgetSentence.setSortingEnabled(__sortingEnabled)
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Table View", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBoxSection.setText(QtGui.QApplication.translate("MainWindow", "Section", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBoxSubSection.setText(QtGui.QApplication.translate("MainWindow", "Sub Section", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBoxFunction.setText(QtGui.QApplication.translate("MainWindow", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBoxStrip.setText(QtGui.QApplication.translate("MainWindow", "Strip Sentence", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBoxReference.setText(QtGui.QApplication.translate("MainWindow", "Reference", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBoxFunction.setText(QtGui.QApplication.translate("MainWindow", "Function", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBoxSubSection.setText(QtGui.QApplication.translate("MainWindow", "Sub Section", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBoxSection.setText(QtGui.QApplication.translate("MainWindow", "Section", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.menuSection.setTitle(QtGui.QApplication.translate("MainWindow", "Section", None, QtGui.QApplication.UnicodeUTF8))
@@ -430,4 +436,5 @@ class Ui_MainWindow(object):
         self.actionTipsSubSection.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTipsFunction.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTipsSentence.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionStripOptions.setText(QtGui.QApplication.translate("MainWindow", "Strip Options", None, QtGui.QApplication.UnicodeUTF8))
 

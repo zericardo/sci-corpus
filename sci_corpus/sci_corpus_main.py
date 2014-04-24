@@ -4,7 +4,7 @@
 """
 Graphical interface for sci-corpus program.
 Author: Daniel Pizetta <daniel.pizetta@usp.br>
-        Tiago de Campos <tiago.campo@usp.br>
+        Tiago de Campos <tiago.campos@usp.br>
         José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
 Date: 04/04/2014
 
@@ -13,12 +13,13 @@ This script provides a graphical interface for sci-corpus program standalone.
 
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
 from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
-import container
+
+import container as container
 import re
+
 from ui import main_window_ui
 
 __version__='0.1.B'
-
 
 
 class MainWindow(QMainWindow):
@@ -106,8 +107,6 @@ class MainWindow(QMainWindow):
         self.ui.checkBoxFunction.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(2, not self.ui.checkBoxFunction.isChecked()))
         self.ui.checkBoxReference.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(4, not self.ui.checkBoxReference.isChecked()))
         
-        self.ui.tableWidgetSentence.setColumnWidth(4,50)
-        
         self.updateSectionView()
         self.updateSubSectionView()
         self.updateFunctionView()
@@ -119,7 +118,7 @@ class MainWindow(QMainWindow):
         self.ui.tableWidgetSentence.setColumnHidden(2, not self.ui.checkBoxFunction.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(4, not self.ui.checkBoxReference.isChecked())
         
-    def selectedTitles(self,  selected_items):
+    def selectedTitles(self, selected_items):
         """
         Return a list of selected titles.
         """
@@ -371,27 +370,21 @@ in an article.'),
                 sent = aux.replace(begin,"").replace(end,"")
         else:
             raise AssertionError("Delimiter number doesnt match! =(")
-
+            
         return sent
 
-    def adjustSentence(sentence="", begin="", end="", hideMarked=True):
-        """
-        Adjusts sentences to be displayed on the screen.
-        """
-        sentence.split(begin).split(end)
-        for i in sentence:
-            print i
 
     def addSentence(self):
         """
         Adds a new sentence.
         """
+        # Getting information
         section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         sub_section = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         function = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
         sentence = str(self.ui.textEditSentence.toPlainText())
         reference = str(self.ui.lineEditReference.text())
-        
+        # Insertting in DB
         if section != '':
             self.container.addDB(sect=section, subsect=sub_section, funct=function, phrase=[sentence], ref=[reference])
             self.writeStatusBar('A new sentence has already added.')
@@ -402,7 +395,6 @@ in an article.'),
         Removes a sentence.
         """
         sentence = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
-        #sentence = list(self.selectedTitles(self.ui.listWidgetSentence.selectedItems()))
         if sentence != []:
             if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
                 self.container.remove(phrase=sentence)
@@ -417,29 +409,27 @@ in an article.'),
         """
         Updates a sentence view.
         """
-        self.ui.tableWidgetSentence.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        self.ui.tableWidgetSentence.setDragEnabled(False)
         sentencesFinal = []
+        
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())       
-
         sentences = self.container.listSentences(section=list(sections),subsection=list(sub_sections),function=list(functions))
         self.ui.tableWidgetSentence.clear()
         
         for i in range(len(sentences[0])):
             if sentences[0][i][0] != u'NULL':
                sentencesFinal.append(sentences[0][i])
-        
-        self.ui.tableWidgetSentence.setColumnCount(5)
+               
         self.ui.tableWidgetSentence.setRowCount(len(sentencesFinal))
-        
+        self.ui.tableWidgetSentence.setColumnWidth(4,50)
+        self.ui.tableWidgetSentence.setColumnCount(5)
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem(str('Section')))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem(str('Sub Section')))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(2,QTableWidgetItem(str('Function')))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(3,QTableWidgetItem(str('Sentence')))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(4,QTableWidgetItem(str('Reference')))
-                      
+
         for row, sentence in enumerate(sentencesFinal):
             if sentence[0] != 'NULL' and sentence[1] != 'NULL':
                item_sentence = QTableWidgetItem(str(sentence[0]))
@@ -475,7 +465,7 @@ in an article.'),
                                            self.tr(self.container.path))[0]
 
         if path != '':
-            # precisa salvar se tiver algo aberto antes
+            self.closeFile()
             self.container.read_(path)
             self.updateSectionView()
 
@@ -569,6 +559,9 @@ in an article.'),
 \n\nVersion:{}'.format(__version__)))
 
     def quit(self):
+        """
+        Quit application.
+        """
         self.closeEvent()
         
     def closeEvent(self, event):
@@ -585,7 +578,6 @@ in an article.'),
             # Isto esta errado...fazer um metodo para fechar...
             self.container.__db.close()
             self.closeFile()
-            self.close()
             event.accept()
         else:
             event.ignore()
@@ -599,9 +591,9 @@ in an article.'),
         status_bar.showMessage(str(msg), 5000)
 
     def tips(self):
-        '''
+        """
         Show tips about aplication
-        '''
+        """
         self.notImplementedYet()
         
     def notImplementedYet(self):

@@ -10,6 +10,11 @@
     <height>938</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <stylestrategy>PreferAntialias</stylestrategy>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Sci Corpus </string>
   </property>
@@ -37,12 +42,9 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Type here your sentence and press enter to add. Specific parts of the sentence can be smart ommited by using {{ }}, see an example:&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt; &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Nowadays it is dangerous {{to shit}} in the forest&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nowadays it is dangerous {{to shit}} in the forest.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;In a future version we will able to show like this: &lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Nowadays it is dangerous ... in the forest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nowadays it is dangerous ... in the forest.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -183,23 +185,9 @@ p, li { white-space: pre-wrap; }
          <item>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QCheckBox" name="checkBoxStrip">
+            <widget class="QCheckBox" name="checkBoxSection">
              <property name="text">
-              <string>Strip Sentence</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxReference">
-             <property name="text">
-              <string>Reference</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxFunction">
-             <property name="text">
-              <string>Function</string>
+              <string>Section</string>
              </property>
             </widget>
            </item>
@@ -211,9 +199,23 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkBoxSection">
+            <widget class="QCheckBox" name="checkBoxFunction">
              <property name="text">
-              <string>Section</string>
+              <string>Function</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxStrip">
+             <property name="text">
+              <string>Strip Sentence</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBoxReference">
+             <property name="text">
+              <string>Reference</string>
              </property>
             </widget>
            </item>
@@ -300,6 +302,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionRemoveSentence"/>
     <addaction name="actionUpdateSentence"/>
     <addaction name="separator"/>
+    <addaction name="actionStripOptions"/>
+    <addaction name="separator"/>
     <addaction name="actionTipsSentence"/>
    </widget>
    <addaction name="menuFile"/>
@@ -370,14 +374,23 @@ p, li { white-space: pre-wrap; }
        <property name="inputMethodHints">
         <set>Qt::ImhPreferUppercase</set>
        </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragOnly</enum>
+       </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
        </property>
        <property name="selectionMode">
-        <enum>QAbstractItemView::SingleSelection</enum>
+        <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
        <property name="movement">
         <enum>QListView::Free</enum>
+       </property>
+       <property name="modelColumn">
+        <number>0</number>
+       </property>
+       <property name="uniformItemSizes">
+        <bool>false</bool>
        </property>
        <property name="selectionRectVisible">
         <bool>true</bool>
@@ -470,11 +483,14 @@ p, li { white-space: pre-wrap; }
          <height>16777215</height>
         </size>
        </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragOnly</enum>
+       </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
        </property>
        <property name="selectionMode">
-        <enum>QAbstractItemView::SingleSelection</enum>
+        <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
        <property name="movement">
         <enum>QListView::Free</enum>
@@ -567,11 +583,14 @@ p, li { white-space: pre-wrap; }
        <property name="midLineWidth">
         <number>0</number>
        </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragOnly</enum>
+       </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
        </property>
        <property name="selectionMode">
-        <enum>QAbstractItemView::SingleSelection</enum>
+        <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
        <property name="movement">
         <enum>QListView::Free</enum>
@@ -732,6 +751,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionTipsSentence">
    <property name="text">
     <string>Tips</string>
+   </property>
+  </action>
+  <action name="actionStripOptions">
+   <property name="text">
+    <string>Strip Options</string>
    </property>
   </action>
  </widget>
