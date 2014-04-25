@@ -107,10 +107,7 @@ class MainWindow(QMainWindow):
         self.ui.checkBoxFunction.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(2, not self.ui.checkBoxFunction.isChecked()))
         self.ui.checkBoxReference.clicked.connect(lambda: self.ui.tableWidgetSentence.setColumnHidden(4, not self.ui.checkBoxReference.isChecked()))
         
-        self.updateSectionView()
-        self.updateSubSectionView()
-        self.updateFunctionView()
-        self.updateSentenceView()
+        self.clearAll()
         
         # When initialize
         self.ui.tableWidgetSentence.setColumnHidden(0, not self.ui.checkBoxSection.isChecked())
@@ -120,8 +117,9 @@ class MainWindow(QMainWindow):
         
     def selectedTitles(self, selected_items):
         """
-                    Return a list of selected titles.
-                    """
+        Return a list of selected titles.
+        """
+        
         titles = []
         for item in  selected_items:
             titles.append(str(item.text()))
@@ -156,8 +154,9 @@ class MainWindow(QMainWindow):
                 
     def updateSection(self):
         """
-                    Updates old section with new section.
-                    """
+        Updates old section with new section.
+        """
+        
         old_section = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         new_section = str(self.ui.lineEditSection.text())
         
@@ -169,8 +168,9 @@ class MainWindow(QMainWindow):
         
     def updateSectionView(self):
         """
-                    Updates section view.
-                    """
+        Updates section view.
+        """
+        
         self.ui.listWidgetSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetSection.setDragEnabled(False)
         sections = self.container.listCategories()
@@ -219,8 +219,8 @@ In summary, they are the titles of each section.'),
                 
     def updateSubSection(self):
         """
-                    Updates one subsection
-                    """
+        Updates one subsection
+        """
         old_subsection = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         new_subsection = str(self.ui.lineEditSubSection.text())
         
@@ -232,8 +232,8 @@ In summary, they are the titles of each section.'),
 
     def updateSubSectionView(self):
         """
-                    Updates subsection view
-                    """
+        Updates subsection view
+        """
         self.ui.listWidgetSubSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetSubSection.setDragEnabled(False)
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
@@ -304,8 +304,8 @@ in an article.'),
 
     def updateFunctionView(self):
         """
-                    Updates a function view.
-                    """
+        Updates a function view.
+        """
         self.ui.listWidgetFunction.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetFunction.setDragEnabled(False)
         sections = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
@@ -454,21 +454,21 @@ in an article.'),
        
     def openFile(self):
         """"
-                    Opens a new file.
-                    """
+        Opens a new file.
+        """
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Open File'),
                                            self.tr(self.container.path))[0]
 
         if path != '':
-            self.closeFile()
             self.container.read_(path)
             self.updateSectionView()
 
     def saveFile(self):
         """"
-                    Saves the file that is being used.
-                    """
+        Saves the file that is being used.
+        """
+        
         if self.container.path == '':
             self.saveFileAs()
         else:
@@ -476,8 +476,8 @@ in an article.'),
 
     def saveFileAs(self):
         """"
-                    Saves a new file
-                    """
+        Saves a new file
+        """
         path = QFileDialog.getSaveFileName(self,
                                  self.tr('Save As'),
                                  self.tr(self.container.path))[0]
@@ -486,14 +486,14 @@ in an article.'),
         
     def printFile(self):
         """"
-                    Generates a PDF file with all sentences included in database.
-                    """
+        Generates a PDF file with all sentences included in database.
+        """
         self.notImplementedYet()
 
     def closeFile(self):
         """
-                    Closes current file.
-                    """
+        Closes current file.
+        """
         if self.container.isModified:
             answer = QMessageBox.question(self,
                                           self.tr('Save'),
@@ -503,13 +503,11 @@ in an article.'),
             
             if answer == QMessageBox.Yes:
                 self.container.write_()
-                self.container.clear_()
-            elif answer == QMessageBox.No:
-                self.container.clear_()
-        else:
-            self.container.clear_()
-            
-            
+
+        self.container.close_()
+        self.clearAll()    
+        
+        
     def exportFile(self):
         '''
         Export file with extension.
@@ -553,6 +551,14 @@ in an article.'),
 \n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
 \n\nVersion:{}'.format(__version__)))
 
+    def clearAll(self):
+        '''
+        '''
+        self.ui.listWidgetSection.clear()
+        self.ui.listWidgetSubSection.clear()
+        self.ui.listWidgetFunction.clear()
+        self.ui.tableWidgetSentence.clear()
+
     def quit(self):
         """
         Quit application.
@@ -569,10 +575,7 @@ in an article.'),
                                       QMessageBox.Yes | QMessageBox.No, 
                                       QMessageBox.No)
         if answer == QMessageBox.Yes:
-            
-            # Isto esta errado...fazer um metodo para fechar...
-            self.container.__db.close()
-            self.closeFile()
+            self.container.write_()
             event.accept()
         else:
             event.ignore()

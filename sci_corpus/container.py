@@ -9,23 +9,8 @@ class ContainerDB():
     Class container.
     """
     def __init__(self):
-        self.__path = '../test'
-        self.__isModified = False
-        self.__dict = {"Not Classified":{"Not Classified":{"Not Classified":[("Sentence","Reference"),("Oi tuto pbom", "Monique")]}}}
-        self.__db = sqlite3.connect('CORPUS.db')
-        
-        cur = self.__db.cursor()
-        
-        #Need to add an option to create a table!
-        
-        #cur.execute('''DROP TABLE corpus''')
-        cur.execute('''CREATE TABLE IF NOT EXISTS
-                     corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-                     func TEXT, phrase TEXT, ref TEXT)''')
-        cur.execute('''INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)''',('Not Classified','Not Classified','Not Classified','This is an exemple.','journal_volume_page'))
-        self.__db.commit()
-        print('Connected to the database!\n')
-        
+        self.__path = '../exemples/CORPUS.db'
+        self.__isModified = False    
     
     def addDB(self,sect=['Not Classified'],subsect=['Not Classified'],funct=['Not Classified'],phrase=['NULL'],ref=['NULL']):
         
@@ -35,7 +20,6 @@ class ContainerDB():
 
         cursor.executemany('''INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)''',whatadd)
                 
-        self.__db.commit()
         self.isModified  = True
     
     
@@ -43,17 +27,17 @@ class ContainerDB():
         
         cursor = self.__db.cursor()
         
-        sections = []
-        subsections = []
+        secsubsecfunc = []
+        subsecfunc = []
         functions = []
         
         if section == [] and subsection == [] and function == []:
-           cursor.execute('''SELECT DISTINCT sec FROM corpus''')
-           sections = cursor.fetchall()
+           cursor.execute('''SELECT DISTINCT sec, subsec, func FROM corpus''')
+           secsubsecfunc = cursor.fetchall()
                 
         if section != [] and subsection == [] and function == []:
-           cursor.execute('SELECT DISTINCT subsec FROM corpus WHERE sec in ({0})'.format(','.join('?' for _ in section)), section)
-           subsections = cursor.fetchall()
+           cursor.execute('SELECT DISTINCT subsec, func FROM corpus WHERE sec in ({0})'.format(','.join('?' for _ in section)), section)
+           subsecfunc = cursor.fetchall()
               
         if section != [] and subsection != [] and function == []:
            secsubsecTuple = [(a,b) for a in section for b in subsection]
@@ -61,25 +45,32 @@ class ContainerDB():
               cursor.execute('''SELECT DISTINCT func FROM corpus WHERE sec=? AND subsec=?''',secsubsecTuple[i])
               functions.append(cursor.fetchall())
         
-        sectionsFinal = []
-        subsectionsFinal = []
-        functionsFinal = []
+        #sectionsFinal = []
+        #subsectionsFinal = []
+        #functionsFinal = []
         
-        for i in sections:
-           sectionsFinal.append(i[0])
+        #for i in sections:
+        #   sectionsFinal.append(i[0])
         
-        for i in subsections:
-           subsectionsFinal.append(i[0])
+        #for i in subsections:
+        #   subsectionsFinal.append(i[0])
            
-        for j in functions:
-           for i in range(len(j)):
-              functionsFinal.append(j[i][0])
+        #for j in functions:
+        #   for i in range(len(j)):
+        #      functionsFinal.append(j[i][0])
+ 
+        #sectionsFinal = list(set(sectionsFinal))
+        #subsectionsFinal = list(set(subsectionsFinal))
+        #functionsFinal = list(set(functionsFinal))
 
-        sectionsFinal = list(set(sectionsFinal))
-        subsectionsFinal = list(set(subsectionsFinal))
-        functionsFinal = list(set(functionsFinal))
-
-        return [sectionsFinal,subsectionsFinal,functionsFinal]
+        #return [sectionsFinal,subsectionsFinal,functionsFinal]
+        
+        final = []
+        final.append(secsubsecfunc)
+        final.append(subsecfunc)
+        final.append(functions)
+        
+        return final
 
 
     def listSentences(self,section=[],subsection=[],function=[]):
@@ -89,26 +80,40 @@ class ContainerDB():
         phrases = []
 
         if section == [] and subsection == [] and function == []:
-           cursor.execute('''SELECT DISTINCT phrase, ref FROM corpus''')
+           cursor.execute('''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus''')
            phrases.append(cursor.fetchall())
         
         if section != [] and subsection == [] and function == []:
-           cursor.execute('SELECT DISTINCT phrase, ref FROM corpus WHERE sec in ({0})'.format(','.join('?' for _ in section)), section)
+           cursor.execute('SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec in ({0})'.format(','.join('?' for _ in section)), section)
            phrases.append(cursor.fetchall())
         
         if section != [] and subsection != [] and function == []:
            secsubsecTuple = [(a,b) for a in section for b in subsection]
            for i in range(len(secsubsecTuple)):
-              cursor.execute('''SELECT DISTINCT phrase, ref FROM corpus WHERE sec=? AND subsec=?''',secsubsecTuple[i])
+              cursor.execute('''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec=? AND subsec=?''',secsubsecTuple[i])
               phrases.append(cursor.fetchall())
         
         if section != [] and subsection != [] and function != []:
            secsubsecfuncTuple = [(a,b,c) for a in section for b in subsection for c in function]
            for i in range(len(secsubsecfuncTuple)):
-              cursor.execute('''SELECT DISTINCT phrase, ref FROM corpus WHERE sec=? AND subsec=? AND func=?''',secsubsecfuncTuple[i])
+              cursor.execute('''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec=? AND subsec=? AND func=?''',secsubsecfuncTuple[i])
               phrases.append(cursor.fetchall())
                 
         return phrases
+        
+    def listAll(self):
+        '''
+        return a list o tuples with all info
+        '''    
+        cursor = self.__db.cursor()
+        
+        allInfo = []
+
+        cursor.execute('SELECT DISCTINC sec, subsec, func, phrase, ref from corpus')
+        allInfo.append(cursor.fetchall())
+
+        return allInfo
+        
         
     def update(self, section=[('NULL','NULL')],subsection=[('NULL','NULL')],function=[('NULL','NULL')],phrase=[('NULL','NULL')],ref=[('NULL','NULL')]):
         
@@ -134,7 +139,6 @@ class ContainerDB():
            cursor.execute('''UPDATE corpus 
                           SET ref=? WHERE ref=?''',ref[0]) 
         
-        self.__db.commit()
         self.isModified  = True  
         
     def remove(self,sect=[],subsect=[],funct=[],phrase=[]):
@@ -142,31 +146,29 @@ class ContainerDB():
         cursor = self.__db.cursor()
         
         if sect != [] and subsect == [] and funct == [] and phrase == []:
-           whatrm = [(a,) for a in sect]
+           #whatrm = [(a,) for a in sect]
            whatup = [('Not Classified',a) for a in sect]
-           cursor.executemany('DELETE FROM corpus WHERE sec=?',whatrm)
+           #cursor.executemany('DELETE FROM corpus WHERE sec=?',whatrm)
            self.update(section=whatup)
         
         if sect == [] and subsect != [] and funct == [] and phrase == []:
-           whatrm = [(a,) for a in subsect]
+           #whatrm = [(a,) for a in subsect]
            whatup = [('Not Classified',a) for a in subsect]
-           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
+           #cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
            self.update(subsection=whatup)
            
         if sect == [] and subsect == [] and funct != [] and phrase == []:
-           whatrm = [(a,) for a in funct]
+           #whatrm = [(a,) for a in funct]
            whatup = [('Not Classified',a) for a in funct]
-           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
+           #cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
            self.update(function=whatup)
            
         if sect == [] and subsect == [] and funct == [] and phrase != []:
-           whatrm = [(a,) for a in phrase]
+           #whatrm = [(a,) for a in phrase]
            whatup = [('NULL',a) for a in phrase]
-           cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
+           #cursor.executemany('DELETE FROM corpus WHERE subsec=?',whatrm)
            self.update(phrase=whatup)
 
-
-        self.__db.commit()
         self.isModified  = True
 
 
@@ -181,7 +183,7 @@ class ContainerDB():
         
         cursor.executemany('INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)',info)
         
-        self.__db.commit()
+        self.isModified  = True
       
     
     @property
@@ -195,6 +197,10 @@ class ContainerDB():
     def path(self, path):
         self.__path = os.path.abspath(path)
         
+    @property
+    def db(self):
+        self.__db
+
     @property
     def isModified(self):
         """
@@ -210,39 +216,65 @@ class ContainerDB():
         """
         Writes file in path or in self.path if not passed.
         """
+        
         if path == '':
             path = self.path
         else:
             self.path = path
-        self.export_(path)
-        self.isModified = False
+        
+        try:
+           self.__db.commit()
+        except Exception:
+           raise
+        else:
+           self.isModified = False
         
     def read_(self,  path):
         """
         Reads file.
         """
-        self.import_(path[0])
-        self.path = path
-        self.isModified = False
         
-    def clear_(self):
+        try:
+            self.__db = sqlite3.connect(path)
+            cur = self.__db.cursor()
+            cur.execute('''CREATE TABLE IF NOT EXISTS
+                        corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                        func TEXT, phrase TEXT, ref TEXT)''')
+            self.__db.commit()
+        except Exception:
+            raise
+        else:
+            self.path = path
+            self.isModified = False
+        
+      
+    def close_(self):
         """
         Clear all fields.
         """
-        self.__path = ''
-        self.__isModified = False
-        self.__dict = {'Not Classified':{'Not Classified':{'Not Classified':('Sentence','Reference')}}}
+        
+        try:
+           self.__db.close()
+        except Exception:
+           raise
+        else:
+           self.__path = ''
+           self.__isModified = False        
         
     def import_(self,  path=''):
         """
         Import file as XML, JSON, DB.
         """
-        extension = path.split('.')[1]
         
-        if extension == 'xml' or 'XML':
-           self.bulk_add(path)
-        
-        self.isModified = True
+        try:
+           extension = path.split('.')[1]
+           if extension == 'xml' or 'XML':
+              self.bulk_add(path)
+              
+        except Exception:
+           raise
+        else:
+           self.isModified = True
         
     def export_(self,  path=''):
         """
@@ -384,9 +416,21 @@ class Container():
         """
         Reads file.
         """
-        self.import_(path)
-        self.path = path
-        self.isModified = False
+        
+        try:
+            self.__db = sqlite3.connect(path)
+            cur = self.__db.cursor()
+            cur.execute('''CREATE TABLE IF NOT EXISTS
+                        corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                        func TEXT, phrase TEXT, ref TEXT)''')
+            self.__db.commit()
+        except Exception:
+            raise
+        else:
+            self.path = path
+            self.isModified = False
+        
+        
         
     def clear_(self):
         """
@@ -394,17 +438,20 @@ class Container():
         """
         self.__path = ''
         self.__isModified = False
-        self.__dict = {'Not Classified':{'Not Classified':{'Not Classified':('Sentence','Reference')}}}
+        #self.__dict = {'Not Classified':{'Not Classified':{'Not Classified':('Sentence','Reference')}}}
+        self.__db.commit()
+        self.__db.close()
         
     def import_(self,  path=''):
         """
         Import file as XML, JSON, DB.
         """
-        print path
-        with codecs.open(path, 'rb', 'utf-8') as fp:
-            text = fp.read()
-            self.__dict = json.loads(str(text))
-        self.isModified = False
+        extension = path.split('.')[1]
+        
+        if extension == 'xml' or 'XML':
+           self.bulk_add(path)
+        
+        self.isModified = True
         
     def export_(self,  path=''):
         """
