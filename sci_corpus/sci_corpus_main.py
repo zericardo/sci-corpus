@@ -13,7 +13,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
-from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
+from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView,  QFont
 
 import container as container
 import re
@@ -114,6 +114,7 @@ class MainWindow(QMainWindow):
         self.ui.tableWidgetSentence.setColumnHidden(1, not self.ui.checkBoxSubSection.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(2, not self.ui.checkBoxFunction.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(4, not self.ui.checkBoxReference.isChecked())
+        self.ui.tableWidgetSentence.itemChanged.connect(self.updateSentenceFromTable)
         
     def selectedTitles(self, selected_items):
         """
@@ -140,7 +141,6 @@ class MainWindow(QMainWindow):
             self.writeStatusBar('A new section "{}" has already added.'.format(section))
         self.ui.listWidgetSection.clear()
         self.updateSectionView()
-        self.updateSentenceView()
 
     def removeSection(self):
         """
@@ -161,9 +161,8 @@ class MainWindow(QMainWindow):
         new_section = str(self.ui.lineEditSection.text())
         
         if old_section != [] and new_section != '':
-           if self.updateQuestion("section",(new_section,old_section)):
+            if self.updateQuestion("section",(new_section,old_section)) == QMessageBox.Yes:
               self.container.update(section=[(new_section,old_section[0])])
-        
         self.updateSectionView()
         
     def updateSectionView(self):
@@ -173,10 +172,14 @@ class MainWindow(QMainWindow):
         
         self.ui.listWidgetSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetSection.setDragEnabled(False)
-        sections = self.container.listCategories()
-        sections = sections[0]
-        self.ui.listWidgetSection.clear()
+        sections = self.container.listCategories()[0]
         sections = sorted(sections)
+        self.ui.listWidgetSection.clear()
+        
+        if "Not Classified" in sections:
+            sections.remove("Not Classified")
+            sections.append("Not Classified")
+            
         for row, value in enumerate(sections):
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSection.addItem(item)
@@ -225,7 +228,7 @@ In summary, they are the titles of each section.'),
         new_subsection = str(self.ui.lineEditSubSection.text())
         
         if old_subsection != [] and new_subsection != '':
-           if self.updateQuestion("subsection",(new_subsection,old_subsection)):
+           if self.updateQuestion("subsection",(new_subsection,old_subsection)) == QMessageBox.Yes:
               self.container.update(subsection=[(new_subsection,old_subsection[0])])
         
         self.updateSubSectionView()
@@ -238,11 +241,15 @@ In summary, they are the titles of each section.'),
         self.ui.listWidgetSubSection.setDragEnabled(False)
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sections = list(sections)
-        subsections = self.container.listCategories(section=sections)
-        subsections = subsections[1]
+        subsections = self.container.listCategories(section=sections)[1]
         self.ui.listWidgetSubSection.clear()
         subsections = sorted(subsections)
+        self.ui.listWidgetSubSection.clear()
         
+        if "Not Classified" in subsections:
+            subsections.remove("Not Classified")
+            subsections.append("Not Classified")
+       
         for row, value in enumerate(subsections):
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSubSection.addItem(item)
@@ -296,7 +303,7 @@ in an article.'),
         new_function = str(self.ui.lineEditFunction.text())
         
         if old_function != [] and new_function != '':
-           if self.updateQuestion("function",(new_function,old_function)):
+           if self.updateQuestion("function",(new_function,old_function)) == QMessageBox.Yes:
               self.container.update(function=[(new_function,old_function[0])])
         
         self.updateFunctionView()
@@ -311,10 +318,14 @@ in an article.'),
         sections = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         sub_sections = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         functions = self.container.listCategories(section=sections,subsection=sub_sections)[2]
+
+        functions = sorted(functions)
         self.ui.listWidgetFunction.clear()
         
-        functions = sorted(functions)
-        
+        if "Not Classified" in functions:
+            functions.remove("Not Classified")
+            functions.append("Not Classified")
+            
         for row, value in enumerate(functions):
             item = QListWidgetItem(str(value))
             self.ui.listWidgetFunction.addItem(item)
@@ -380,6 +391,10 @@ in an article.'),
         function = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
         sentence = str(self.ui.textEditSentence.toPlainText())
         reference = str(self.ui.lineEditReference.text())
+        
+        self.ui.textEditSentence.clear()
+        self.ui.lineEditReference.clear()
+        
         # Insertting in DB
         if section != '':
             self.container.addDB(sect=section, subsect=sub_section, funct=function, phrase=[sentence], ref=[reference])
@@ -396,10 +411,22 @@ in an article.'),
                 self.container.remove(phrase=sentence)
         self.updateSentenceView()
 
-    def updateSentence(self):
+    def updateSentence(self,  old_sentence,  new_sentence=''):
         """
-        Updates a sentence.
-        """
+                    Updates a sentence.
+                    """
+        new_function = str(self.ui.lineEditFunction.text())
+        
+        if old_function != [] and new_function != '':
+           if self.updateQuestion("function",(new_function,old_function)) == QMessageBox.Yes:
+              self.container.update(function=[(new_function,old_function[0])])
+        
+        self.updateFunctionView()
+        
+    def updateSentenceFromTable(self,  new):
+        print new.text()#,  old.text()
+        
+        
 
     def updateSentenceView(self):
         """
@@ -463,7 +490,8 @@ in an article.'),
         if path != '':
             self.container.read_(path)
             self.updateSectionView()
-
+            self.path = path
+            self.isModified = False
     def saveFile(self):
         """"
         Saves the file that is being used.
@@ -563,7 +591,7 @@ in an article.'),
         """
         Quit application.
         """
-        self.closeEvent()
+        self.closeEvent(QCloseEvent())
         
     def closeEvent(self, event):
         """
@@ -635,7 +663,7 @@ in an article.'),
         
         return QMessageBox.question(self,
                                     self.tr('Update'),
-                                    self.tr('Do you want to update item {} to {} in {}?'.format(oldWho,newWho,category)),
+                                    self.tr('Do you want to update item "{}" to "{}" in {}?'.format(oldWho[0],newWho,category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
 
