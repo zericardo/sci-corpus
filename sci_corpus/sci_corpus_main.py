@@ -162,7 +162,7 @@ class MainWindow(QMainWindow):
         new_section = str(self.ui.lineEditSection.text())
         
         if old_section != [] and new_section != '':
-           if self.updateQuestion("section",(new_section,old_section)):
+            if self.updateQuestion("section",(new_section,old_section)) == QMessageBox.Yes:
               self.container.update(section=[(new_section,old_section[0])])
         
         self.updateSectionView()
@@ -225,7 +225,7 @@ In summary, they are the titles of each section.'),
         new_subsection = str(self.ui.lineEditSubSection.text())
         
         if old_subsection != [] and new_subsection != '':
-           if self.updateQuestion("subsection",(new_subsection,old_subsection)):
+           if self.updateQuestion("subsection",(new_subsection,old_subsection)) == QMessageBox.Yes:
               self.container.update(subsection=[(new_subsection,old_subsection[0])])
         
         self.updateSubSectionView()
@@ -296,7 +296,7 @@ in an article.'),
         new_function = str(self.ui.lineEditFunction.text())
         
         if old_function != [] and new_function != '':
-           if self.updateQuestion("function",(new_function,old_function)):
+           if self.updateQuestion("function",(new_function,old_function)) == QMessageBox.Yes:
               self.container.update(function=[(new_function,old_function[0])])
         
         self.updateFunctionView()
@@ -632,7 +632,7 @@ in an article.'),
         
         return QMessageBox.question(self,
                                     self.tr('Update'),
-                                    self.tr('Do you want to update item {} to {} in {}?'.format(oldWho,newWho,category)),
+                                    self.tr('Do you want to update item "{}" to "{}" in {}?'.format(oldWho[0],newWho,category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
 
