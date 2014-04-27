@@ -39,13 +39,13 @@ class ContainerDB():
            secsubsecfunc = cursor.fetchall()
                 
         if section != [] and subsection == [] and function == []:
-           cursor.execute('SELECT DISTINCT subsec, func FROM corpus WHERE sec in ({0})'.format(','.join('?' for _ in section)), section)
+           cursor.execute('SELECT DISTINCT sec, subsec, func FROM corpus WHERE sec in ({0})'.format(','.join('?' for _ in section)), section)
            subsecfunc = cursor.fetchall()
               
         if section != [] and subsection != [] and function == []:
            secsubsecTuple = [(a,b) for a in section for b in subsection]
            for i in range(len(secsubsecTuple)):
-              cursor.execute('''SELECT DISTINCT func FROM corpus WHERE sec=? AND subsec=?''',secsubsecTuple[i])
+              cursor.execute('''SELECT DISTINCT sec, subsec, func FROM corpus WHERE sec=? AND subsec=?''',secsubsecTuple[i])
               functions.append(cursor.fetchall())
         
         #sectionsFinal = []
