@@ -9,7 +9,10 @@ class ContainerDB():
     Class container.
     """
     def __init__(self):
-        self.__path = '../exemples/CORPUS.db'
+        # @TODO: At this moment this path is ok, but it must be ''
+        # Because if you just start the program and save, it will save 
+        # a null DB on this path.
+        self.__path = '../examples/CORPUS.db'
         self.__isModified = False    
     
     def addDB(self,sect=['Not Classified'],subsect=['Not Classified'],funct=['Not Classified'],phrase=['NULL'],ref=['NULL']):
@@ -66,10 +69,12 @@ class ContainerDB():
         #return [sectionsFinal,subsectionsFinal,functionsFinal]
         
         final = []
-        final.append(secsubsecfunc)
-        final.append(subsecfunc)
-        final.append(functions)
+        final.extend(secsubsecfunc)
+        final.extend(subsecfunc)
+        final.extend(functions)
         
+        #@TODO: The number of tuple must BE the SAME!
+
         return final
 
 
@@ -81,23 +86,23 @@ class ContainerDB():
 
         if section == [] and subsection == [] and function == []:
            cursor.execute('''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus''')
-           phrases.append(cursor.fetchall())
+           phrases.extend(cursor.fetchall())
         
         if section != [] and subsection == [] and function == []:
            cursor.execute('SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec in ({0})'.format(','.join('?' for _ in section)), section)
-           phrases.append(cursor.fetchall())
+           phrases.extend(cursor.fetchall())
         
         if section != [] and subsection != [] and function == []:
            secsubsecTuple = [(a,b) for a in section for b in subsection]
            for i in range(len(secsubsecTuple)):
               cursor.execute('''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec=? AND subsec=?''',secsubsecTuple[i])
-              phrases.append(cursor.fetchall())
+              phrases.extend(cursor.fetchall())
         
         if section != [] and subsection != [] and function != []:
            secsubsecfuncTuple = [(a,b,c) for a in section for b in subsection for c in function]
            for i in range(len(secsubsecfuncTuple)):
               cursor.execute('''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec=? AND subsec=? AND func=?''',secsubsecfuncTuple[i])
-              phrases.append(cursor.fetchall())
+              phrases.extend(cursor.fetchall())
                 
         return phrases
         
@@ -429,8 +434,6 @@ class Container():
         else:
             self.path = path
             self.isModified = False
-        
-        
         
     def clear_(self):
         """
