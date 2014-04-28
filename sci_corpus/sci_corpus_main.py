@@ -14,6 +14,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
 from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView,  QFont
+from PySide.QtGui import QCloseEvent
 
 import container as container
 import re
@@ -42,7 +43,7 @@ class MainWindow(QMainWindow):
         
         # Application
         
-        self.ui.actionQuit.triggered.connect(self.quit)
+        self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.actionTips.triggered.connect(self.tips)
         
@@ -138,7 +139,8 @@ class MainWindow(QMainWindow):
         self.ui.tableWidgetSentence.setColumnHidden(4, \
             not self.ui.checkBoxReference.isChecked())
                  
-        self.ui.checkBoxStrip.setChecked(True)
+        self.ui.checkBoxStrip.setChecked(False)
+        self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
         
     def selectedTitles(self, selected_items):
         """
@@ -297,9 +299,7 @@ scientific text. In summary, they are the titles of each section.'),
         """
         sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         subs = set()
-        
-        # @TODO: In the future, not use for
-        # @TODO: THIAGO, THE NUMER OF ELEMENTS IN TUPLE MUST BE THE SAME FOR ALL
+
         for secv, subsv, funcv in self.container.listCategories(section=sec):
             subs.add(subsv)
             
@@ -391,7 +391,6 @@ in an article.'),
         subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         func = set()
         
-        # @TODO: In the future, not use for
         for secv, subsv, funcv in self.container.listCategories(section=sec,subsection=subs):
             func.add(funcv)
 
@@ -523,10 +522,8 @@ in an article.'),
         self.ui.tableWidgetSentence.clear()
 
         for secv, subsv, funcv, sentv, refv in sentences:
-            print sentv
             if sentv != u'NULL':
                 if(self.ui.checkBoxStrip.isChecked()):
-                    print sentv
                     sentencesFinal.append((self.adjustSentence(sentv, "[", "]", False, "..."),refv))
                 else:
                     sentencesFinal.append((sentv,refv))
@@ -686,11 +683,6 @@ in an article.'),
         # Clear table view
         self.ui.tableWidgetSentence.clear()
 
-    def quit(self):
-        """
-        Quit application.
-        """
-        self.closeEvent(QCloseEvent())
         
     def closeEvent(self, event):
         """

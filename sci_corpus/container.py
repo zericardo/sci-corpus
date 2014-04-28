@@ -46,7 +46,7 @@ class ContainerDB():
            secsubsecTuple = [(a,b) for a in section for b in subsection]
            for i in range(len(secsubsecTuple)):
               cursor.execute('''SELECT DISTINCT sec, subsec, func FROM corpus WHERE sec=? AND subsec=?''',secsubsecTuple[i])
-              functions.append(cursor.fetchall())
+              functions.extend(cursor.fetchall())
         
         #sectionsFinal = []
         #subsectionsFinal = []
@@ -74,7 +74,7 @@ class ContainerDB():
         final.extend(functions)
         
         #@TODO: The number of tuple must BE the SAME!
-
+        print final
         return final
 
 
