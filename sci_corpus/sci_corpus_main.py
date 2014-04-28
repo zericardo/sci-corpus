@@ -241,8 +241,12 @@ class MainWindow(QMainWindow):
         # @TODO: In the future, not use for
         for secv, subsv, funcv in self.container.listCategories():
             sec.add(secv)
-        sec = sorted(sec)
+        
         self.ui.listWidgetSection.clear()
+        
+        sec = sorted(sec)
+        
+        self.ui.labelShownSection.setText(str(len(sec)))
         
         if "Not Classified" in sec:
             sec.remove("Not Classified")
@@ -331,6 +335,8 @@ scientific text. In summary, they are the titles of each section.'),
             
         self.ui.listWidgetSubSection.clear()
         subs = sorted(subs)
+        
+        self.ui.labelShownSubSection.setText(str(len(subs)))
         
         if "Not Classified" in subs:
             subs.remove("Not Classified")
@@ -422,6 +428,8 @@ in an article.'),
 
         self.ui.listWidgetFunction.clear()
         func = sorted(func)
+        
+        self.ui.labelShownFunction.setText(str(len(func)))
 
         if "Not Classified" in func:
             func.remove("Not Classified")
@@ -838,6 +846,15 @@ in an article.'),
 if __name__ == '__main__':
     app = QApplication('Sci Corpus')
     main_window = MainWindow()
+    style_sheet = """QGroupBox {
+                    border: 1px solid lightgray;
+                    border-radius: 5px;
+                    margin-top: 0.5em;}
+                    QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left:10px;
+                    padding: 0 3px 0 3px;}"""
+    app.setStyleSheet(style_sheet)
     main_window.show()
     exit(app.exec_())
 

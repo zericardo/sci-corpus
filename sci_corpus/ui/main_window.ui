@@ -48,6 +48,60 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="4" column="3" rowspan="6" colspan="6">
+       <widget class="QTableWidget" name="tableWidgetSentence">
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>100</number>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <row>
+         <property name="text">
+          <string>1</string>
+         </property>
+        </row>
+        <row>
+         <property name="text">
+          <string>2</string>
+         </property>
+        </row>
+        <row>
+         <property name="text">
+          <string>3</string>
+         </property>
+        </row>
+        <column>
+         <property name="text">
+          <string>Sentence</string>
+         </property>
+        </column>
+        <item row="0" column="0">
+         <property name="text">
+          <string>a teste</string>
+         </property>
+        </item>
+        <item row="1" column="0">
+         <property name="text">
+          <string>b teste</string>
+         </property>
+        </item>
+        <item row="2" column="0">
+         <property name="text">
+          <string>c teste</string>
+         </property>
+        </item>
+       </widget>
+      </item>
       <item row="0" column="3">
        <widget class="QLabel" name="labelSentence">
         <property name="maximumSize">
@@ -116,60 +170,6 @@ p, li { white-space: pre-wrap; }
       <item row="3" column="4" colspan="4">
        <widget class="QLineEdit" name="lineEditReference"/>
       </item>
-      <item row="4" column="3" rowspan="6" colspan="6">
-       <widget class="QTableWidget" name="tableWidgetSentence">
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <attribute name="horizontalHeaderMinimumSectionSize">
-         <number>100</number>
-        </attribute>
-        <attribute name="horizontalHeaderStretchLastSection">
-         <bool>true</bool>
-        </attribute>
-        <attribute name="verticalHeaderStretchLastSection">
-         <bool>false</bool>
-        </attribute>
-        <row>
-         <property name="text">
-          <string>1</string>
-         </property>
-        </row>
-        <row>
-         <property name="text">
-          <string>2</string>
-         </property>
-        </row>
-        <row>
-         <property name="text">
-          <string>3</string>
-         </property>
-        </row>
-        <column>
-         <property name="text">
-          <string>Sentence</string>
-         </property>
-        </column>
-        <item row="0" column="0">
-         <property name="text">
-          <string>a teste</string>
-         </property>
-        </item>
-        <item row="1" column="0">
-         <property name="text">
-          <string>b teste</string>
-         </property>
-        </item>
-        <item row="2" column="0">
-         <property name="text">
-          <string>c teste</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="0" column="8" rowspan="4">
        <widget class="QGroupBox" name="groupBox">
         <property name="maximumSize">
@@ -224,6 +224,79 @@ p, li { white-space: pre-wrap; }
         </layout>
         <zorder></zorder>
        </widget>
+      </item>
+      <item row="0" column="4">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(180, 180, 180);</string>
+          </property>
+          <property name="text">
+           <string>Selected: </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelSelectedSentence">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(180, 180, 180);</string>
+          </property>
+          <property name="text">
+           <string>#</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(180, 180, 180);</string>
+          </property>
+          <property name="text">
+           <string>Shown: </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelShownSentence">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(180, 180, 180);</string>
+          </property>
+          <property name="text">
+           <string>#</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_11">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(180, 180, 180);</string>
+          </property>
+          <property name="text">
+           <string>Total:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelTotalSentence">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(180, 180, 180);</string>
+          </property>
+          <property name="text">
+           <string>#</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -323,6 +396,19 @@ p, li { white-space: pre-wrap; }
    </attribute>
    <widget class="QWidget" name="dockWidgetContentsSection">
     <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pushButtonSectionRemove">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLineEdit" name="lineEditSection">
        <property name="text">
@@ -340,19 +426,6 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="text">
         <string>+</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="pushButtonSectionRemove">
-       <property name="maximumSize">
-        <size>
-         <width>30</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>-</string>
        </property>
       </widget>
      </item>
@@ -426,6 +499,79 @@ p, li { white-space: pre-wrap; }
         </property>
        </item>
       </widget>
+     </item>
+     <item row="3" column="0" rowspan="3" colspan="4">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Selected:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelSelectedSection">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Shown: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelShownSection">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Total:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelTotalSection">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -530,6 +676,79 @@ p, li { white-space: pre-wrap; }
        </item>
       </widget>
      </item>
+     <item row="2" column="0" rowspan="2" colspan="4">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Selected: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelSelectedSubSection">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Shown:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelShownSubSection">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Total:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelTotalSubSection">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -609,6 +828,79 @@ p, li { white-space: pre-wrap; }
         </property>
        </item>
       </widget>
+     </item>
+     <item row="2" column="0" colspan="4">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_14">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Selected: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelSelectedFunction">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_15">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Shown: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelShownFunction">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_17">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>Total: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelTotalFunction">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(180, 180, 180);</string>
+         </property>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
