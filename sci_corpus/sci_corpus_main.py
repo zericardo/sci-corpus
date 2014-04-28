@@ -329,11 +329,22 @@ scientific text. In summary, they are the titles of each section.'),
         """
         sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         subs = set()
+        subsecs = []
 
-        for secv, subsv, funcv in self.container.listCategories(section=sec):
-            subs.add(subsv)
+        if sec == []:
+            for secv, subsv, funcv in self.container.listCategories(section=sec):
+                subs.add(subsv)
+        else:
+            for i in range(len(sec)):
+                subsecs.append({subsv for secv, subsv, funcv in self.container.listCategories(section=[sec[i]])})
+            
+            #print subsecs[0]
+            subs = subsecs[0]
+            for i in range(len(sec)-1):
+                subs = subs & subsecs[i+1]
             
         self.ui.listWidgetSubSection.clear()
+        
         subs = sorted(subs)
         
         self.ui.labelShownSubSection.setText(str(len(subs)))
@@ -423,8 +434,29 @@ in an article.'),
         subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         func = set()
         
-        for secv, subsv, funcv in self.container.listCategories(section=sec,subsection=subs):
-            func.add(funcv)
+        funcs = []
+
+        if sec == [] and subs == []:
+            for secv, subsv, funcv in self.container.listCategories(section=sec):
+                func.add(funcv)
+                
+        elif sec != [] and subs == []:
+            for i in range(len(sec)):
+                funcs.append({funcv for secv, subsv, funcv in self.container.listCategories(section=[sec[i]])})
+                
+            func = funcs[0]
+            for i in range(len(sec)-1):
+                func = func & funcs[i+1]
+                
+        elif sec != [] and subs != []:
+            for i in range(len(sec)):
+                for j in range(len(subs)):
+                    funcs.append({funcv for secv, subsv, funcv in self.container.listCategories(section=[sec[i]],subsection=[subs[j]])})
+                
+            func = funcs[0]
+            for i in range(len(funcs)-1):
+                func = func & funcs[i+1]    
+
 
         self.ui.listWidgetFunction.clear()
         func = sorted(func)
