@@ -682,11 +682,14 @@ in an article.'),
         '''
         Export file with extension.
         '''
+        self.notImplementedYet()
+        """
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
                                            self.tr(self.container.path))
         if path != '':
-            self.container.write_(path)
+            self.container.export_(path)
+        """
         
         
     def importFile(self):
@@ -696,10 +699,10 @@ in an article.'),
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Import File'),
                                            self.tr(self.container.path),
-                                           self.tr("Files (*.json *.xml)"))
+                                           self.tr("Files (*.xml)"))
 
         if path != '':
-            self.container.read_(path)
+            self.container.import_(path)
         
         self.updateSectionView()
         self.updateSubSectionView()
@@ -720,6 +723,7 @@ in an article.'),
 \n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
 \n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
 \n\nVersion:{}'.format(__version__)))
+
 
     def clearAll(self):
         """

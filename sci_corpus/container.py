@@ -269,12 +269,10 @@ class ContainerDB():
         """
         Import file as XML, JSON, DB.
         """
-        
         try:
            extension = path.split('.')[1]
            if extension == 'xml' or 'XML':
               self.bulk_add(path)
-              
         except Exception:
            raise
         else:
@@ -284,13 +282,10 @@ class ContainerDB():
         """
         Export file as XML, JSON, DB.
         """
-        print path
+
         with codecs.open(path, 'wb',  'utf-8') as project_file:
             json.dump(self.__dict, project_file,  indent=4,  sort_keys=True)
         self.isModified = False
-
-
-
 
 class Container():
     """
