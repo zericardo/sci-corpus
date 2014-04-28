@@ -13,8 +13,9 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
-from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView,  QFont
-from PySide.QtGui import QCloseEvent
+from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
+from PySide.QtGui import QBrush,  QColor
+from PySide.QtCore import QSettings
 
 import container as container
 import re
@@ -138,8 +139,33 @@ class MainWindow(QMainWindow):
             not self.ui.checkBoxFunction.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(4, \
             not self.ui.checkBoxReference.isChecked())
+            
+        self.ui.tableWidgetSentence.setColumnCount(5)
+            
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem('Section'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem('Sub Section'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(2,QTableWidgetItem('Function'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(3,QTableWidgetItem('Sentence'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(4,QTableWidgetItem('Reference'))
+        
+        self.ui.tableWidgetSentence.setColumnWidth(0,100)
+        self.ui.tableWidgetSentence.setColumnWidth(1,200)
+        self.ui.tableWidgetSentence.setColumnWidth(2,300)
+        self.ui.tableWidgetSentence.setColumnWidth(3,800)
+        self.ui.tableWidgetSentence.setColumnWidth(4,100)
+        
+        self.ui.tableWidgetSentence.setColumnHidden(0, \
+            not self.ui.checkBoxSection.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(1, \
+            not self.ui.checkBoxSubSection.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(2, \
+            not self.ui.checkBoxFunction.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(4, \
+            not self.ui.checkBoxReference.isChecked())
+            
+        self.ui.tableWidgetSentence.setRowCount(1)
                  
-        self.ui.checkBoxStrip.setChecked(False)
+        self.ui.checkBoxStrip.setChecked(True)
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
         
     def selectedTitles(self, selected_items):
@@ -423,7 +449,7 @@ in an article.'),
     # -----------------------------------------------------------------------
 
 
-    def adjustSentence(self,sent="", begin="[", end="]", hideMarked=True, changeBy="..."):
+    def adjustSentence(self,sent="", begin="{", end="}", hideMarked=True, changeBy="..."):
         """
         Adjusts sentences to be displayed on the screen.
         """
@@ -513,37 +539,65 @@ in an article.'),
         """
         Updates a sentence view.
         """
-        sentencesFinal = []
-        
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())       
         sentences = self.container.listSentences(section=list(sections),subsection=list(sub_sections),function=list(functions))
+        
         self.ui.tableWidgetSentence.clear()
+        self.ui.tableWidgetSentence.setColumnCount(5)
+        
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem('Section'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem('Sub Section'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(2,QTableWidgetItem('Function'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(3,QTableWidgetItem('Sentence'))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(4,QTableWidgetItem('Reference'))
+        
+        self.ui.tableWidgetSentence.setColumnWidth(0,150)
+        self.ui.tableWidgetSentence.setColumnWidth(1,200)
+        self.ui.tableWidgetSentence.setColumnWidth(2,300)
+        self.ui.tableWidgetSentence.setColumnWidth(3,900)
+        self.ui.tableWidgetSentence.setColumnWidth(4,100)  
+        
+        row = 0
+        strip = self.ui.checkBoxStrip.isChecked()
 
         for secv, subsv, funcv, sentv, refv in sentences:
-            if sentv != u'NULL':
-                if(self.ui.checkBoxStrip.isChecked()):
-                    sentencesFinal.append((self.adjustSentence(sentv, "[", "]", False, "..."),refv))
-                else:
-                    sentencesFinal.append((sentv,refv))
-               
-        self.ui.tableWidgetSentence.setRowCount(len(sentencesFinal))
-        self.ui.tableWidgetSentence.setColumnWidth(4,50)
-        self.ui.tableWidgetSentence.setColumnCount(5)
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem(str('Section')))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem(str('Sub Section')))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(2,QTableWidgetItem(str('Function')))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(3,QTableWidgetItem(str('Sentence')))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(4,QTableWidgetItem(str('Reference')))
-
-        for row, sentence in enumerate(sentencesFinal):
-            if sentence[0] != 'NULL' and sentence[1] != 'NULL':
-               item_sentence = QTableWidgetItem(str(sentence[0]))
-               self.ui.tableWidgetSentence.setItem(row,3,item_sentence)
-               item_reference = QTableWidgetItem(str(sentence[1]))
-               self.ui.tableWidgetSentence.setItem(row,4,item_reference)
             
+            if sentv != u'NULL':
+
+                sec_item = QTableWidgetItem(str(secv))
+                subs_item = QTableWidgetItem(str(subsv))
+                func_item = QTableWidgetItem(str(funcv))
+                sent_item = QTableWidgetItem(str(sentv))
+                ref_item = QTableWidgetItem(str(refv))
+                
+                self.ui.tableWidgetSentence.setItem(row,0,sec_item)
+                self.ui.tableWidgetSentence.setItem(row,1,subs_item)
+                self.ui.tableWidgetSentence.setItem(row,2,func_item)
+                self.ui.tableWidgetSentence.setItem(row,3,sent_item)
+                self.ui.tableWidgetSentence.setItem(row,4,ref_item)
+                
+                if strip:
+                    try:
+                        sent_item.setText(str(self.adjustSentence(sentv, "{", "}", False, "...")))
+                    except Exception:
+                        sent_item.setText(str(sentv))
+                        # Background red
+                        sent_item.setBackground(QBrush(QColor(255,0,0,127)))
+                row += 1
+                
+        self.ui.tableWidgetSentence.setRowCount(row-1)
+        
+        self.ui.tableWidgetSentence.setColumnHidden(0, \
+            not self.ui.checkBoxSection.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(1, \
+            not self.ui.checkBoxSubSection.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(2, \
+            not self.ui.checkBoxFunction.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(4, \
+            not self.ui.checkBoxReference.isChecked())
+        
             
     def tipsSentence(self):
         """
@@ -695,9 +749,23 @@ in an article.'),
                                       QMessageBox.No)
         if answer == QMessageBox.Yes:
             self.container.write_()
+            self.writeSettings()
             event.accept()
         else:
             event.ignore()
+            
+            
+    def writeSettings(self):
+        settings = QSettings("SciCorpus", "SciCorpus")
+        settings.setValue("geometry", self.saveGeometry())
+        settings.setValue("windowState", self.saveState())
+
+
+    def readSettings(self):
+        settings = QSettings ("SciCorpus", "SciCorpus")
+        self.restoreGeometry(settings.value("geometry").toByteArray())
+        self.restoreState(settings.value("windowState").toByteArray())
+            
             
     def writeStatusBar(self,  msg):
         """
@@ -707,11 +775,13 @@ in an article.'),
         status_bar.clearMessage()
         status_bar.showMessage(str(msg), 5000)
 
+
     def tips(self):
         """
         Show tips about aplication
         """
         self.notImplementedYet()
+        
         
     def notImplementedYet(self):
         """
@@ -722,6 +792,7 @@ in an article.'),
                         self.tr('We have no implemented this function yet.'),
                         QMessageBox.Ok)
 
+
     def removeQuestion(self, category='', who=''):
         """
         Removes a section item
@@ -731,6 +802,7 @@ in an article.'),
                                     self.tr('Do you want to remove item {} from {}?'.format(who, category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
+                                    
                                     
     def updateQuestion(self, section=(), subsection=(), function=()):
         """

@@ -74,7 +74,6 @@ class ContainerDB():
         final.extend(functions)
         
         #@TODO: The number of tuple must BE the SAME!
-        print final
         return final
 
 
