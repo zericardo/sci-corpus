@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Mon Apr 28 15:53:04 2014
+# Created: Mon Apr 28 17:34:14 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -101,6 +101,8 @@ class Ui_MainWindow(object):
         self.gridLayoutMainWindow.addWidget(self.groupBox, 0, 8, 4, 1)
         self.horizontalLayout_3 = QtGui.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
         self.label_4 = QtGui.QLabel(self.centralwidget)
         self.label_4.setStyleSheet("color: rgb(180, 180, 180);")
         self.label_4.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -191,6 +193,8 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.listWidgetSection, 1, 0, 1, 4)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
         self.label = QtGui.QLabel(self.dockWidgetContentsSection)
         self.label.setStyleSheet("color: rgb(180, 180, 180);")
         self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -258,6 +262,8 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.listWidgetSubSection, 1, 0, 1, 4)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem2)
         self.label_7 = QtGui.QLabel(self.dockWidgetContentsSubSection)
         self.label_7.setStyleSheet("color: rgb(180, 180, 180);")
         self.label_7.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -321,6 +327,8 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.listWidgetFunction, 1, 0, 1, 4)
         self.horizontalLayout_4 = QtGui.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_4.addItem(spacerItem3)
         self.label_14 = QtGui.QLabel(self.dockWidgetContentsFunction)
         self.label_14.setStyleSheet("color: rgb(180, 180, 180);")
         self.label_14.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
