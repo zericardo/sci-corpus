@@ -63,6 +63,8 @@ class MainWindow(QMainWindow):
         self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSubSectionView)
         self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSentenceView)
         
+        self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSelectedNumbers)
+        
         self.ui.listWidgetSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetSection.setDragEnabled(False)
 
@@ -81,6 +83,8 @@ class MainWindow(QMainWindow):
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateFunctionView)
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateSentenceView)
 
+        self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateSelectedNumbers)
+
         self.ui.listWidgetSubSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetSubSection.setDragEnabled(False)
         
@@ -98,6 +102,8 @@ class MainWindow(QMainWindow):
         self.ui.listWidgetFunction.doubleClicked.connect(self.tipsFunction)
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSentenceView)
         
+        self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSelectedNumbers)
+
         self.ui.listWidgetFunction.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetFunction.setDragEnabled(False)
         
@@ -177,6 +183,36 @@ class MainWindow(QMainWindow):
             titles.append(str(item.text()))
         return titles  
         
+    def updateSelectedNumbers(self):
+        """
+        Updates selected numbers from list and table views.
+        """
+        self.ui.labelSelectedSection.setText(str(len(self.ui.listWidgetSection.selectedItems())))
+        self.ui.labelSelectedSubSection.setText(str(len(self.ui.listWidgetSubSection.selectedItems())))
+        self.ui.labelSelectedFunction.setText(str(len(self.ui.listWidgetFunction.selectedItems())))
+        
+    def updateTotalNumbers(self):
+        """
+        Updates total numbers from list and table views.
+        """
+        sec = set()
+        subs = set()
+        func = set()
+        sent = set()
+        
+        # This can be better :), maybe a property of container
+        for secv, subsv, funcv, sentv, refv in self.container.listSentences():
+            sec.add(secv)
+            subs.add(subsv)
+            func.add(funcv)
+            if sentv != u'NULL':
+                sent.add(sentv)
+        
+        self.ui.labelTotalSection.setText(str(len(sec)))
+        self.ui.labelTotalSubSection.setText(str(len(subs)))
+        self.ui.labelTotalFunction.setText(str(len(func)))
+        self.ui.labelTotalSentence.setText(str(len(sent)))
+        
         
     # -----------------------------------------------------------------------
     # Section methods
@@ -193,7 +229,7 @@ class MainWindow(QMainWindow):
         if sec != '':
             self.container.addDB(sect=[sec])
             self.writeStatusBar('A new section "{}" has already added.'.format(sec))
-        
+        self.updateTotalNumbers()
         self.updateSectionView()
 
 
@@ -208,7 +244,7 @@ class MainWindow(QMainWindow):
             if self.removeQuestion("section",sec) == QMessageBox.Yes:
                 self.container.remove(sect=sec)
                 self.writeStatusBar('Section(s) has already removed.'.format(sec))
-
+        self.updateTotalNumbers()
         self.updateSectionView()
                
                
@@ -285,7 +321,7 @@ scientific text. In summary, they are the titles of each section.'),
         if subs != '':
             self.container.addDB(sect=sec, subsect=[subs])
             self.writeStatusBar('A new sub section "{}" has already added.'.format(subs))
-
+        self.updateTotalNumbers()
         self.updateSubSectionView()
 
     
@@ -299,7 +335,7 @@ scientific text. In summary, they are the titles of each section.'),
             if self.removeQuestion("subsection",subs) == QMessageBox.Yes:
                 self.container.remove(subsect=subs)
                 self.writeStatusBar('A sub section has already removed.')
-
+        self.updateTotalNumbers()
         self.updateSubSectionView() 
                 
                 
@@ -334,11 +370,10 @@ scientific text. In summary, they are the titles of each section.'),
         if sec == []:
             for secv, subsv, funcv in self.container.listCategories(section=sec):
                 subs.add(subsv)
+        # This havent be treat here, this need to be treated on contianer.
         else:
             for i in range(len(sec)):
                 subsecs.append({subsv for secv, subsv, funcv in self.container.listCategories(section=[sec[i]])})
-            
-            #print subsecs[0]
             subs = subsecs[0]
             for i in range(len(sec)-1):
                 subs = subs & subsecs[i+1]
@@ -388,7 +423,8 @@ in an article.'),
         if func != '':
             self.container.addDB(sect=sec, subsect=subs, funct=[func])
             self.writeStatusBar('A new function "{}" has already added.'.format(func))
-            
+        
+        self.updateTotalNumbers()  
         self.updateFunctionView()
         
         
@@ -402,7 +438,8 @@ in an article.'),
             if self.removeQuestion("function",func) == QMessageBox.Yes:
                 self.container.remove(funct=func)
                 self.writeStatusBar('A function has already removed.')
-
+        
+        self.updateTotalNumbers()
         self.updateFunctionView()
 
 
@@ -439,7 +476,7 @@ in an article.'),
         if sec == [] and subs == []:
             for secv, subsv, funcv in self.container.listCategories(section=sec):
                 func.add(funcv)
-                
+        # This havent be treat here, this need to be treated on contianer.
         elif sec != [] and subs == []:
             for i in range(len(sec)):
                 funcs.append({funcv for secv, subsv, funcv in self.container.listCategories(section=[sec[i]])})
@@ -548,6 +585,8 @@ in an article.'),
         # Insertting in DB
         self.container.addDB(sect=sec, subsect=subs, funct=func, phrase=[sent], ref=[ref])
         self.writeStatusBar('A new sentence has already added.')
+        
+        self.updateTotalNumbers()
         self.updateSentenceView()
         
         
@@ -560,6 +599,8 @@ in an article.'),
         if sentence != []:
             if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
                 self.container.remove(phrase=sentence)
+                
+        self.updateTotalNumbers()
         self.updateSentenceView()
 
 
@@ -598,12 +639,11 @@ in an article.'),
         self.ui.tableWidgetSentence.setColumnWidth(2,300)
         self.ui.tableWidgetSentence.setColumnWidth(3,900)
         self.ui.tableWidgetSentence.setColumnWidth(4,100)  
-        
+
         row = 0
         strip = self.ui.checkBoxStrip.isChecked()
 
         for secv, subsv, funcv, sentv, refv in sentences:
-            
             if sentv != u'NULL':
 
                 sec_item = QTableWidgetItem(str(secv))
@@ -627,7 +667,9 @@ in an article.'),
                         sent_item.setBackground(QBrush(QColor(255,0,0,127)))
                 row += 1
                 
-        self.ui.tableWidgetSentence.setRowCount(row-1)
+        self.ui.labelShownSentence.setText(str(row))
+                
+        self.ui.tableWidgetSentence.setRowCount(row)
         
         self.ui.tableWidgetSentence.setColumnHidden(0, \
             not self.ui.checkBoxSection.isChecked())
@@ -667,6 +709,8 @@ in an article.'),
 
         if path != '':
             self.container.read_(path)
+            self.updateSelectedNumbers()
+            self.updateTotalNumbers()
             self.updateSectionView()
             self.isModified = False
             
