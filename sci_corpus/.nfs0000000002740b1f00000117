@@ -59,10 +59,7 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSection.triggered.connect(self.updateSection)
         self.ui.actionTipsSection.triggered.connect(self.tipsSection)
         
-        self.ui.listWidgetSection.doubleClicked.connect(lambda: \
-                self.ui.lineEditSection.setText(self.ui.listWidgetSection.currentItem().text()))
-        self.ui.listWidgetSection.itemSelectionChanged.connect(lambda: self.ui.lineEditSection.clear())
-                
+        self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
         self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSubSectionView)
         self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSentenceView)
         
@@ -82,10 +79,7 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSubSection.triggered.connect(self.updateSubSection)
         self.ui.actionTipsSubSection.triggered.connect(self.tipsSubSection)
         
-        self.ui.listWidgetSubSection.doubleClicked.connect(lambda: \
-                self.ui.lineEditSubSection.setText(self.ui.listWidgetSubSection.currentItem().text()))
-        self.ui.listWidgetSubSection.itemSelectionChanged.connect(lambda: self.ui.lineEditSubSection.clear())
-        
+        self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateFunctionView)
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateSentenceView)
 
@@ -105,11 +99,7 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateFunction.triggered.connect(self.updateFunction)
         self.ui.actionTipsFunction.triggered.connect(self.tipsFunction)
         
-        
-        self.ui.listWidgetFunction.doubleClicked.connect(lambda: \
-                self.ui.lineEditFunction.setText(self.ui.listWidgetFunction.currentItem().text()))
-        self.ui.listWidgetFunction.itemSelectionChanged.connect(lambda: self.ui.lineEditFunction.clear())
-        
+        self.ui.listWidgetFunction.doubleClicked.connect(self.tipsFunction)
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSentenceView)
         
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSelectedNumbers)
@@ -253,7 +243,7 @@ class MainWindow(QMainWindow):
         sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         
         if sec != []:
-            if self.removeQuestion("Section",sec) == QMessageBox.Yes:
+            if self.removeQuestion("section",sec) == QMessageBox.Yes:
                 self.container.remove(sect=sec)
                 self.writeStatusBar('Section(s) has already removed.'.format(sec))
         self.updateTotalNumbers()
@@ -274,7 +264,7 @@ class MainWindow(QMainWindow):
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_sec != '':
-            if self.updateQuestion("Section",(old_sec[0], new_sec)) == QMessageBox.Yes:
+            if self.updateQuestion("section",(new_sec,old_sec[0])) == QMessageBox.Yes:
                 self.container.update(section=[(new_sec,old_sec[0])])
                 self.writeStatusBar('Section "{}" has already updated to "{}".'.format(old_sec[0], new_sec))
 
@@ -344,10 +334,9 @@ scientific text. In summary, they are the titles of each section.'),
         subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         
         if subs != []:
-            if self.removeQuestion("Subsection",subs) == QMessageBox.Yes:
+            if self.removeQuestion("subsection",subs) == QMessageBox.Yes:
                 self.container.remove(subsect=subs)
                 self.writeStatusBar('A sub section has already removed.')
-                
         self.updateTotalNumbers()
         self.updateSubSectionView() 
                 
@@ -365,7 +354,7 @@ scientific text. In summary, they are the titles of each section.'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_subs != '':
-           if self.updateQuestion("Subsection",(old_subs[0], new_subs)) == QMessageBox.Yes:
+           if self.updateQuestion("subsection",(new_subs,old_subs[0])) == QMessageBox.Yes:
               self.container.update(subsection=[(new_subs,old_subs[0])])
               self.writeStatusBar('Sub section "{}" has already updated to "{}".'.format(old_subs[0], new_subs))
         
@@ -392,8 +381,10 @@ scientific text. In summary, they are the titles of each section.'),
                 subs = subs & subsecs[i+1]
             
         self.ui.listWidgetSubSection.clear()
+        
         subs = sorted(subs)
-
+        
+        self.ui.labelShownSubSection.setText(str(len(subs)))
         
         if "Not Classified" in subs:
             subs.remove("Not Classified")
@@ -403,7 +394,6 @@ scientific text. In summary, they are the titles of each section.'),
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSubSection.addItem(item)
             
-        self.ui.labelShownSubSection.setText(str(len(subs)))  
         self.updateFunctionView()
         self.updateSentenceView()
             
@@ -447,7 +437,7 @@ in an article.'),
         func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
         
         if func != []:
-            if self.removeQuestion("Function",func) == QMessageBox.Yes:
+            if self.removeQuestion("function",func) == QMessageBox.Yes:
                 self.container.remove(funct=func)
                 self.writeStatusBar('A function has already removed.')
         
@@ -468,10 +458,10 @@ in an article.'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_func != '':
-           if self.updateQuestion("Function",(old_func[0], new_func)) == QMessageBox.Yes:
+           if self.updateQuestion("function",(new_func,old_func)) == QMessageBox.Yes:
               self.container.update(function=[(new_func,old_func[0])])
               self.writeStatusBar('Function "{}" has already updated to "{}".'.format(old_func[0], new_func))
-              
+
         self.updateFunctionView()
 
 
@@ -612,7 +602,12 @@ in an article.'),
         """
         Removes a sentence.
         """
-        self.notImplementedYet()      
+        # Needs a review it doesnt work
+        sentence = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
+        if sentence != []:
+            if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
+                self.container.remove(phrase=sentence)
+                
         self.updateTotalNumbers()
         self.updateSentenceView()
 
@@ -621,9 +616,13 @@ in an article.'),
         """
         Updates a sentence.
         """
-        self.notImplementedYet()
-        self.updateTotalNumbers()
-        self.updateSentenceView()
+        new_function = str(self.ui.lineEditFunction.text())
+        # Needs a review it doesnt work
+        if old_function != [] and new_function != '':
+           if self.updateQuestion("function",(new_function,old_function)) == QMessageBox.Yes:
+              self.container.update(function=[(new_function,old_function[0])])
+        
+        self.updateFunctionView()
         
     def updateSentenceView(self):
         """
@@ -747,7 +746,7 @@ in an article.'),
         
         
     def printFile(self):
-        """
+        """"
         Generates a PDF file with all sentences included in database.
         """
         self.notImplementedYet()
@@ -765,16 +764,16 @@ in an article.'),
                                           QMessageBox.Yes)
             
             if answer == QMessageBox.Yes:
-                self.saveFile()
+                self.container.write_()
 
         self.container.close_()
         self.clearAll()    
         
         
     def exportFile(self):
-        """
+        '''
         Export file with extension.
-        """
+        '''
         self.notImplementedYet()
         """
         path = QFileDialog.getSaveFileName(self,
@@ -786,21 +785,21 @@ in an article.'),
         
         
     def importFile(self):
-        """
+        '''
         Import file with extension.
-        """
+        '''
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Import File'),
-                                           self.tr(''),
-                                           self.tr('(*.xml *.csv)'))[0]
+                                           self.tr(self.container.path),
+                                           self.tr("Files (*.xml)"))
 
         if path != '':
             self.container.import_(path)
         
-        #self.updateSectionView()
-        #self.updateSubSectionView()
-        #self.updateFunctionView()
-        #self.updateSentenceView()
+        self.updateSectionView()
+        self.updateSubSectionView()
+        self.updateFunctionView()
+        self.updateSentenceView()
             
     # -----------------------------------------------------------------------
     # Application methods
@@ -845,7 +844,7 @@ in an article.'),
                                       QMessageBox.Yes | QMessageBox.No, 
                                       QMessageBox.No)
         if answer == QMessageBox.Yes:
-            self.closeFile()
+            self.container.write_()
             self.writeSettings()
             event.accept()
         else:
@@ -890,25 +889,40 @@ in an article.'),
                         QMessageBox.Ok)
 
 
-    def removeQuestion(self, category='', who=[]):
+    def removeQuestion(self, category='', who=''):
         """
         Removes a section item
-        """    
-            
+        """
         return QMessageBox.question(self,
                                     self.tr('Remove'),
-                                    self.tr("Do you want to remove item(s) {} from {}?".format(str(who)[1:-1], category)),
+                                    self.tr('Do you want to remove item {} from {}?'.format(who, category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
                                     
                                     
-    def updateQuestion(self, category, (old_who, new_who)):
+    def updateQuestion(self, section=(), subsection=(), function=()):
         """
         Updates a section item
         """
+        
+        if section != ():
+           category = 'section'
+           oldWho = section[1]
+           newWho = section[0]
+
+        if subsection != ():
+           category = 'subsection'
+           oldWho = subsection[1]
+           newWho = subsection[0]
+        
+        if function != ():
+           category = 'function'
+           oldWho = function[1]
+           newWho = function[0]
+        
         return QMessageBox.question(self,
                                     self.tr('Update'),
-                                    self.tr("Do you want to update item '{}' to '{}' in {}?".format(old_who,new_who,category)),
+                                    self.tr('Do you want to update item "{}" to "{}" in {}?'.format(oldWho[0],newWho,category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
 
@@ -927,3 +941,396 @@ if __name__ == '__main__':
     app.setStyleSheet(style_sheet)
     main_window.show()
     exit(app.exec_())
+
+    '''
+
+    # -----------------------------------------------------------------------
+    # Section methods
+    # -----------------------------------------------------------------------
+
+        
+    def addSection(self):
+        """
+        Add a new section.
+        """
+        section = str(self.ui.lineEditSection.text())
+        if section != '':
+            self.container.add(section)
+        self.updateSectionView()
+
+    def removeSection(self, section=''):
+        """
+        Remove a section.
+        """
+        if section != '':
+            section = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("section",section) == QMessageBox.Yes:
+                return
+        self.container.isModified(True)
+                
+    def updateSection(self, (old_section, new_section)):
+        """
+        Updates old section with new section.
+        """
+        self.container.isModified(True)
+        self.updateSectionView()
+        
+    def updateSectionView(self):
+        """
+        Updates section view.
+        """
+        sections = self.container.sections()
+        self.ui.listWidgetSection.clear()
+        for row, value in enumerate(sections):
+            item = QListWidgetItem(str(value))
+            self.ui.listWidgetSection.addItem(item)
+            
+    def tipsSection(self):
+        """
+        Show tips for the section.
+        """    
+        QMessageBox.information(self, 
+                                self.tr('Section Tips'),
+                                self.tr('Sections are the main division of a scientific text.\
+In summary, they are the titles of each section.'),
+                                QMessageBox.Ok)
+                                
+    # -----------------------------------------------------------------------
+    # Subsection methods
+    # -----------------------------------------------------------------------
+    
+
+        
+    def addSubSection(self):
+        """
+        Add a new Subsection
+        """
+
+        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
+        sub_section = str(self.ui.lineEditSubSection.text())
+        
+        if sub_section != '':
+            self.container.add(section, sub_section)
+        self.updateSubSectionView()
+        
+    def removeSubSection(self, subsection=''):
+        """
+        Remove one subsection
+        """
+        if subsection != '':
+            subsection = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("subsection",subsection) == QMessageBox.Yes:
+                return
+                
+    def updateSubSection(self):
+        """
+        Updates one subsection
+        """
+
+    def updateSubSectionView(self):
+        """
+        Updates subsection view
+        """
+        sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subsections = self.container.subSections(sections)
+        self.ui.listWidgetSubSection.clear()
+        
+        for row, value in enumerate(subsections):
+            item = QListWidgetItem(str(value))
+            self.ui.listWidgetSubSection.addItem(item)
+            
+    def tipsSubSection(self):
+        """
+        Show tips for Subsection
+        """
+        QMessageBox.information(self, 
+                                self.tr('Sub Section Tips'),
+                                self.tr('Sub section are a sub division of the section.\
+\n\nAs an example, section Introduction has a Contextualization, Gap and Propose sub sections \
+in an article.'),
+                                QMessageBox.Ok)
+
+    # -----------------------------------------------------------------------
+    # Function methods
+    # -----------------------------------------------------------------------
+
+    def addFunction(self):
+        """
+        Adds a new function.
+        """
+        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
+        sub_section = str(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())[0])
+        function = str(self.ui.lineEditFunction.text())
+        if function != '':
+            self.container.add(section, sub_section, function)
+        self.updateFunctionView()
+        
+    def removeFunction(self, function=''):
+        """
+        Removes a function.
+        """
+        if function != '':
+            section = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("function",function) == QMessageBox.Yes:
+                return
+                # chama função remove Tiago
+
+    def updateFunction(self):
+        """
+        Updates a function.
+        """
+
+    def updateFunctionView(self):
+        """
+        Updates a function view.
+        """
+        sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        sub_sections = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        
+        functions = self.container.functions(sections, sub_sections)
+        self.ui.listWidgetFunction.clear()
+        
+        for row, value in enumerate(functions):
+            item = QListWidgetItem(str(value))
+            self.ui.listWidgetFunction.addItem(item)
+
+    def tipsFunction(self):
+        """
+        Show tips for function.
+        """
+        QMessageBox.information(self, 
+                        self.tr('Function Tips'),
+                        self.tr('Function explain what each sentence is.'),
+                        QMessageBox.Ok)
+
+    # -----------------------------------------------------------------------
+    # Sentence methods
+    # -----------------------------------------------------------------------
+
+    def addSentence(self):
+        """
+        Adds a new sentence.
+        """
+        section = str(self.selectedTitles(self.ui.listWidgetSection.selectedItems())[0])
+        sub_section = str(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())[0])
+        function = str(self.selectedTitles(self.ui.listWidgetFunction.selectedItems())[0])
+        sentence = str(self.ui.textEditSentence.toPlainText())
+        reference = str(self.ui.lineEditReference.text())
+        if section != '':
+            self.container.add(section, sub_section, function, sentence, reference)
+        self.updateSentenceView()
+        
+    def removeSentence(self, sentence=''):
+        """
+        Removes a sentence.
+        """
+        if sentence != '':
+            section = self.ui.lineEditSection.text()
+        else: 
+            if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
+                return
+                # chama função remove Tiago
+
+    def updateSentence(self):
+        """
+        Updates a sentence.
+        """
+
+    def updateSentenceView(self):
+        """
+        Updates a sentence view.
+        """
+        sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
+        sentences = self.container.sentences(sections, sub_sections, functions)
+        self.ui.tableWidgetSentence.clear()
+        
+        self.ui.tableWidgetSentence.setColumnCount(2)
+        self.ui.tableWidgetSentence.setRowCount(len(sentences))
+        
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem(str('Sentence')))
+        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem(str('Reference')))
+        
+        for row, (sentence, reference) in enumerate(sentences):
+            item_sentence = QTableWidgetItem(str(sentence))
+            self.ui.tableWidgetSentence.setItem(row,0,item_sentence)
+            item_reference = QTableWidgetItem(str(reference))
+            self.ui.tableWidgetSentence.setItem(row,1,item_reference)
+            
+
+    def tipsSentence(self):
+        """
+        Show tips for sentence.
+        """ 
+        QMessageBox.information(self, 
+                self.tr('Sentence Tips'),
+                self.tr('Sentences are extracted from scientific documents.\
+ \n\nTo remove specific words or sub sentences, please, use {{}}.\
+ \n\nExample: Here, we demonstrate the {{capacity of imaging spectroscopy}} to discriminate among \
+ {{genotypes of Populus tremuloides}}.\
+ \n\nThis will provide you a short view like: Here, we demonstrate the ... to discriminate among ...\
+ \n\nNote that the original sentence remains unbroken.'),
+                QMessageBox.Ok)
+
+    # -----------------------------------------------------------------------
+    # File methods
+    # -----------------------------------------------------------------------
+       
+    def openFile(self):
+        """
+        Opens a new file.
+        """
+        path = QFileDialog.getOpenFileName(self,
+                                           self.tr('Open File'),
+                                           self.tr(self.container.path))[0]
+
+        if path != '':
+            # precisa salvar se tiver algo aberto antes
+            self.container.read_(path)
+            self.updateSectionView()
+
+    def saveFile(self):
+        """
+        Saves the file that is being used.
+        """
+        if self.container.path == '':
+            self.saveFileAs()
+        else:
+            self.container.write_()
+
+    def saveFileAs(self):
+        """
+        Saves a new file
+        """
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Save As'),
+                                           self.tr(self.container.path))[0]
+        if path != '':
+            self.container.write_(path)
+        
+    def printFile(self):
+        """
+        Generates a PDF file with all sentences included in database.
+        """
+        self.notImplementedYet()
+
+    def closeFile(self):
+        """
+        Closes current file.
+        """
+        if self.container.isModified:
+            answer = QMessageBox.question(self,
+                                          self.tr('Save'),
+                                          self.tr('Do you want to save the current work?'),
+                                          QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+                                          QMessageBox.Yes)
+            
+            if answer == QMessageBox.Yes:
+                self.container.write_()
+                self.container.clear_()
+            elif answer == QMessageBox.No:
+                self.container.clear_()
+        else:
+            self.container.clear_()
+            
+            
+    def exportFile(self):
+        """
+        Export file with extension.
+        """
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Export JSON File'),
+                                           self.tr(self.container.path))
+        if path != '':
+            self.container.write_(path)
+        
+        
+    def importFile(self):
+        '""
+        Import file with extension.
+        """
+        path = QFileDialog.getOpenFileName(self,
+                                           self.tr('Open JSON File'),
+                                           self.tr(self.container.path))
+
+        if path != '':
+            self.container.read_(path)
+            
+    # -----------------------------------------------------------------------
+    # Application methods
+    # -----------------------------------------------------------------------
+
+    def about(self):
+        """
+        About shows the main information about the application.
+        """
+        QMessageBox.about(self,
+                          self.tr('About Sci Corpus'),
+                          self.tr('This software is a corpus manager, that allows you to trainer.\
+\n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
+\n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
+\n\nVersion:{}'.format(__version__)))
+    
+    def quit(self):
+        """
+        Quit current application.
+        """
+        answer = QMessageBox.question(self, 
+                                      self.tr('Quit'),
+                                      self.tr('Do you want to exit Sci Corpus?'),
+                                      QMessageBox.Yes | QMessageBox.No, 
+                                      QMessageBox.No)
+        if answer == QMessageBox.Yes:
+            self.closeFile()
+            self.close()
+            return True
+        else:
+            return False
+
+    def tips(self):
+        """
+        Show tips about aplication
+        """
+        self.notImplementedYet()
+        
+    def notImplementedYet(self):
+        """
+        Show tips for function.
+        """
+        QMessageBox.information(self, 
+                        self.tr('Sorry'),
+                        self.tr('We have no implemented this function yet.'),
+                        QMessageBox.Ok)
+
+    def removeQuestion(self, category='', who=''):
+        """
+        Removes a section item
+        """
+        return QMessageBox.question(self,
+                                    self.tr('Remove'),
+                                    self.tr('Do you want to remove item {} from {}?'.format(who, category)),
+                                    QMessageBox.Yes | QMessageBox.No,
+                                    QMessageBox.No)
+
+    def updateQuestion(self, section=([], []), subsection=([], []), function=([], [])):
+        """
+        Updates a section item
+        """
+        return QMessageBox.question(self,
+                                    self.tr('Update'),
+                                    self.tr('Do you want to update item {} to {} in {}?'.format(oldWho,newWho,what)),
+                                    QMessageBox.Yes | QMessageBox.No,
+                                    QMessageBox.No)
+
+
+if __name__ == '__main__':
+    app = QApplication('Sci Corpus')
+    main_window = MainWindow()
+    main_window.show()
+    exit(app.exec_())
+'''
+
