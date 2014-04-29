@@ -535,35 +535,43 @@ in an article.'),
 
         b  = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e  = [match.end() for match in re.finditer(re.escape(end), sent)]
+
         
         #exception here b and e must have the same size!
         if(len(b) == len(e)):
             
+            for i in range(0,len(b)):
+                if(b[i]>=e[i]):
+                    raise AssertionError("Delimiters aren't being used correctly!")
+
             r = []
         
+            for i in range(0,len(b)):
+                r.append(sent[b[i]:e[i]])
+
             if(hideMarked):
-                for i in range(0,len(b)):
-                    r.append(sent[b[i]:e[i]])
             
                 for substring in r:
                     sent = sent.replace(substring, changeBy)
             else:
-                aux=''
+                if(r != []):
+                    # @TODO: talvez colocar um erro em um else para este if!
+                    aux=''
 
-                if 0 not in b:
-                    aux += changeBy+" "
+                    if 0 not in b:
+                        aux += changeBy+" "
 
-                for i in range(0,len(b)-1):
-                    aux += sent[b[i]:e[i]]+" "+changeBy+" "
+                    for i in range(0,len(b)-1):
+                        aux += sent[b[i]:e[i]]+" "+changeBy+" "
             
-                if(e[len(b)-1]==len(sent)-1):
-                    aux += sent[b[len(b)-1]:e[len(e)-1]]
-                else:
-                    aux += sent[b[len(b)-1]:e[len(e)-1]]+" "+changeBy+" "
+                    if(e[len(b)-1]==len(sent)-1):
+                        aux += sent[b[len(b)-1]:e[len(e)-1]]
+                    else:
+                        aux += sent[b[len(b)-1]:e[len(e)-1]]+" "+changeBy+" "
                 
-                sent = aux.replace(begin,"").replace(end,"")
+                    sent = aux.replace(begin,"").replace(end,"")
         else:
-            raise AssertionError("Delimiter number doesnt match! =(")
+            raise AssertionError("Delimiter number doesnt match!")
             
         return sent
 
