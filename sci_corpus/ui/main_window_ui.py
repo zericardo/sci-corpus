@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Mon Apr 28 23:55:05 2014
+# Created: Tue Apr 29 11:30:45 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -177,12 +177,14 @@ class Ui_MainWindow(object):
         self.pushButtonSectionUpdate.setObjectName("pushButtonSectionUpdate")
         self.gridLayout.addWidget(self.pushButtonSectionUpdate, 0, 3, 1, 1)
         self.listWidgetSection = QtGui.QListWidget(self.dockWidgetContentsSection)
+        self.listWidgetSection.setMinimumSize(QtCore.QSize(0, 200))
         self.listWidgetSection.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.listWidgetSection.setInputMethodHints(QtCore.Qt.ImhPreferUppercase)
-        self.listWidgetSection.setDragDropMode(QtGui.QAbstractItemView.DragOnly)
+        self.listWidgetSection.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
         self.listWidgetSection.setAlternatingRowColors(False)
         self.listWidgetSection.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.listWidgetSection.setMovement(QtGui.QListView.Free)
+        self.listWidgetSection.setViewMode(QtGui.QListView.ListMode)
         self.listWidgetSection.setModelColumn(0)
         self.listWidgetSection.setUniformItemSizes(False)
         self.listWidgetSection.setSelectionRectVisible(True)
@@ -249,6 +251,7 @@ class Ui_MainWindow(object):
         self.pushButtonSubSectionUpdate.setObjectName("pushButtonSubSectionUpdate")
         self.gridLayout_3.addWidget(self.pushButtonSubSectionUpdate, 0, 3, 1, 1)
         self.listWidgetSubSection = QtGui.QListWidget(self.dockWidgetContentsSubSection)
+        self.listWidgetSubSection.setMinimumSize(QtCore.QSize(0, 200))
         self.listWidgetSubSection.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.listWidgetSubSection.setDragDropMode(QtGui.QAbstractItemView.DragOnly)
         self.listWidgetSubSection.setAlternatingRowColors(False)
@@ -318,6 +321,7 @@ class Ui_MainWindow(object):
         self.pushButtonFunctionUpdate.setObjectName("pushButtonFunctionUpdate")
         self.gridLayout_4.addWidget(self.pushButtonFunctionUpdate, 0, 3, 1, 1)
         self.listWidgetFunction = QtGui.QListWidget(self.dockWidgetContentsFunction)
+        self.listWidgetFunction.setMinimumSize(QtCore.QSize(0, 200))
         self.listWidgetFunction.setMidLineWidth(0)
         self.listWidgetFunction.setDragDropMode(QtGui.QAbstractItemView.DragOnly)
         self.listWidgetFunction.setAlternatingRowColors(False)
