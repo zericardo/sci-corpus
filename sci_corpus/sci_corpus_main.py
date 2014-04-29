@@ -747,7 +747,7 @@ in an article.'),
         
         
     def printFile(self):
-        """"
+        """
         Generates a PDF file with all sentences included in database.
         """
         self.notImplementedYet()
@@ -772,9 +772,9 @@ in an article.'),
         
         
     def exportFile(self):
-        '''
+        """
         Export file with extension.
-        '''
+        """
         self.notImplementedYet()
         """
         path = QFileDialog.getSaveFileName(self,
@@ -786,21 +786,21 @@ in an article.'),
         
         
     def importFile(self):
-        '''
+        """
         Import file with extension.
-        '''
+        """
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Import File'),
-                                           self.tr(self.container.path),
-                                           self.tr("Files (*.xml)"))
+                                           self.tr(''),
+                                           self.tr('(*.xml *.csv)'))[0]
 
         if path != '':
             self.container.import_(path)
         
-        self.updateSectionView()
-        self.updateSubSectionView()
-        self.updateFunctionView()
-        self.updateSentenceView()
+        #self.updateSectionView()
+        #self.updateSubSectionView()
+        #self.updateFunctionView()
+        #self.updateSentenceView()
             
     # -----------------------------------------------------------------------
     # Application methods
@@ -845,7 +845,7 @@ in an article.'),
                                       QMessageBox.Yes | QMessageBox.No, 
                                       QMessageBox.No)
         if answer == QMessageBox.Yes:
-            self.container.write_()
+            self.closeFile()
             self.writeSettings()
             event.accept()
         else:

@@ -1,7 +1,8 @@
 import os
-#import json
+import json
 import codecs
 import sqlite3
+import csv
 import xml.etree.ElementTree as ET
 
 class ContainerDB():
@@ -269,14 +270,36 @@ class ContainerDB():
         """
         Import file as XML, JSON, DB.
         """
-        try:
-           extension = path.split('.')[1]
-           if extension == 'xml' or 'XML':
-              self.bulk_add(path)
-        except Exception:
-           raise
-        else:
-           self.isModified = True
+        # @TODO: We need to implement a signal to send a log message.
+        print 'Importing from: ',  path
+
+        path = os.path.abspath(path)
+        ext = os.path.splitext(path)[1]
+        
+        if (ext == '.xml') or (ext == '.XML'):
+            print "Importing XML ..."
+            try:
+                self.bulk_add(path)
+            except Exception:
+                raise
+            else:
+                self.isModified = True
+                
+        elif (ext == '.csv') or (ext == '.CSV'):
+            print "Importing CSV ..."
+            with open(path,'rb') as csvfile:
+                spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                row_number = 0
+                for row in spamreader:
+                    if row_number != 0:
+                        [sec,  subs,  func,  sent,  ref]  = row
+                        # Splitting many fields in the same category
+                        sec = sec.split(',')
+                        subs = subs.split(',')
+                        func = func.split(',')
+                        self.addDB(sect=sec,subsect=subs,funct=func,phrase=[sent],ref=[ref])
+                    row_number += 1
+                    
         
     def export_(self,  path=''):
         """
@@ -435,7 +458,6 @@ class Container():
         """
         self.__path = ''
         self.__isModified = False
-        #self.__dict = {'Not Classified':{'Not Classified':{'Not Classified':('Sentence','Reference')}}}
         self.__db.commit()
         self.__db.close()
         
