@@ -515,9 +515,6 @@ p, li { white-space: pre-wrap; }
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidgetSubSection">
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
    <property name="windowTitle">
     <string>  Sub Section</string>
    </property>
@@ -720,10 +717,6 @@ p, li { white-space: pre-wrap; }
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidgetFunction">
-   <property name="styleSheet">
-    <string notr="true">
-</string>
-   </property>
    <property name="windowTitle">
     <string>  Function</string>
    </property>

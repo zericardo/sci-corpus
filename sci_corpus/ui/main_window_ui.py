@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Apr 29 16:35:41 2014
+# Created: Tue Apr 29 17:22:40 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -196,7 +196,6 @@ class Ui_MainWindow(object):
         self.dockWidgetSection.setWidget(self.dockWidgetContentsSection)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(4), self.dockWidgetSection)
         self.dockWidgetSubSection = QtGui.QDockWidget(MainWindow)
-        self.dockWidgetSubSection.setStyleSheet("")
         self.dockWidgetSubSection.setObjectName("dockWidgetSubSection")
         self.dockWidgetContentsSubSection = QtGui.QWidget()
         self.dockWidgetContentsSubSection.setObjectName("dockWidgetContentsSubSection")
@@ -272,8 +271,6 @@ class Ui_MainWindow(object):
         self.dockWidgetSubSection.setWidget(self.dockWidgetContentsSubSection)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(4), self.dockWidgetSubSection)
         self.dockWidgetFunction = QtGui.QDockWidget(MainWindow)
-        self.dockWidgetFunction.setStyleSheet("\n"
-"")
         self.dockWidgetFunction.setObjectName("dockWidgetFunction")
         self.dockWidgetContentsFunction = QtGui.QWidget()
         self.dockWidgetContentsFunction.setObjectName("dockWidgetContentsFunction")
