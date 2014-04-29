@@ -243,7 +243,7 @@ class MainWindow(QMainWindow):
         sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
         
         if sec != []:
-            if self.removeQuestion("section",sec) == QMessageBox.Yes:
+            if self.removeQuestion("Section",sec) == QMessageBox.Yes:
                 self.container.remove(sect=sec)
                 self.writeStatusBar('Section(s) has already removed.'.format(sec))
         self.updateTotalNumbers()
@@ -264,7 +264,7 @@ class MainWindow(QMainWindow):
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_sec != '':
-            if self.updateQuestion("section",(new_sec,old_sec[0])) == QMessageBox.Yes:
+            if self.updateQuestion("Section",(old_sec[0], new_sec)) == QMessageBox.Yes:
                 self.container.update(section=[(new_sec,old_sec[0])])
                 self.writeStatusBar('Section "{}" has already updated to "{}".'.format(old_sec[0], new_sec))
 
@@ -334,9 +334,10 @@ scientific text. In summary, they are the titles of each section.'),
         subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
         
         if subs != []:
-            if self.removeQuestion("subsection",subs) == QMessageBox.Yes:
+            if self.removeQuestion("Subsection",subs) == QMessageBox.Yes:
                 self.container.remove(subsect=subs)
                 self.writeStatusBar('A sub section has already removed.')
+                
         self.updateTotalNumbers()
         self.updateSubSectionView() 
                 
@@ -354,7 +355,7 @@ scientific text. In summary, they are the titles of each section.'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_subs != '':
-           if self.updateQuestion("subsection",(new_subs,old_subs[0])) == QMessageBox.Yes:
+           if self.updateQuestion("Subsection",(old_subs[0], new_subs)) == QMessageBox.Yes:
               self.container.update(subsection=[(new_subs,old_subs[0])])
               self.writeStatusBar('Sub section "{}" has already updated to "{}".'.format(old_subs[0], new_subs))
         
@@ -381,10 +382,8 @@ scientific text. In summary, they are the titles of each section.'),
                 subs = subs & subsecs[i+1]
             
         self.ui.listWidgetSubSection.clear()
-        
         subs = sorted(subs)
-        
-        self.ui.labelShownSubSection.setText(str(len(subs)))
+
         
         if "Not Classified" in subs:
             subs.remove("Not Classified")
@@ -394,6 +393,7 @@ scientific text. In summary, they are the titles of each section.'),
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSubSection.addItem(item)
             
+        self.ui.labelShownSubSection.setText(str(len(subs)))  
         self.updateFunctionView()
         self.updateSentenceView()
             
@@ -437,7 +437,7 @@ in an article.'),
         func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
         
         if func != []:
-            if self.removeQuestion("function",func) == QMessageBox.Yes:
+            if self.removeQuestion("Function",func) == QMessageBox.Yes:
                 self.container.remove(funct=func)
                 self.writeStatusBar('A function has already removed.')
         
@@ -458,10 +458,10 @@ in an article.'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_func != '':
-           if self.updateQuestion("function",(new_func,old_func)) == QMessageBox.Yes:
+           if self.updateQuestion("Function",(old_func[0], new_func)) == QMessageBox.Yes:
               self.container.update(function=[(new_func,old_func[0])])
               self.writeStatusBar('Function "{}" has already updated to "{}".'.format(old_func[0], new_func))
-
+              
         self.updateFunctionView()
 
 
@@ -602,12 +602,7 @@ in an article.'),
         """
         Removes a sentence.
         """
-        # Needs a review it doesnt work
-        sentence = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
-        if sentence != []:
-            if self.removeQuestion("sentence",sentence) == QMessageBox.Yes:
-                self.container.remove(phrase=sentence)
-                
+        self.notImplementedYet()      
         self.updateTotalNumbers()
         self.updateSentenceView()
 
@@ -616,13 +611,9 @@ in an article.'),
         """
         Updates a sentence.
         """
-        new_function = str(self.ui.lineEditFunction.text())
-        # Needs a review it doesnt work
-        if old_function != [] and new_function != '':
-           if self.updateQuestion("function",(new_function,old_function)) == QMessageBox.Yes:
-              self.container.update(function=[(new_function,old_function[0])])
-        
-        self.updateFunctionView()
+        self.notImplementedYet()
+        self.updateTotalNumbers()
+        self.updateSentenceView()
         
     def updateSentenceView(self):
         """
@@ -889,40 +880,25 @@ in an article.'),
                         QMessageBox.Ok)
 
 
-    def removeQuestion(self, category='', who=''):
+    def removeQuestion(self, category='', who=[]):
         """
         Removes a section item
-        """
+        """    
+            
         return QMessageBox.question(self,
                                     self.tr('Remove'),
-                                    self.tr('Do you want to remove item {} from {}?'.format(who, category)),
+                                    self.tr("Do you want to remove item(s) {} from {}?".format(str(who)[1:-1], category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
                                     
                                     
-    def updateQuestion(self, section=(), subsection=(), function=()):
+    def updateQuestion(self, category, (old_who, new_who)):
         """
         Updates a section item
         """
-        
-        if section != ():
-           category = 'section'
-           oldWho = section[1]
-           newWho = section[0]
-
-        if subsection != ():
-           category = 'subsection'
-           oldWho = subsection[1]
-           newWho = subsection[0]
-        
-        if function != ():
-           category = 'function'
-           oldWho = function[1]
-           newWho = function[0]
-        
         return QMessageBox.question(self,
                                     self.tr('Update'),
-                                    self.tr('Do you want to update item "{}" to "{}" in {}?'.format(oldWho[0],newWho,category)),
+                                    self.tr("Do you want to update item '{}' to '{}' in {}?".format(old_who,new_who,category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
 
