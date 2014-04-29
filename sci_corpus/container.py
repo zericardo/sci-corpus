@@ -266,6 +266,7 @@ class ContainerDB():
            self.__path = ''
            self.__isModified = False        
         
+        
     def import_(self,  path=''):
         """
         Import file as XML, JSON, DB.

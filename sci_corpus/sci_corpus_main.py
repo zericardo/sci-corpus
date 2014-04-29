@@ -15,7 +15,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
 from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
 from PySide.QtGui import QBrush,  QColor
-from PySide.QtCore import QSettings
+from PySide.QtCore import QSettings,  QRect
 
 import container as container
 import re
@@ -851,7 +851,7 @@ in an article.'),
         else:
             event.ignore()
             
-            
+        
     def writeSettings(self):
         settings = QSettings("SciCorpus", "SciCorpus")
         settings.setValue("geometry", self.saveGeometry())
@@ -915,6 +915,8 @@ in an article.'),
 
 if __name__ == '__main__':
     app = QApplication('Sci Corpus')
+    screenGeometry = QRect()
+    screenGeometry = app.desktop().screenGeometry()
     main_window = MainWindow()
     style_sheet = """QGroupBox {
                     border: 1px solid lightgray;
@@ -926,6 +928,7 @@ if __name__ == '__main__':
                     padding: 0 3px 0 3px;}"""
     app.setStyleSheet(style_sheet)
     main_window.show()
+    main_window.setGeometry(screenGeometry)
     exit(app.exec_())
 
     '''
