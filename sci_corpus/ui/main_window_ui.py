@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Mon Apr 28 17:34:14 2014
+# Created: Mon Apr 28 23:55:05 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -27,7 +27,10 @@ class Ui_MainWindow(object):
         self.textEditSentence.setObjectName("textEditSentence")
         self.gridLayoutMainWindow.addWidget(self.textEditSentence, 1, 3, 2, 5)
         self.tableWidgetSentence = QtGui.QTableWidget(self.centralwidget)
+        self.tableWidgetSentence.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.tableWidgetSentence.setDragDropOverwriteMode(False)
         self.tableWidgetSentence.setAlternatingRowColors(True)
+        self.tableWidgetSentence.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.tableWidgetSentence.setObjectName("tableWidgetSentence")
         self.tableWidgetSentence.setColumnCount(1)
         self.tableWidgetSentence.setRowCount(3)

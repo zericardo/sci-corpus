@@ -50,8 +50,17 @@ p, li { white-space: pre-wrap; }
       </item>
       <item row="4" column="3" rowspan="6" colspan="6">
        <widget class="QTableWidget" name="tableWidgetSentence">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="dragDropOverwriteMode">
+         <bool>false</bool>
+        </property>
         <property name="alternatingRowColors">
          <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
         </property>
         <property name="sortingEnabled">
          <bool>true</bool>

@@ -170,7 +170,8 @@ class MainWindow(QMainWindow):
             not self.ui.checkBoxReference.isChecked())
             
         self.ui.tableWidgetSentence.setRowCount(1)
-                 
+        self.ui.tableWidgetSentence.itemSelectionChanged.connect(self.updateSelectedNumbers)
+
         self.ui.checkBoxStrip.setChecked(True)
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
         
@@ -190,6 +191,7 @@ class MainWindow(QMainWindow):
         self.ui.labelSelectedSection.setText(str(len(self.ui.listWidgetSection.selectedItems())))
         self.ui.labelSelectedSubSection.setText(str(len(self.ui.listWidgetSubSection.selectedItems())))
         self.ui.labelSelectedFunction.setText(str(len(self.ui.listWidgetFunction.selectedItems())))
+        self.ui.labelSelectedSentence.setText(str(len(self.ui.tableWidgetSentence.selectedItems())))
         
     def updateTotalNumbers(self):
         """
@@ -539,7 +541,6 @@ in an article.'),
         
         #exception here b and e must have the same size!
         if(len(b) == len(e)):
-            
             for i in range(0,len(b)):
                 if(b[i]>=e[i]):
                     raise AssertionError("Delimiters aren't being used correctly!")
@@ -550,7 +551,6 @@ in an article.'),
                 r.append(sent[b[i]:e[i]])
 
             if(hideMarked):
-            
                 for substring in r:
                     sent = sent.replace(substring, changeBy)
             else:
@@ -676,7 +676,7 @@ in an article.'),
                 row += 1
                 
         self.ui.labelShownSentence.setText(str(row))
-                
+        
         self.ui.tableWidgetSentence.setRowCount(row)
         
         self.ui.tableWidgetSentence.setColumnHidden(0, \
