@@ -15,14 +15,16 @@ This script provides a graphical interface for sci-corpus program standalone.
 from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
 from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
 from PySide.QtGui import QBrush,  QColor
-from PySide.QtCore import QSettings
+from PySide.QtCore import QSettings,  QRect
 
 import container as container
 import re
+import os
 
 from ui import main_window_ui
 
 __version__='0.1.B'
+__program_name__ = 'Sci Corpus - Scientific Corpus Manager'
 
 class MainWindow(QMainWindow):
     def __init__(self, argv=None, parent=None):
@@ -139,6 +141,9 @@ class MainWindow(QMainWindow):
         self.ui.checkBoxFunction.clicked.connect(lambda: \
                 self.ui.tableWidgetSentence.setColumnHidden(2, \
                 not self.ui.checkBoxFunction.isChecked()))
+        self.ui.checkBoxSentence.clicked.connect(lambda: \
+                self.ui.tableWidgetSentence.setColumnHidden(3, \
+                not self.ui.checkBoxSentence.isChecked()))
         self.ui.checkBoxReference.clicked.connect(lambda: \
                 self.ui.tableWidgetSentence.setColumnHidden(4, \
                 not self.ui.checkBoxReference.isChecked()))
@@ -153,6 +158,8 @@ class MainWindow(QMainWindow):
             not self.ui.checkBoxSubSection.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(2, \
             not self.ui.checkBoxFunction.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(3, \
+            not self.ui.checkBoxSentence.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(4, \
             not self.ui.checkBoxReference.isChecked())
             
@@ -176,6 +183,8 @@ class MainWindow(QMainWindow):
             not self.ui.checkBoxSubSection.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(2, \
             not self.ui.checkBoxFunction.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(3,  \
+            not self.ui.checkBoxSentence.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(4, \
             not self.ui.checkBoxReference.isChecked())
             
@@ -646,7 +655,7 @@ in an article.'),
         self.ui.tableWidgetSentence.setColumnWidth(0,150)
         self.ui.tableWidgetSentence.setColumnWidth(1,200)
         self.ui.tableWidgetSentence.setColumnWidth(2,300)
-        self.ui.tableWidgetSentence.setColumnWidth(3,900)
+        self.ui.tableWidgetSentence.setColumnWidth(3,800)
         self.ui.tableWidgetSentence.setColumnWidth(4,100)  
 
         row = 0
@@ -686,6 +695,8 @@ in an article.'),
             not self.ui.checkBoxSubSection.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(2, \
             not self.ui.checkBoxFunction.isChecked())
+        self.ui.tableWidgetSentence.setColumnHidden(3, \
+            not self.ui.checkBoxSentence.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(4, \
             not self.ui.checkBoxReference.isChecked())
         
@@ -718,6 +729,7 @@ in an article.'),
 
         if path != '':
             self.container.read_(path)
+            self.setWindowTitle(__program_name__+" : "+self.container.path)
             self.updateSelectedNumbers()
             self.updateTotalNumbers()
             self.updateSectionView()
@@ -768,6 +780,7 @@ in an article.'),
                 self.saveFile()
 
         self.container.close_()
+        self.setWindowTitle(__program_name__)
         self.clearAll()    
         
         
@@ -851,7 +864,7 @@ in an article.'),
         else:
             event.ignore()
             
-            
+        
     def writeSettings(self):
         settings = QSettings("SciCorpus", "SciCorpus")
         settings.setValue("geometry", self.saveGeometry())
@@ -914,16 +927,22 @@ in an article.'),
 
 
 if __name__ == '__main__':
-    app = QApplication('Sci Corpus')
+    app = QApplication(__program_name__)
     main_window = MainWindow()
-    style_sheet = """QGroupBox {
-                    border: 1px solid lightgray;
-                    border-radius: 5px;
-                    margin-top: 0.5em;}
-                    QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left:10px;
-                    padding: 0 3px 0 3px;}"""
-    app.setStyleSheet(style_sheet)
+             
+    try:
+        style_sheet = ''
+        with open(os.path.abspath('ui/sci_corpus_style_sheet.sty'),'rb') as style_file:
+            style_sheet = str(style_file.read())
+            app.setStyleSheet(style_sheet)
+    except Exception,  e:
+        print 'Error in style sheet: ',  e
+        pass
+        
     main_window.show()
+    main_window.setWindowTitle(__program_name__)
+    screenGeometry = QRect()
+    screenGeometry = app.desktop().screenGeometry()
+    main_window.setGeometry(screenGeometry)
+    
     exit(app.exec_())
