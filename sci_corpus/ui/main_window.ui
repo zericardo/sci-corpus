@@ -460,6 +460,12 @@ p, li { white-space: pre-wrap; }
      </item>
      <item row="1" column="0" colspan="4">
       <widget class="QListWidget" name="listWidgetSection">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>200</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -470,7 +476,7 @@ p, li { white-space: pre-wrap; }
         <set>Qt::ImhPreferUppercase</set>
        </property>
        <property name="dragDropMode">
-        <enum>QAbstractItemView::DragOnly</enum>
+        <enum>QAbstractItemView::DragDrop</enum>
        </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
@@ -480,6 +486,9 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="movement">
         <enum>QListView::Free</enum>
+       </property>
+       <property name="viewMode">
+        <enum>QListView::ListMode</enum>
        </property>
        <property name="modelColumn">
         <number>0</number>
@@ -658,6 +667,12 @@ p, li { white-space: pre-wrap; }
      </item>
      <item row="1" column="0" colspan="4">
       <widget class="QListWidget" name="listWidgetSubSection">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>200</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -847,6 +862,12 @@ p, li { white-space: pre-wrap; }
      </item>
      <item row="1" column="0" colspan="4">
       <widget class="QListWidget" name="listWidgetFunction">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>200</height>
+        </size>
+       </property>
        <property name="midLineWidth">
         <number>0</number>
        </property>

@@ -59,7 +59,10 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSection.triggered.connect(self.updateSection)
         self.ui.actionTipsSection.triggered.connect(self.tipsSection)
         
-        self.ui.listWidgetSection.doubleClicked.connect(self.tipsSection)
+        self.ui.listWidgetSection.doubleClicked.connect(lambda: \
+                self.ui.lineEditSection.setText(self.ui.listWidgetSection.currentItem().text()))
+        self.ui.listWidgetSection.itemSelectionChanged.connect(lambda: self.ui.lineEditSection.clear())
+                
         self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSubSectionView)
         self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSentenceView)
         
@@ -79,7 +82,10 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSubSection.triggered.connect(self.updateSubSection)
         self.ui.actionTipsSubSection.triggered.connect(self.tipsSubSection)
         
-        self.ui.listWidgetSubSection.doubleClicked.connect(self.tipsSubSection)
+        self.ui.listWidgetSubSection.doubleClicked.connect(lambda: \
+                self.ui.lineEditSubSection.setText(self.ui.listWidgetSubSection.currentItem().text()))
+        self.ui.listWidgetSubSection.itemSelectionChanged.connect(lambda: self.ui.lineEditSubSection.clear())
+        
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateFunctionView)
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateSentenceView)
 
@@ -99,7 +105,11 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateFunction.triggered.connect(self.updateFunction)
         self.ui.actionTipsFunction.triggered.connect(self.tipsFunction)
         
-        self.ui.listWidgetFunction.doubleClicked.connect(self.tipsFunction)
+        
+        self.ui.listWidgetFunction.doubleClicked.connect(lambda: \
+                self.ui.lineEditFunction.setText(self.ui.listWidgetFunction.currentItem().text()))
+        self.ui.listWidgetFunction.itemSelectionChanged.connect(lambda: self.ui.lineEditFunction.clear())
+        
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSentenceView)
         
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSelectedNumbers)
