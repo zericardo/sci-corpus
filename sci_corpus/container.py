@@ -383,28 +383,38 @@ class ContainerDB():
 
         elif (ext == '.csv') or (ext == '.CSV'):
             print "Importing CSV ..."
-            with open(path,'rb') as csvfile:
-                spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            with codecs.open(path, 'rb', 'utf-8') as csvfile:
+                spamreader = csv.reader(csvfile, delimiter=';', quotechar='"')
                 row_number = 0
                 for row in spamreader:
                     if row_number != 0:
                         [sec,  subs,  func,  sent,  ref]  = row
                         # Splitting many fields in the same category
-                        sec = sec.split(',')
-                        subs = subs.split(',')
-                        func = func.split(',')
-                        self.addDB(sect=sec,subsect=subs,funct=func,phrase=[sent],ref=[ref])
-                    row_number += 1
-
-
+                        sec = [unicode(x) for x in sec.split(',')]
+                        subs = [unicode(x) for x in subs.split(',')]
+                        func = [unicode(x) for x in func.split(',')]
+                        self.addDB(sect=sec,subsect=subs,funct=func,phrase=[unicode(sent)],ref=[unicode(ref)])
+                    row_number += 1                    
+        elif (ext == '.json') or (ext == '.JSON'):
+            print "Importing JSON ..."
+                    
+        
     def export_(self,  path=''):
         """
         Export file as XML, JSON, DB.
         """
+        print 'Exporting to: ',  path
 
-        with codecs.open(path, 'wb',  'utf-8') as project_file:
-            json.dump(self.__dict, project_file,  indent=4,  sort_keys=True)
-        self.isModified = False
+        path = os.path.abspath(path)
+        ext = os.path.splitext(path)[1]
+        
+        if (ext == '.xml') or (ext == '.XML'):
+            print "Exporting XML ..."
 
-
+                
+        elif (ext == '.csv') or (ext == '.CSV'):
+            print "Exporting CSV ..."
+            
+        elif (ext == '.json') or (ext == '.JSON'):
+            print "Exporting JSON ..."
 
