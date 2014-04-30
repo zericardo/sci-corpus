@@ -20,6 +20,7 @@ from PySide.QtCore import QSettings,  QRect
 import container as container
 import re
 import os
+import json
 
 from ui import main_window_ui
 
@@ -33,6 +34,23 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         
         self.container = container.ContainerDB()
+        
+        self.preferences = {'theme':self.theme, 
+                            'section':self.ui.checkBoxSection.isClicked(), 
+                            'subsection': self.ui.checkBoxSubSection.isClicked(), 
+                            'function': self.ui.checkBoxFunction.isClicked(), 
+                            'sentence': self.ui.checkBoxSentence.isClicked(), 
+                            'reference': self.ui.checkBoxReference.isClicked(), 
+                            'strip': self.ui.checkBoxStrip.isClicked(), 
+                            'replace_by':self.replaceBy, 
+                            'marker': self.marker, 
+                            'hide_marked':self.hideMarked, 
+                            'last_path': self.container.path}
+                            
+        self.theme = 'Black'
+        self.replaceBy = '...'
+        self.marker = '{}'
+        self.hideMarked = True
         
         # File
         
@@ -809,10 +827,24 @@ in an article.'),
         if path != '':
             self.container.import_(path)
         
-        #self.updateSectionView()
-        #self.updateSubSectionView()
-        #self.updateFunctionView()
-        #self.updateSentenceView()
+        self.updateSectionView()
+        self.updateSubSectionView()
+        self.updateFunctionView()
+        self.updateSentenceView()
+        
+    def readPreferences(self):
+        """
+        Reads preferences from file.
+        """
+        with codecs.open(os.path.abspath(os.path.join('~', 'scicorpuspreferences.ini')), 'rb',  'utf-8') as file:
+            self.preferences = json.loads(file)
+        
+    def writePreferences(self):
+        """
+        Writes preferences on file.
+        """
+        with codecs.open(os.path.abspath(os.path.join('~', 'scicorpuspreferences.ini')), 'wb',  'utf-8') as file:
+            json.dump(self.preferences, file,  indent=4,  sort_keys=True)
             
     # -----------------------------------------------------------------------
     # Application methods
