@@ -105,7 +105,6 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateFunction.triggered.connect(self.updateFunction)
         self.ui.actionTipsFunction.triggered.connect(self.tipsFunction)
         
-        
         self.ui.listWidgetFunction.doubleClicked.connect(lambda: \
                 self.ui.lineEditFunction.setText(self.ui.listWidgetFunction.currentItem().text()))
         self.ui.listWidgetFunction.itemSelectionChanged.connect(lambda: self.ui.lineEditFunction.clear())
