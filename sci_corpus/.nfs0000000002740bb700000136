@@ -5,84 +5,61 @@ import sqlite3
 import csv
 import xml.etree.ElementTree as ET
 import StringIO
-import shutil
 
 class ContainerDB():
     """
     Class container.
     """
     def __init__(self):
-        self.__path = ''
-        self.__defaultpath = '../examples/backup.db'
         self.__isModified = False 
-        self.createNconnectDB(flag=True)
-        
+        self.createNconnectDB()
     
     
-    def createNconnectDB(self, path='',flag=False):
-        '''
-        Make a sqlite connection and creates a table.
-        If no path, the connection will be with memory
-        otherwise, with the database file referenced by path
-        '''
-        
-        try:
-            if path != '':
+    def createNconnectDB(self, path=''):
+		'''
+		Make a sqlite connection and creates a table.
+		If no path, the connection will be with memory
+		otherwise, with the database file referenced by path
+		'''
+		
+		try:
+			if path != '':
                 self.__dbfile = sqlite3.connect(path)
             else:
-                self.__dbmem = sqlite3.connect(":memory:")
+				self.__dbmem = sqlite3.connect(":memory:")
             
         except sqlite3.Error, err:
-            print "[INFO line 35] %s" % err
+            print "[INFO] %s" % err
         
         else:
-            if flag == True:
-                if path != '':
-                    self.__dbfile.cursor().execute('''CREATE TABLE IF NOT EXISTS
-                                corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-                                func TEXT, phrase TEXT, ref TEXT)''')
-                    self.__dbfile.commit()
-                else:
-                    self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
-                                corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-                                func TEXT, phrase TEXT, ref TEXT)''')
-                    self.__dbmem.commit()
+            if path != '':
+			    self.__dbfile.cursor().execute('''CREATE TABLE IF NOT EXISTS
+                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                            func TEXT, phrase TEXT, ref TEXT)''')
+                self.__dbfile.commit()
+            else:
+			    self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
+                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                            func TEXT, phrase TEXT, ref TEXT)''')
+				self.__dbmem.commit()
    
    
     def importToMemory(self):
-        '''
-        This function imports a DB file to memory
-        '''
-        try:
-             tempfile = StringIO.StringIO()
-             for line in self.__dbfile.iterdump():
-                 tempfile.write('%s\n' % line)
-             self.__dbfile.close()
-             tempfile.seek(0)
-             
-             self.__dbmem.cursor().execute('DROP TABLE corpus')
-             self.__dbmem.cursor().executescript(tempfile.read())
-             self.__dbmem.commit()
-             
-        except sqlite3.Error, err:
-            print "[INFO line 66] %s" % err
-            
-    def importToDBFile(self):
-        '''
-        This function imports a memory table to DB file
-        '''
-        try:
-             tempfile = StringIO.StringIO()
-             for line in self.__dbmem.iterdump():
-                 tempfile.write('%s\n' % line)
-             tempfile.seek(0)
-             
-             self.__dbfile.cursor().executescript(tempfile.read())
-             self.__dbfile.commit()
-             self.__dbfile.close()
-        except sqlite3.Error, err:
-            print "[INFO] %s" % err
-
+		'''
+		This function imports a DB file to memory
+		'''
+		try:
+			 tempfile = StringIO()
+			 for line in self.__dbfile.interdump():
+				 tempfile.write('%s\n' % line)
+			 self.__dbfile.close()
+			 tempfile.seek(0)
+			 
+			 self.__dbmem.cursor().executescript(tempfile.read())
+			 self.__dbmem.commit()
+	    except sqlite3.Error, err
+	        print "[INFO] %s" % err
+	        
     
     def addDB(self,sect=['Not Classified'],subsect=['Not Classified'],funct=['Not Classified'],phrase=['NULL'],ref=['NULL']):
         
@@ -251,8 +228,8 @@ class ContainerDB():
         return self.__defaultpath
         
     @defaultpath.setter
-    def defaultpath(self, path):
-        self.__defaultpath = os.path.abspath(path)
+    def defaultpath(self):
+        self.__defaultpath = os.path.abspath('../examples/CORPUS.db')
 
     @property
     def dbfile(self):
@@ -278,43 +255,32 @@ class ContainerDB():
         Writes file in path or in self.path if not passed.
         """
         
-        self.__dbmem.commit()
-        
         if path == '':
-            path = self.path
-            try:
-                shutil.copy2(path,self.__defaultpath)
-                os.remove(path)
-            except OSError, e:
-                print ("Error: %s - %s." % (e.filename,e.strerror))
-            else:
-                self.createNconnectDB(path)
-                self.importToDBFile()
+            path = self.defaultpath
         else:
             self.path = path
-            try:
-                os.remove(path)
-            except OSError, e:
-                print ("Error: %s - %s." % (e.filename,e.strerror))
-            finally:
-                self.createNconnectDB(path)
-                self.importToDBFile()
-            
-        self.isModified = False
+        
+        try:
+           self.__db.commit()
+        except Exception:
+           raise
+        else:
+           self.isModified = False
         
     def read_(self,  path):
         """
         Reads file.
         """
         
-        try:
-            self.createNconnectDB(path)
-            self.importToMemory()
-        except Exception:
-            raise
-        else:
-            self.path = path
-            self.isModified = False
+        '''
+        This two function alheady handle exception
+        '''
+        self.createNconnectDB(path)
+        self.importToMemory()
+        
+        
+        self.path = path
+        self.isModified = False
         
       
     def close_(self):
@@ -323,15 +289,12 @@ class ContainerDB():
         """
         
         try:
-           self.__dbmem.close()
-        except sqlite3.Error, err:
-            print "[INFO line 326] %s" % err
+           self.__db.close()
+        except Exception:
+           raise
         else:
            self.__path = ''
            self.__isModified = False        
-        finally:
-            self.createNconnectDB(flag=True)
-        
         
     def import_(self,  path=''):
         """
