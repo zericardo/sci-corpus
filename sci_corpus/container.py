@@ -4,8 +4,7 @@ import codecs
 import sqlite3
 import csv
 import xml.etree.ElementTree as ET
-from xml.etree.ElementTree import ParseError
-from StringIO import StringIO
+import StringIO as strio
 from shutil import copy2
 
 class ContainerDB():
@@ -55,7 +54,7 @@ class ContainerDB():
         This function imports a DB file to memory
         '''
         try:
-             tempfile = StringIO.StringIO()
+             tempfile = strio.StringIO()
              for line in self.__dbfile.iterdump():
                  tempfile.write('%s\n' % line)
              self.__dbfile.close()
@@ -73,7 +72,7 @@ class ContainerDB():
         This function imports a memory table to DB file
         '''
         try:
-             tempfile = StringIO.StringIO()
+             tempfile = strio.StringIO()
              for line in self.__dbmem.iterdump():
                  tempfile.write('%s\n' % line)
              tempfile.seek(0)
@@ -88,6 +87,12 @@ class ContainerDB():
     def addDB(self,sect=['Not Classified'],subsect=['Not Classified'],funct=['Not Classified'],phrase=['NULL'],ref=['NULL']):
 
         cursor = self.__dbmem.cursor()
+
+        if sect == ['']: sect = ['Not Classified']
+        if subsect == ['']: subsect = ['Not Classified']
+        if funct == ['']: funct = ['Not Classified']
+        if phrase == ['']: phrase = ['NULL']
+        if ref == ['']: ref = ['NULL']
 
         try:
             whatadd = [(a,b,c,d,e) for a in sect for b in subsect for c in funct for d in phrase for e in ref]
