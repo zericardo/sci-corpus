@@ -33,24 +33,22 @@ class MainWindow(QMainWindow):
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
         
-        self.container = container.ContainerDB()
-        
-        self.preferences = {'theme':self.theme, 
-                            'section':self.ui.checkBoxSection.isClicked(), 
-                            'subsection': self.ui.checkBoxSubSection.isClicked(), 
-                            'function': self.ui.checkBoxFunction.isClicked(), 
-                            'sentence': self.ui.checkBoxSentence.isClicked(), 
-                            'reference': self.ui.checkBoxReference.isClicked(), 
-                            'strip': self.ui.checkBoxStrip.isClicked(), 
-                            'replace_by':self.replaceBy, 
-                            'marker': self.marker, 
-                            'hide_marked':self.hideMarked, 
-                            'last_path': self.container.path}
-                            
+        self.container = container.ContainerDB()               
         self.theme = 'Black'
         self.replaceBy = '...'
         self.marker = '{}'
         self.hideMarked = True
+        self.preferences = {'theme':self.theme, 
+                    'section':self.ui.checkBoxSection.isClicked(), 
+                    'subsection': self.ui.checkBoxSubSection.isClicked(), 
+                    'function': self.ui.checkBoxFunction.isClicked(), 
+                    'sentence': self.ui.checkBoxSentence.isClicked(), 
+                    'reference': self.ui.checkBoxReference.isClicked(), 
+                    'strip': self.ui.checkBoxStrip.isClicked(), 
+                    'replace_by':self.replaceBy, 
+                    'marker': self.marker, 
+                    'hide_marked':self.hideMarked, 
+                    'last_path': self.container.path}
         
         # File
         
