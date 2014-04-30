@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1562</width>
-    <height>938</height>
+    <height>950</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,6 +23,10 @@
   </property>
   <property name="windowTitle">
    <string>Sci Corpus </string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons/sci_corpus_resource.qrc">
+    <normaloff>:/Window/Icon_Sci_Corpus.png</normaloff>:/Window/Icon_Sci_Corpus.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -1054,26 +1058,42 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionClose"/>
   </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/File/document-open-7.png</normaloff>:/File/document-open-7.png</iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/File/document-save-3.png</normaloff>:/File/document-save-3.png</iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
   </action>
   <action name="actionSaveAs">
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/File/document-save-as-3.png</normaloff>:/File/document-save-as-3.png</iconset>
+   </property>
    <property name="text">
     <string>Save As</string>
    </property>
   </action>
   <action name="actionPrint">
    <property name="text">
-    <string>Print</string>
+    <string>Print to PDF</string>
    </property>
   </action>
   <action name="actionClose">
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/File/document-close-4.png</normaloff>:/File/document-close-4.png</iconset>
+   </property>
    <property name="text">
     <string>Close</string>
    </property>
@@ -1154,21 +1174,19 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionImport">
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/File/document-import-2.png</normaloff>:/File/document-import-2.png</iconset>
+   </property>
    <property name="text">
     <string>Import ...</string>
    </property>
   </action>
-  <action name="actionExportXML">
-   <property name="text">
-    <string>Export XML</string>
-   </property>
-  </action>
-  <action name="actionImportJSON">
-   <property name="text">
-    <string>Import JSON</string>
-   </property>
-  </action>
   <action name="actionExport">
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/File/document-export-4.png</normaloff>:/File/document-export-4.png</iconset>
+   </property>
    <property name="text">
     <string>Export ...</string>
    </property>
@@ -1199,6 +1217,8 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons/sci_corpus_resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

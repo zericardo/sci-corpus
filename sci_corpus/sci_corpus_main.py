@@ -21,10 +21,13 @@ import container as container
 import re
 import os
 import json
+import codecs
+import time
 
 from ui import main_window_ui
+import start_dlg
 
-__version__='0.1.B'
+__version__='1.0'
 __program_name__ = 'Sci Corpus - Scientific Corpus Manager'
 
 class MainWindow(QMainWindow):
@@ -32,6 +35,20 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
+        
+        # We should put something util
+        start_dialog = start_dlg.StartDialog()
+        start_dialog.progress(10)
+        time.sleep(0.5)
+        start_dialog.progress(30)
+        time.sleep(1)
+        start_dialog.progress(60)
+        time.sleep(1)
+        start_dialog.progress(90)
+        time.sleep(2)
+        start_dialog.progress(100)
+        time.sleep(1)
+        start_dialog.close()
         
         self.container = container.ContainerDB()               
         self.theme = 'Black'
@@ -795,7 +812,7 @@ in an article.'),
                 self.saveFile()
 
         self.container.close_()
-        self.setWindowTitle(__program_name__)
+        self.setWindowTitle(__program_name__+" V."+__version__)
         self.clearAll()    
         
         
@@ -844,6 +861,7 @@ in an article.'),
         with codecs.open(os.path.abspath(os.path.join('~', 'scicorpuspreferences.ini')), 'wb',  'utf-8') as file:
             json.dump(self.preferences, file,  indent=4,  sort_keys=True)
             
+
     # -----------------------------------------------------------------------
     # Application methods
     # -----------------------------------------------------------------------

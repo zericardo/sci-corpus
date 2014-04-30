@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Apr 29 17:22:40 2014
+# Created: Wed Apr 30 13:50:51 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1562, 938)
+        MainWindow.resize(1562, 950)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -20,6 +20,9 @@ class Ui_MainWindow(object):
         MainWindow.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         MainWindow.setFont(font)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/Window/Icon_Sci_Corpus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -406,14 +409,26 @@ class Ui_MainWindow(object):
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.actionOpen = QtGui.QAction(MainWindow)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/File/document-open-7.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionOpen.setIcon(icon1)
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtGui.QAction(MainWindow)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/File/document-save-3.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSave.setIcon(icon2)
         self.actionSave.setObjectName("actionSave")
         self.actionSaveAs = QtGui.QAction(MainWindow)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/File/document-save-as-3.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSaveAs.setIcon(icon3)
         self.actionSaveAs.setObjectName("actionSaveAs")
         self.actionPrint = QtGui.QAction(MainWindow)
         self.actionPrint.setObjectName("actionPrint")
         self.actionClose = QtGui.QAction(MainWindow)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/File/document-close-4.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionClose.setIcon(icon4)
         self.actionClose.setObjectName("actionClose")
         self.actionQuit = QtGui.QAction(MainWindow)
         self.actionQuit.setObjectName("actionQuit")
@@ -446,12 +461,14 @@ class Ui_MainWindow(object):
         self.actionUpdateSentence = QtGui.QAction(MainWindow)
         self.actionUpdateSentence.setObjectName("actionUpdateSentence")
         self.actionImport = QtGui.QAction(MainWindow)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/File/document-import-2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionImport.setIcon(icon5)
         self.actionImport.setObjectName("actionImport")
-        self.actionExportXML = QtGui.QAction(MainWindow)
-        self.actionExportXML.setObjectName("actionExportXML")
-        self.actionImportJSON = QtGui.QAction(MainWindow)
-        self.actionImportJSON.setObjectName("actionImportJSON")
         self.actionExport = QtGui.QAction(MainWindow)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/File/document-export-4.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionExport.setIcon(icon6)
         self.actionExport.setObjectName("actionExport")
         self.actionTipsSection = QtGui.QAction(MainWindow)
         self.actionTipsSection.setObjectName("actionTipsSection")
@@ -619,7 +636,7 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSave.setText(QtGui.QApplication.translate("MainWindow", "Save", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSaveAs.setText(QtGui.QApplication.translate("MainWindow", "Save As", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionPrint.setText(QtGui.QApplication.translate("MainWindow", "Print", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionPrint.setText(QtGui.QApplication.translate("MainWindow", "Print to PDF", None, QtGui.QApplication.UnicodeUTF8))
         self.actionClose.setText(QtGui.QApplication.translate("MainWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
@@ -637,8 +654,6 @@ class Ui_MainWindow(object):
         self.actionRemoveSentence.setText(QtGui.QApplication.translate("MainWindow", "Remove", None, QtGui.QApplication.UnicodeUTF8))
         self.actionUpdateSentence.setText(QtGui.QApplication.translate("MainWindow", "Update", None, QtGui.QApplication.UnicodeUTF8))
         self.actionImport.setText(QtGui.QApplication.translate("MainWindow", "Import ...", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionExportXML.setText(QtGui.QApplication.translate("MainWindow", "Export XML", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionImportJSON.setText(QtGui.QApplication.translate("MainWindow", "Import JSON", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExport.setText(QtGui.QApplication.translate("MainWindow", "Export ...", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTipsSection.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTipsSubSection.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
@@ -646,3 +661,4 @@ class Ui_MainWindow(object):
         self.actionTipsSentence.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStripOptions.setText(QtGui.QApplication.translate("MainWindow", "Strip Options", None, QtGui.QApplication.UnicodeUTF8))
 
+import ui.sci_corpus_resource_rc
