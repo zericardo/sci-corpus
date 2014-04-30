@@ -1,0 +1,37 @@
+<RCC>
+  <qresource prefix="File">
+    <file>configure-5.png</file>
+    <file>db_add.png</file>
+    <file>db_comit.png</file>
+    <file>db_remove.png</file>
+    <file>db_status.png</file>
+    <file>db_update.png</file>
+    <file>db.png</file>
+    <file>document-close-2.png</file>
+    <file>document-close-4.png</file>
+    <file>document-close.png</file>
+    <file>document-export-4.png</file>
+    <file>document-import-2.png</file>
+    <file>document-open-4.png</file>
+    <file>document-open-5.png</file>
+    <file>document-open-7.png</file>
+    <file>document-open-8.png</file>
+    <file>document-open-folder.png</file>
+    <file>document-save-2.png</file>
+    <file>document-save-3.png</file>
+    <file>document-save-4.png</file>
+    <file>document-save-as-2.png</file>
+    <file>document-save-as-3.png</file>
+    <file>document-save-as-4.png</file>
+    <file>sci_corpus_resource.qrc</file>
+    <file>window-close-2.png</file>
+    <file>window-close.png</file>
+  </qresource>
+  <qresource prefix="Window">
+    <file>Logo_Sci_Corpus_Without_Version.png</file>
+    <file>Icon_Sci_Corpus.png</file>
+    <file>Logo_Sci_Corpus_Over_All.png</file>
+    <file>Logo_Sci_Corpus_Over_Sci.png</file>
+    <file>Logo_Sci_Corpus_V1.0.png</file>
+  </qresource>
+</RCC>
