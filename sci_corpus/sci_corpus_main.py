@@ -39,12 +39,12 @@ class MainWindow(QMainWindow):
         self.marker = '{}'
         self.hideMarked = True
         self.preferences = {'theme':self.theme, 
-                    'section':self.ui.checkBoxSection.isClicked(), 
-                    'subsection': self.ui.checkBoxSubSection.isClicked(), 
-                    'function': self.ui.checkBoxFunction.isClicked(), 
-                    'sentence': self.ui.checkBoxSentence.isClicked(), 
-                    'reference': self.ui.checkBoxReference.isClicked(), 
-                    'strip': self.ui.checkBoxStrip.isClicked(), 
+                    'section':self.ui.checkBoxSection.isChecked(), 
+                    'subsection': self.ui.checkBoxSubSection.isChecked(), 
+                    'function': self.ui.checkBoxFunction.isChecked(), 
+                    'sentence': self.ui.checkBoxSentence.isChecked(), 
+                    'reference': self.ui.checkBoxReference.isChecked(), 
+                    'strip': self.ui.checkBoxStrip.isChecked(), 
                     'replace_by':self.replaceBy, 
                     'marker': self.marker, 
                     'hide_marked':self.hideMarked, 
@@ -961,7 +961,7 @@ if __name__ == '__main__':
              
     try:
         style_sheet = ''
-        with open(os.path.abspath('ui/sci_corpus_style_sheet.sty'),'rb') as style_file:
+        with open(os.path.abspath('ui/white_theme.sty'),'rb') as style_file:
             style_sheet = str(style_file.read())
             app.setStyleSheet(style_sheet)
     except Exception,  e:
