@@ -15,11 +15,10 @@ class ContainerDB():
         self.__path = ''
         self.__defaultpath = '../examples/backup.db'
         self.__isModified = False
-        self.createNconnectDB(flag=True)
+        self.createNconnectDB()
 
 
-
-    def createNconnectDB(self, path='',flag=False):
+    def createNconnectDB(self, path=''):
         '''
         Make a sqlite connection and creates a table.
         If no path, the connection will be with memory
@@ -29,24 +28,25 @@ class ContainerDB():
         try:
             if path != '':
                 self.__dbfile = sqlite3.connect(path)
+                self.__dbfile.text_factory = str
             else:
                 self.__dbmem = sqlite3.connect(":memory:")
+                self.__dbmem.text_factory = str
 
         except sqlite3.Error, err:
             print "[INFO creatNconnect] %s" % err
 
         else:
-            if flag == True:
-                if path != '':
-                    self.__dbfile.cursor().execute('''CREATE TABLE IF NOT EXISTS
-                                corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-                                func TEXT, phrase TEXT, ref TEXT)''')
-                    self.__dbfile.commit()
-                else:
-                    self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
-                                corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-                                func TEXT, phrase TEXT, ref TEXT)''')
-                    self.__dbmem.commit()
+            if path != '':
+                self.__dbfile.cursor().execute('''CREATE TABLE IF NOT EXISTS
+                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                            func TEXT, phrase TEXT, ref TEXT)''')
+                self.__dbfile.commit()
+            else:
+                self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
+                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                            func TEXT, phrase TEXT, ref TEXT)''')
+                self.__dbmem.commit()
 
 
     def importToMemory(self):
@@ -355,7 +355,7 @@ class ContainerDB():
            self.__path = ''
            self.__isModified = False
         finally:
-            self.createNconnectDB(flag=True)
+            self.createNconnectDB()
 
 
     def import_(self,  path=''):
@@ -394,7 +394,7 @@ class ContainerDB():
                         ref = w.find('REF').text
                         if ref == None: ref = 'Not Classified'
                         
-                        info.append((sec, subs, func, unicode(sent), ref))
+                        info.append((sec.encode("utf-8"), subs.encode("utf-8"), func.encode("utf-8"), sent.encode("utf-8"), ref.encode("utf-8")))
             
                         #print info
             
@@ -414,10 +414,10 @@ class ContainerDB():
                     if row_number != 0:
                         [sec,  subs,  func,  sent,  ref]  = row
                         # Splitting many fields in the same category
-                        sec = [unicode(x) for x in sec.split(',')]
-                        subs = [unicode(x) for x in subs.split(',')]
-                        func = [unicode(x) for x in func.split(',')]
-                        self.addDB(sect=sec,subsect=subs,funct=func,phrase=[unicode(sent)],ref=[unicode(ref)])
+                        sec = [x.encode("utf-8") for x in sec.split(',')]
+                        subs = [x.encode("utf-8") for x in subs.split(',')]
+                        func = [x.encode("utf-8") for x in func.split(',')]
+                        self.addDB(sect=sec,subsect=subs,funct=func,phrase=[sent.encode("utf-8")],ref=[ref.encode("utf-8")])
                     row_number += 1                    
         elif (ext == '.json') or (ext == '.JSON'):
             print "Importing JSON ..."
