@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main_window.ui'
+# Form implementation generated from reading ui file 'main_window_mw.ui'
 #
-# Created: Thu May  1 14:59:06 2014
+# Created: Thu May  1 19:41:29 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(942, 867)
+        MainWindow.resize(1020, 867)
         font = QtGui.QFont()
         MainWindow.setFont(font)
         icon = QtGui.QIcon()
@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.widget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 942, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1020, 25))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -71,6 +71,8 @@ class Ui_MainWindow(object):
         self.menuFunction.setObjectName("menuFunction")
         self.menuSentence = QtGui.QMenu(self.menubar)
         self.menuSentence.setObjectName("menuSentence")
+        self.menuSettings = QtGui.QMenu(self.menubar)
+        self.menuSettings.setObjectName("menuSettings")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -475,6 +477,8 @@ class Ui_MainWindow(object):
         self.actionTipsSentence.setObjectName("actionTipsSentence")
         self.actionStripOptions = QtGui.QAction(MainWindow)
         self.actionStripOptions.setObjectName("actionStripOptions")
+        self.actionPreferences = QtGui.QAction(MainWindow)
+        self.actionPreferences.setObjectName("actionPreferences")
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addSeparator()
@@ -510,14 +514,14 @@ class Ui_MainWindow(object):
         self.menuSentence.addAction(self.actionRemoveSentence)
         self.menuSentence.addAction(self.actionUpdateSentence)
         self.menuSentence.addSeparator()
-        self.menuSentence.addAction(self.actionStripOptions)
-        self.menuSentence.addSeparator()
         self.menuSentence.addAction(self.actionTipsSentence)
+        self.menuSettings.addAction(self.actionPreferences)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuSection.menuAction())
         self.menubar.addAction(self.menuSubSection.menuAction())
         self.menubar.addAction(self.menuFunction.menuAction())
         self.menubar.addAction(self.menuSentence.menuAction())
+        self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.toolBar.addAction(self.actionOpen)
         self.toolBar.addAction(self.actionSave)
@@ -546,6 +550,7 @@ class Ui_MainWindow(object):
         self.menuSubSection.setTitle(QtGui.QApplication.translate("MainWindow", "Sub Section", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFunction.setTitle(QtGui.QApplication.translate("MainWindow", "Function", None, QtGui.QApplication.UnicodeUTF8))
         self.menuSentence.setTitle(QtGui.QApplication.translate("MainWindow", "Sentence", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuSettings.setTitle(QtGui.QApplication.translate("MainWindow", "Settings", None, QtGui.QApplication.UnicodeUTF8))
         self.dockWidgetSection.setWindowTitle(QtGui.QApplication.translate("MainWindow", "  Section", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonSectionRemove.setText(QtGui.QApplication.translate("MainWindow", "-", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonSectionAdd.setStatusTip(QtGui.QApplication.translate("MainWindow", "Add a new  section", None, QtGui.QApplication.UnicodeUTF8))
@@ -622,5 +627,6 @@ class Ui_MainWindow(object):
         self.actionTipsFunction.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTipsSentence.setText(QtGui.QApplication.translate("MainWindow", "Tips", None, QtGui.QApplication.UnicodeUTF8))
         self.actionStripOptions.setText(QtGui.QApplication.translate("MainWindow", "Strip Options", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
 
 import sci_corpus_resource_rc

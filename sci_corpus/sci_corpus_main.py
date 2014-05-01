@@ -17,7 +17,7 @@ from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
 from PySide.QtGui import QBrush, QColor
 
-from PySide.QtCore import QSettings,  QRect,  Signal
+from PySide.QtCore import QSettings, Signal
 
 import container
 import re
@@ -29,6 +29,7 @@ from time import gmtime, strftime
 
 from ui import main_window_ui
 import start_dlg
+import preferences_dlg
 
 __version__='1.0'
 __pname__ = 'Sci Corpus'
@@ -65,7 +66,8 @@ class MainWindow(QMainWindow):
         self.theme = 'White'
         self.replaceBy = '...'
         self.marker = '{}'
-        self.replaceWhere = 'Outside'
+        self.replaceWhere = 'Outside markers'
+        self.openLast = True
         self.workspace = os.path.expanduser('~')
         
         self.preferences = {'section':self.ui.checkBoxSection.isChecked(), 
@@ -79,7 +81,9 @@ class MainWindow(QMainWindow):
                             
                             'marker': self.marker, 
                             'replace_by':self.replaceBy,
-                            'replace_where':self.replaceWhere, 
+                            'replace_where':self.replaceWhere,
+                            'workspace':self.workspace,
+                            'open_last':self.openLast, 
                             'last_path': self.container.path}
         
         # File ----------------------------------------------------------------
@@ -96,6 +100,8 @@ class MainWindow(QMainWindow):
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.actionTips.triggered.connect(self.tips)
+        
+        self.ui.actionPreferences.triggered.connect(self.setupPreferences)
         # Signals
         self.logSig.connect(self.showLogMessage)
         
@@ -558,7 +564,7 @@ in an article.'),
     # -----------------------------------------------------------------------
 
 
-    def adjustSentence(self,sent="", begin="{", end="}", hideMarked=True, changeBy="..."):
+    def adjustSentence(self,sent="", begin="{", end="}", replace_where='Inside markers', replace_by="..."):
         """
         Adjusts sentences to be displayed on the screen.
         """
@@ -576,24 +582,24 @@ in an article.'),
             for i in range(0,len(b)):
                 r.append(sent[b[i]:e[i]])
 
-            if(hideMarked):
+            if replace_where == 'Inside markers':
                 for substring in r:
-                    sent = sent.replace(substring, changeBy)
+                    sent = sent.replace(substring, replace_by)
             else:
                 if(r != []):
                     # @TODO: talvez colocar um erro em um else para este if!
                     aux=''
 
                     if 0 not in b:
-                        aux += changeBy+" "
+                        aux += replace_by+" "
 
                     for i in range(0,len(b)-1):
-                        aux += sent[b[i]:e[i]]+" "+changeBy+" "
+                        aux += sent[b[i]:e[i]]+" "+replace_by+" "
             
                     if(e[len(b)-1]==len(sent)-1):
                         aux += sent[b[len(b)-1]:e[len(e)-1]]
                     else:
-                        aux += sent[b[len(b)-1]:e[len(e)-1]]+" "+changeBy+" "
+                        aux += sent[b[len(b)-1]:e[len(e)-1]]+" "+replace_by+" "
                 
                     sent = aux.replace(begin,"").replace(end,"")
         else:
@@ -679,7 +685,10 @@ in an article.'),
                 
                 if strip:
                     try:
-                        sent_item.setText(str(self.adjustSentence(sentv, "{", "}", False, "...")))
+                        marker = self.preferences['marker']
+                        marker_beg = marker[:len(marker)/2]
+                        marker_end = marker[len(marker)/2:]
+                        sent_item.setText(str(self.adjustSentence(sentv, marker_beg, marker_end, self.preferences['replace_where'], self.preferences['replace_by'])))
                     except Exception:
                         sent_item.setText(str(sentv))
                         # Background red
@@ -830,6 +839,15 @@ in an article.'),
     # -----------------------------------------------------------------------
     # Application methods
     # -----------------------------------------------------------------------
+    
+    def setupPreferences(self):
+        """
+        Call setup preferences dialog.
+        """
+        print self.preferences
+        dialog = preferences_dlg.PreferencesDialog(self.preferences, self)
+        if dialog.exec_():
+            print self.preferences
         
     def readPreferences(self):
         """
