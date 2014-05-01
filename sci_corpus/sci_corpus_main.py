@@ -24,7 +24,6 @@ import re
 import os
 import json
 import codecs
-import time
 
 from ui import main_window_ui
 import start_dlg
@@ -39,20 +38,22 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         
         # We should put something util
-        start_dialog = start_dlg.StartDialog(self)
-        start_dialog.progress(10)
-        time.sleep(0.1)
-        start_dialog.progress(30)
-        time.sleep(0.1)
-        start_dialog.progress(60)
-        time.sleep(0.1)
-        start_dialog.progress(90)
-        time.sleep(0.1)
-        start_dialog.progress(100)
-        time.sleep(0.5)
-        start_dialog.close()
+        start = start_dlg.StartDialog(self)
+        start.show()
+        start.informationProgress('Starting')
+        start.updateProgress(10)
+        start.informationProgress('Loading interface')
+        start.updateProgress(30)
+        start.informationProgress('Loading preferences')
+        start.updateProgress(60)
+        start.informationProgress('Loading environment')
+        start.updateProgress(90)
+        start.informationProgress('Finishing to run')
+        start.updateProgress(100)
+        start.close()
         
-        self.container = container.ContainerDB()               
+        self.container = container.ContainerDB()
+        
         self.theme = 'Black'
         self.replaceBy = '...'
         self.marker = '{}'
@@ -70,7 +71,6 @@ class MainWindow(QMainWindow):
                     'last_path': self.container.path}
         
         # File
-        
         self.ui.actionOpen.triggered.connect(self.openFile)
         self.ui.actionSave.triggered.connect(self.saveFile)
         self.ui.actionSaveAs.triggered.connect(self.saveFileAs)
@@ -80,13 +80,11 @@ class MainWindow(QMainWindow):
         self.ui.actionClose.triggered.connect(self.closeFile)
         
         # Application
-        
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.actionTips.triggered.connect(self.tips)
         
         # Section
-        
         self.ui.pushButtonSectionAdd.clicked.connect(self.addSection)
         self.ui.pushButtonSectionRemove.clicked.connect(self.removeSection)
         self.ui.pushButtonSectionUpdate.clicked.connect(self.updateSection)
@@ -109,7 +107,6 @@ class MainWindow(QMainWindow):
         self.ui.listWidgetSection.setDragEnabled(False)
 
         # Subsection
-        
         self.ui.pushButtonSubSectionAdd.clicked.connect(self.addSubSection)
         self.ui.pushButtonSubSectionRemove.clicked.connect(self.removeSubSection)
         self.ui.pushButtonSubSectionUpdate.clicked.connect(self.updateSubSection)
@@ -132,7 +129,6 @@ class MainWindow(QMainWindow):
         self.ui.listWidgetSubSection.setDragEnabled(False)
         
         # Function
-        
         self.ui.pushButtonFunctionAdd.clicked.connect(self.addFunction)
         self.ui.pushButtonFunctionRemove.clicked.connect(self.removeFunction)
         self.ui.pushButtonFunctionUpdate.clicked.connect(self.updateFunction)
@@ -143,18 +139,17 @@ class MainWindow(QMainWindow):
         self.ui.actionTipsFunction.triggered.connect(self.tipsFunction)
         
         self.ui.listWidgetFunction.doubleClicked.connect(lambda: \
-                self.ui.lineEditFunction.setText(self.ui.listWidgetFunction.currentItem().text()))
-        self.ui.listWidgetFunction.itemSelectionChanged.connect(lambda: self.ui.lineEditFunction.clear())
+                self.ui.lineEditFunction.setText(\
+                self.ui.listWidgetFunction.currentItem().text()))
+        self.ui.listWidgetFunction.itemSelectionChanged.connect(lambda: \
+                self.ui.lineEditFunction.clear())
         
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSentenceView)
-        
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSelectedNumbers)
-
         self.ui.listWidgetFunction.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetFunction.setDragEnabled(False)
         
         # Sentence
-        
         self.ui.pushButtonSentenceAdd.clicked.connect(self.addSentence)
         self.ui.pushButtonSentenceRemove.clicked.connect(self.removeSentence)
         self.ui.pushButtonSentenceUpdate.clicked.connect(self.updateSentence)
@@ -164,8 +159,7 @@ class MainWindow(QMainWindow):
         self.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
         self.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
         
-        # Signals for table headers
-        
+        # Signals for table view headers
         self.ui.checkBoxSection.clicked.connect(lambda: \
                 self.ui.tableWidgetSentence.setColumnHidden(0, \
                 not self.ui.checkBoxSection.isChecked()))
@@ -185,7 +179,6 @@ class MainWindow(QMainWindow):
         self.clearAll()
         
         # Setting table headers
-        
         self.ui.tableWidgetSentence.setColumnHidden(0, \
             not self.ui.checkBoxSection.isChecked())
         self.ui.tableWidgetSentence.setColumnHidden(1, \
@@ -671,7 +664,7 @@ in an article.'),
         functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())       
         sentences = self.container.listSentences(section=sections,subsection=sub_sections,function=functions)
         
-        self.ui.tableWidgetSentence.clear()
+        self.ui.tableWidgetSentence.clearContents()
         self.ui.tableWidgetSentence.setColumnCount(5)
         
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem('Section'))
@@ -886,7 +879,7 @@ in an article.'),
         self.ui.listWidgetSubSection.clear()
         self.ui.listWidgetFunction.clear()
         # Clear table view
-        self.ui.tableWidgetSentence.clear()
+        self.ui.tableWidgetSentence.clearContents()
 
         
     def closeEvent(self, event):
