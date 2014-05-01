@@ -256,8 +256,8 @@ class MainWindow(QMainWindow):
         
         if sec != '':
             self.container.addDB(sect=[sec])
-            self.logSig.emit('A new section "{}" has already added.'.format(sec))
-            self.showMessageOnStatusBar('A new section "{}" has already added.'.format(sec))
+            self.logSig.emit('A new section "{}" was added.'.format(sec))
+            self.showMessageOnStatusBar('A new section "{}" was added.'.format(sec))
             
         self.updateTotalNumbers()
         self.updateSectionView()
@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
         if sec != []:
             if self.removeQuestion("Section",sec) == QMessageBox.Yes:
                 self.container.remove(sect=sec)
-                self.showMessageOnStatusBar('Section(s) has already removed.'.format(sec))
+                self.showMessageOnStatusBar('Section(s) was removed.'.format(sec))
                 
         self.updateTotalNumbers()
         self.updateSectionView()
@@ -293,7 +293,7 @@ class MainWindow(QMainWindow):
         elif new_sec != '':
             if self.updateQuestion("Section",(old_sec[0], new_sec)) == QMessageBox.Yes:
                 self.container.update(section=[(new_sec,old_sec[0])])
-                self.showMessageOnStatusBar('Section "{}" has already updated to "{}".'.format(old_sec[0], new_sec))
+                self.showMessageOnStatusBar('Section "{}" was updated to "{}".'.format(old_sec[0], new_sec))
 
         self.updateSectionView()
         
@@ -347,7 +347,7 @@ scientific text. In summary, they are the titles of each section.'),
         
         if subs != '':
             self.container.addDB(sect=sec, subsect=[subs])
-            self.showMessageOnStatusBar('A new sub section "{}" has already added.'.format(subs))
+            self.showMessageOnStatusBar('A new sub section "{}" was added.'.format(subs))
             
         self.updateTotalNumbers()
         self.updateSubSectionView()
@@ -362,7 +362,7 @@ scientific text. In summary, they are the titles of each section.'),
         if subs != []:
             if self.removeQuestion("Subsection",subs) == QMessageBox.Yes:
                 self.container.remove(subsect=subs)
-                self.showMessageOnStatusBar('A sub section has already removed.')
+                self.showMessageOnStatusBar('A sub section was removed.')
                 
         self.updateTotalNumbers()
         self.updateSubSectionView() 
@@ -383,7 +383,7 @@ scientific text. In summary, they are the titles of each section.'),
         elif new_subs != '':
            if self.updateQuestion("Subsection",(old_subs[0], new_subs)) == QMessageBox.Yes:
               self.container.update(subsection=[(new_subs,old_subs[0])])
-              self.showMessageOnStatusBar('Sub section "{}" has already updated to "{}".'.format(old_subs[0], new_subs))
+              self.showMessageOnStatusBar('Sub section "{}" was updated to "{}".'.format(old_subs[0], new_subs))
         
         self.updateSubSectionView()
 
@@ -449,7 +449,7 @@ in an article.'),
         
         if func != '':
             self.container.addDB(sect=sec, subsect=subs, funct=[func])
-            self.showMessageOnStatusBar('A new function "{}" has already added.'.format(func))
+            self.showMessageOnStatusBar('A new function "{}" was added.'.format(func))
         
         self.updateTotalNumbers()  
         self.updateFunctionView()
@@ -485,7 +485,7 @@ in an article.'),
         elif new_func != '':
            if self.updateQuestion("Function",(old_func[0], new_func)) == QMessageBox.Yes:
               self.container.update(function=[(new_func,old_func[0])])
-              self.showMessageOnStatusBar('Function "{}" has already updated to "{}".'.format(old_func[0], new_func))
+              self.showMessageOnStatusBar('Function "{}" was updated to "{}".'.format(old_func[0], new_func))
               
         self.updateFunctionView()
 
@@ -613,7 +613,7 @@ in an article.'),
         
         # Insertting in DB
         self.container.addDB(sect=sec, subsect=subs, funct=func, phrase=[sent], ref=[ref])
-        self.showMessageOnStatusBar('A new sentence has already added.')
+        self.showMessageOnStatusBar('A new sentence was added.')
         
         self.updateTotalNumbers()
         self.updateSentenceView()
@@ -800,7 +800,7 @@ in an article.'),
         QMessageBox.information(self, 
                 self.tr('Import File'),
                 self.tr('Please, before you try import the file,\n \
-                        ensure that if CSV the separator is ; (semi collon) \n \
+                        ensure that if it is a CSV one, the separator is ; (semi collon) \n \
                         and string identificator is " (double quote)'),
                 QMessageBox.Ok)
                 
