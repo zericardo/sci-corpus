@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
         
         # We should put something util
         start = start_dlg.StartDialog(self)
+        start.logSig.connect(self.showLogMessage)
         start.show()
         start.informationProgress('Starting')
         start.updateProgress(10)
@@ -61,21 +62,25 @@ class MainWindow(QMainWindow):
         
         self.container = container.ContainerDB()
         
-        self.theme = 'Black'
+        self.theme = 'White'
         self.replaceBy = '...'
         self.marker = '{}'
-        self.hideMarked = True
-        self.preferences = {'theme':self.theme, 
-                    'section':self.ui.checkBoxSection.isChecked(), 
-                    'subsection': self.ui.checkBoxSubSection.isChecked(), 
-                    'function': self.ui.checkBoxFunction.isChecked(), 
-                    'sentence': self.ui.checkBoxSentence.isChecked(), 
-                    'reference': self.ui.checkBoxReference.isChecked(), 
-                    'strip': self.ui.checkBoxStrip.isChecked(), 
-                    'replace_by':self.replaceBy, 
-                    'marker': self.marker, 
-                    'hide_marked':self.hideMarked, 
-                    'last_path': self.container.path}
+        self.replaceWhere = 'Outside'
+        self.workspace = os.path.expanduser('~')
+        
+        self.preferences = {'section':self.ui.checkBoxSection.isChecked(), 
+                            'subsection': self.ui.checkBoxSubSection.isChecked(), 
+                            'function': self.ui.checkBoxFunction.isChecked(), 
+                            'sentence': self.ui.checkBoxSentence.isChecked(), 
+                            'reference': self.ui.checkBoxReference.isChecked(),
+                            'strip': self.ui.checkBoxStrip.isChecked(), 
+                            
+                            'theme':self.theme,
+                            
+                            'marker': self.marker, 
+                            'replace_by':self.replaceBy,
+                            'replace_where':self.replaceWhere, 
+                            'last_path': self.container.path}
         
         # File ----------------------------------------------------------------
         self.ui.actionOpen.triggered.connect(self.openFile)
@@ -830,10 +835,19 @@ in an article.'),
         """
         Reads preferences from file.
         """
-        with codecs.open(os.path.abspath(os.path.join(\
-                os.path.expanduser('~'), \
-                'scicorpuspreferences.ini')), 'wb', 'utf-8') as file:
-            self.preferences = json.loads(file)
+        try:
+            with codecs.open(os.path.abspath('scicorpus.ini'),'wb','utf-8') as file:
+                config = json.loads(file)
+        except Exception:
+            pass
+        else: 
+            self.timeToStart = config['time_to_start']
+            self.preferencesPath = config['preferences_path']
+            try:
+                with codecs.open(self.preferencesPath,'wb','utf-8') as file:
+                    self.preferences = json.loads(file)
+            except Exception:
+                pass
         
         
     def writePreferences(self):
@@ -973,16 +987,24 @@ in an article.'),
 
 if __name__ == '__main__':
     app = QApplication(__pname__)
+    main_window = MainWindow()
+    style_sheet = ''
+    style_path = ''
+    
+    if main_window.theme == 'Black':
+        style_path = 'ui/black_theme.sty'
+    else:
+        style_path = 'ui/white_theme.sty'
+        
     try:
-        style_sheet = ''
-        with open(os.path.abspath('ui/white_theme.sty'),'rb') as style_file:
+        with open(os.path.abspath(style_path),'rb') as style_file:
             style_sheet = str(style_file.read())
             app.setStyleSheet(style_sheet)
+            
     except Exception,  e:
         print 'Error in style sheet: ',  e
         pass
         
-    main_window = MainWindow()
     main_window.setWindowTitle(__pname__+" V."+__version__) 
     main_window.showMaximized()
     exit(app.exec_())

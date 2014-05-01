@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>942</width>
+    <width>1020</width>
     <height>867</height>
    </rect>
   </property>
@@ -122,7 +122,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>942</width>
+     <width>1020</width>
      <height>25</height>
     </rect>
    </property>
@@ -190,15 +190,20 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionRemoveSentence"/>
     <addaction name="actionUpdateSentence"/>
     <addaction name="separator"/>
-    <addaction name="actionStripOptions"/>
-    <addaction name="separator"/>
     <addaction name="actionTipsSentence"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionPreferences"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSection"/>
    <addaction name="menuSubSection"/>
    <addaction name="menuFunction"/>
    <addaction name="menuSentence"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -1162,6 +1167,11 @@ background-color: rgb(0, 0, 0);</string>
   <action name="actionStripOptions">
    <property name="text">
     <string>Strip Options</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences</string>
    </property>
   </action>
  </widget>

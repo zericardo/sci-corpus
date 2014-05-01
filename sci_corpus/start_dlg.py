@@ -17,6 +17,7 @@ class StartDialog(QDialog):
     """
     Starting screen class.
     """
+    logSig = QtCore.Signal(str)
     def __init__(self, parent=None, delay=0.3):
         """
         Contructor
@@ -70,5 +71,6 @@ class StartDialog(QDialog):
         Parameters
             text : str
         """
+        self.logSig.emit(str(text))
         self.ui.labelInformationProgress.setText(str(text)+" ...")
 
