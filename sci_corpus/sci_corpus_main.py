@@ -5,19 +5,21 @@
 Graphical interface for sci-corpus program.
 
 Author: Daniel Pizetta <daniel.pizetta@usp.br>
-             Tiago de Campos <tiago.campos@usp.br>
-             José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
+        Tiago de Campos <tiago.campos@usp.br>
+        José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
+        
 Date: 04/04/2014
 
 This script provides a graphical interface for sci-corpus program standalone.
 """
 
-from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
-from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
-from PySide.QtGui import QBrush,  QColor
+from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
+from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
+from PySide.QtGui import QBrush, QColor
+
 from PySide.QtCore import QSettings,  QRect
 
-import container as container
+import container
 import re
 import os
 import json
@@ -37,17 +39,17 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         
         # We should put something util
-        start_dialog = start_dlg.StartDialog()
+        start_dialog = start_dlg.StartDialog(self)
         start_dialog.progress(10)
-        time.sleep(0.5)
+        time.sleep(0.1)
         start_dialog.progress(30)
-        time.sleep(1)
+        time.sleep(0.1)
         start_dialog.progress(60)
-        time.sleep(1)
+        time.sleep(0.1)
         start_dialog.progress(90)
-        time.sleep(2)
+        time.sleep(0.1)
         start_dialog.progress(100)
-        time.sleep(1)
+        time.sleep(0.5)
         start_dialog.close()
         
         self.container = container.ContainerDB()               
@@ -222,7 +224,7 @@ class MainWindow(QMainWindow):
             
         self.ui.tableWidgetSentence.setRowCount(1)
         self.ui.tableWidgetSentence.itemSelectionChanged.connect(self.updateSelectedNumbers)
-
+        self.ui.tableWidgetSentence.resize(2000, 2000)
         self.ui.checkBoxStrip.setChecked(True)
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
         
@@ -253,7 +255,7 @@ class MainWindow(QMainWindow):
         func = set()
         sent = set()
         
-        # This can be better :), maybe a property of container
+        # @TODO: This can be better :), maybe a property of container
         for secv, subsv, funcv, sentv, refv in self.container.listSentences():
             sec.add(secv)
             subs.add(subsv)
@@ -276,12 +278,12 @@ class MainWindow(QMainWindow):
         """
         Add a new section.
         """
-        
         sec = str(self.ui.lineEditSection.text())
         
         if sec != '':
             self.container.addDB(sect=[sec])
             self.writeStatusBar('A new section "{}" has already added.'.format(sec))
+            
         self.updateTotalNumbers()
         self.updateSectionView()
 
@@ -290,13 +292,13 @@ class MainWindow(QMainWindow):
         """
         Remove a section.
         """
-        
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         
         if sec != []:
             if self.removeQuestion("Section",sec) == QMessageBox.Yes:
                 self.container.remove(sect=sec)
                 self.writeStatusBar('Section(s) has already removed.'.format(sec))
+                
         self.updateTotalNumbers()
         self.updateSectionView()
                
@@ -305,12 +307,11 @@ class MainWindow(QMainWindow):
         """
         Updates old section with new section.
         """
-        
-        old_sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        old_sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         new_sec = str(self.ui.lineEditSection.text())
         
         if len(old_sec) != 1:
-            QMessageBox.error(self, 
+            QMessageBox.warning(self, 
                                 self.tr('Update'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
@@ -332,10 +333,8 @@ class MainWindow(QMainWindow):
             sec.add(secv)
         
         self.ui.listWidgetSection.clear()
-        
         sec = sorted(sec)
-        
-        self.ui.labelShownSection.setText(str(len(sec)))
+        self.ui.labelDisplayedSection.setText(str(len(sec)))
         
         if "Not Classified" in sec:
             sec.remove("Not Classified")
@@ -368,12 +367,13 @@ scientific text. In summary, they are the titles of each section.'),
         """
         Add a new Subsection
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = str(self.ui.lineEditSubSection.text())
         
         if subs != '':
             self.container.addDB(sect=sec, subsect=[subs])
             self.writeStatusBar('A new sub section "{}" has already added.'.format(subs))
+            
         self.updateTotalNumbers()
         self.updateSubSectionView()
 
@@ -382,7 +382,7 @@ scientific text. In summary, they are the titles of each section.'),
         """
         Remove one subsection
         """
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         
         if subs != []:
             if self.removeQuestion("Subsection",subs) == QMessageBox.Yes:
@@ -397,11 +397,11 @@ scientific text. In summary, they are the titles of each section.'),
         """
         Updates one subsection
         """
-        old_subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        old_subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         new_subs = str(self.ui.lineEditSubSection.text())
         
         if len(old_subs) != 1:
-            QMessageBox.error(self, 
+            QMessageBox.warning(self, 
                                 self.tr('Update'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
@@ -417,7 +417,7 @@ scientific text. In summary, they are the titles of each section.'),
         """
         Updates subsection view
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = set()
         subsecs = []
 
@@ -435,7 +435,6 @@ scientific text. In summary, they are the titles of each section.'),
         self.ui.listWidgetSubSection.clear()
         subs = sorted(subs)
 
-        
         if "Not Classified" in subs:
             subs.remove("Not Classified")
             subs.append("Not Classified")
@@ -444,7 +443,7 @@ scientific text. In summary, they are the titles of each section.'),
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSubSection.addItem(item)
             
-        self.ui.labelShownSubSection.setText(str(len(subs)))  
+        self.ui.labelDisplayedSubSection.setText(str(len(subs)))  
         self.updateFunctionView()
         self.updateSentenceView()
             
@@ -469,8 +468,8 @@ in an article.'),
         """
         Adds a new function.
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         func = str(self.ui.lineEditFunction.text())
         
         if func != '':
@@ -485,7 +484,7 @@ in an article.'),
         """
         Removes a function.
         """
-        func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        func = self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
         
         if func != []:
             if self.removeQuestion("Function",func) == QMessageBox.Yes:
@@ -500,11 +499,11 @@ in an article.'),
         """
         Updates a function.
         """
-        old_func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        old_func = self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
         new_func = str(self.ui.lineEditFunction.text())
         
         if len(old_func) != 1:
-            QMessageBox.error(self, 
+            QMessageBox.warning(self, 
                                 self.tr('Update'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
@@ -520,8 +519,8 @@ in an article.'),
         """
         Updates a function view.
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         func = set()
         
         funcs = []
@@ -551,7 +550,7 @@ in an article.'),
         self.ui.listWidgetFunction.clear()
         func = sorted(func)
         
-        self.ui.labelShownFunction.setText(str(len(func)))
+        self.ui.labelDisplayedFunction.setText(str(len(func)))
 
         if "Not Classified" in func:
             func.remove("Not Classified")
@@ -583,13 +582,9 @@ in an article.'),
         """
         Adjusts sentences to be displayed on the screen.
         """
-
-        #print sent, type(sent)
-
         b  = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e  = [match.end() for match in re.finditer(re.escape(end), sent)]
 
-        
         #exception here b and e must have the same size!
         if(len(b) == len(e)):
             for i in range(0,len(b)):
@@ -632,9 +627,9 @@ in an article.'),
         Adds a new sentence.
         """
         # Getting information
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
-        func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        func = self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
         sent = str(self.ui.textEditSentence.toPlainText())
         ref = str(self.ui.lineEditReference.text())
         
@@ -658,22 +653,23 @@ in an article.'),
         self.updateSentenceView()
 
 
-    def updateSentence(self,  old_sentence,  new_sentence=''):
+    def updateSentence(self,  old_sentence='',  new_sentence=''):
         """
         Updates a sentence.
         """
         self.notImplementedYet()
-        self.updateTotalNumbers()
         self.updateSentenceView()
+        
         
     def updateSentenceView(self):
         """
         Updates a sentence view.
         """
+        
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())       
-        sentences = self.container.listSentences(section=list(sections),subsection=list(sub_sections),function=list(functions))
+        sentences = self.container.listSentences(section=sections,subsection=sub_sections,function=functions)
         
         self.ui.tableWidgetSentence.clear()
         self.ui.tableWidgetSentence.setColumnCount(5)
@@ -717,8 +713,7 @@ in an article.'),
                         sent_item.setBackground(QBrush(QColor(255,0,0,127)))
                 row += 1
                 
-        self.ui.labelShownSentence.setText(str(row))
-        
+        self.ui.labelDisplayedSentence.setText(str(row))
         self.ui.tableWidgetSentence.setRowCount(row)
         
         self.ui.tableWidgetSentence.setColumnHidden(0, \
@@ -761,7 +756,7 @@ in an article.'),
 
         if path != '':
             self.container.read_(path)
-            self.setWindowTitle(__program_name__+" : "+self.container.path)
+            self.setWindowTitle(__program_name__+" V."+__version__+" : "+self.container.path)
             self.updateSelectedNumbers()
             self.updateTotalNumbers()
             self.updateSectionView()
@@ -772,7 +767,6 @@ in an article.'),
         """"
         Saves the file that is being used.
         """
-        
         if self.container.path == '':
             self.saveFileAs()
         else:
@@ -836,16 +830,14 @@ in an article.'),
         """
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Import File'),
-                                           self.tr(''),
+                                           self.tr(os.path.dirname(self.container.path)),
                                            self.tr('(*.xml *.csv)'))[0]
 
         if path != '':
             self.container.import_(path)
         
         self.updateSectionView()
-        self.updateSubSectionView()
-        self.updateFunctionView()
-        self.updateSentenceView()
+        
         
     def readPreferences(self):
         """
@@ -853,6 +845,7 @@ in an article.'),
         """
         with codecs.open(os.path.abspath(os.path.join('~', 'scicorpuspreferences.ini')), 'rb',  'utf-8') as file:
             self.preferences = json.loads(file)
+        
         
     def writePreferences(self):
         """
@@ -865,6 +858,7 @@ in an article.'),
     # -----------------------------------------------------------------------
     # Application methods
     # -----------------------------------------------------------------------
+
 
     def about(self):
         """
@@ -975,7 +969,7 @@ in an article.'),
 
 if __name__ == '__main__':
     app = QApplication(__program_name__)
-    main_window = MainWindow()
+
              
     try:
         style_sheet = ''
@@ -986,10 +980,7 @@ if __name__ == '__main__':
         print 'Error in style sheet: ',  e
         pass
         
-    main_window.show()
-    main_window.setWindowTitle(__program_name__)
-    screenGeometry = QRect()
-    screenGeometry = app.desktop().screenGeometry()
-    main_window.setGeometry(screenGeometry)
-    
+    main_window = MainWindow()
+    main_window.setWindowTitle(__program_name__+" V."+__version__) 
+    main_window.showMaximized()
     exit(app.exec_())

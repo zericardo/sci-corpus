@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'start_dlg.ui'
 #
-# Created: Wed Apr 30 13:48:20 2014
+# Created: Wed Apr 30 23:12:15 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,15 +13,18 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setWindowModality(QtCore.Qt.ApplicationModal)
+        Dialog.setEnabled(True)
         Dialog.resize(530, 264)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
+        Dialog.setWindowTitle("")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/Window/Icon_Sci_Corpus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
+        Dialog.setModal(True)
         self.gridLayout = QtGui.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.labelVersion = QtGui.QLabel(Dialog)
@@ -51,8 +54,7 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
         self.labelVersion.setText(QtGui.QApplication.translate("Dialog", "<html><head/><body><p><span style=\" font-size:8pt;\">V.1.0 </span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.labelProducedBy.setText(QtGui.QApplication.translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:8pt;\">Produced by: </span></p><p align=\"center\"><span style=\" font-size:8pt;\">Daniel C. Pizetta, José R.F. Ronqui and Tiago Campos</span></p><p align=\"center\"><span style=\" font-size:8pt;\">Institute of Physics of Sao Carlos - IFSC</span></p><p align=\"center\"><span style=\" font-size:8pt;\">University of Sao Paulo - USP</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
 
-import ui.sci_corpus_resource_rc
+import sci_corpus_resource_rc

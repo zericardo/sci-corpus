@@ -6,7 +6,7 @@
    <enum>Qt::ApplicationModal</enum>
   </property>
   <property name="enabled">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="geometry">
    <rect>
@@ -23,7 +23,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string/>
   </property>
   <property name="windowIcon">
    <iconset resource="icons/sci_corpus_resource.qrc">

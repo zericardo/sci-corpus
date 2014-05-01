@@ -1,4 +1,5 @@
 from PySide.QtGui import QDialog
+
 import ui.start_dlg_ui
 
 class StartDialog(QDialog):
@@ -9,7 +10,6 @@ class StartDialog(QDialog):
         super(StartDialog, self).__init__(parent)
         self.ui = ui.start_dlg_ui.Ui_Dialog()
         self.ui.setupUi(self)
-        self.setModal(True)
         self.ui.progressBar.setRange(0, 100)
         self.show()
         self.ui.progressBar.setValue(1)
