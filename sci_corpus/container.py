@@ -249,29 +249,20 @@ class ContainerDB():
             self.isModified  = True
 
 
-    def bulk_add(self, path):
+    def bulk_add(self, info):
 
         cursor = self.__dbmem.cursor()
 
+        #print info
+
         try:
-            tree = ET.parse(path)
-            root = tree.getroot()
-            
-        except ET.ParseError, err:
-            print "[INFO addbulk xml import] %s" % err
-            
+            cursor.executemany('INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)',info)
+        except sqlite3.Error, err:
+            print "[INFO addbulk insert] %s" % err    
         else:
-            try:
-                info = [(w.find('SECTION').text, w.find('SUBSECTION').text, w.find('FUNCTION').text, w.find('PHRASE').text, w.find('REF').text) for w in root.findall('INFOPIECE')]
-                cursor.executemany('INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)',info)
-            
-            except sqlite3.Error, err:
-                print "[INFO addbulk insert] %s" % err
-            
-            else:
-                self.isModified  = True
+            self.isModified  = True
 
-
+                
     @property
     def path(self):
         return self.__path
@@ -379,12 +370,40 @@ class ContainerDB():
 
         if (ext == '.xml') or (ext == '.XML'):
             print "Importing XML ..."
+            
             try:
-                self.bulk_add(path)
-            except Exception:
-                raise
+                tree = ET.parse(path)
+                root = tree.getroot()
+            
+            except ET.ParseError, err:
+                print "[INFO xml import] %s" % err
+            
             else:
-                self.isModified = True
+                info = []
+                
+                try:
+                    for w in root.findall('INFOPIECE'):
+                        sec = w.find('SECTION').text
+                        if sec == None: sec = 'Not Classified'
+                        subs = w.find('SUBSECTION').text
+                        if subs == None: subs = 'Not Classified'
+                        func = w.find('FUNCTION').text
+                        if func == None: func = 'Not Classified'
+                        sent = w.find('PHRASE').text
+                        if sent == None: sent = 'Not Classified'
+                        ref = w.find('REF').text
+                        if ref == None: ref = 'Not Classified'
+                        
+                        info.append((sec, subs, func, unicode(sent), ref))
+            
+                        #print info
+            
+                except ET.ParseError, err:
+                    print "[INFO xml import] %s" % err
+                
+                else:
+                    self.bulk_add(info)
+                    self.isModified = True
 
         elif (ext == '.csv') or (ext == '.CSV'):
             print "Importing CSV ..."
