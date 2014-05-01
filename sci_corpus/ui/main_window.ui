@@ -335,7 +335,7 @@ p, li { white-space: pre-wrap; }
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>200</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -519,7 +519,7 @@ p, li { white-space: pre-wrap; }
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>200</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -697,7 +697,7 @@ p, li { white-space: pre-wrap; }
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>200</height>
+         <height>100</height>
         </size>
        </property>
        <property name="midLineWidth">
@@ -877,6 +877,9 @@ p, li { white-space: pre-wrap; }
      </item>
      <item row="2" column="0" colspan="8">
       <widget class="QTableWidget" name="tableWidgetSentence">
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAsNeeded</enum>
+       </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
@@ -889,13 +892,25 @@ p, li { white-space: pre-wrap; }
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
+       <property name="verticalScrollMode">
+        <enum>QAbstractItemView::ScrollPerItem</enum>
+       </property>
        <property name="sortingEnabled">
         <bool>true</bool>
        </property>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
        <attribute name="horizontalHeaderMinimumSectionSize">
         <number>100</number>
        </attribute>
        <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
        <attribute name="verticalHeaderStretchLastSection">
@@ -944,6 +959,51 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionSave"/>
    <addaction name="actionSaveAs"/>
    <addaction name="actionClose"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidgetLogView">
+   <property name="windowTitle">
+    <string>  Log View</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButtonClearLog">
+       <property name="maximumSize">
+        <size>
+         <width>85</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QTextEdit" name="textEditLogView">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(85, 170, 255);
+background-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="autoFormatting">
+        <set>QTextEdit::AutoBulletList</set>
+       </property>
+       <property name="undoRedoEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionOpen">
    <property name="icon">
@@ -1108,5 +1168,22 @@ p, li { white-space: pre-wrap; }
  <resources>
   <include location="icons/sci_corpus_resource.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButtonClearLog</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textEditLogView</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>879</x>
+     <y>626</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>889</x>
+     <y>682</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
