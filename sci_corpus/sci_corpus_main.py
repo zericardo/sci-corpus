@@ -5,52 +5,62 @@
 Graphical interface for sci-corpus program.
 
 Author: Daniel Pizetta <daniel.pizetta@usp.br>
-             Tiago de Campos <tiago.campos@usp.br>
-             José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
+        Tiago de Campos <tiago.campos@usp.br>
+        José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
+        
 Date: 04/04/2014
 
 This script provides a graphical interface for sci-corpus program standalone.
 """
 
-from PySide.QtGui import QApplication,  QMainWindow,  QMessageBox,  QListWidgetItem
-from PySide.QtGui import QFileDialog,  QTableWidgetItem, QAbstractItemView
-from PySide.QtGui import QBrush,  QColor
-from PySide.QtCore import QSettings,  QRect
+from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
+from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
+from PySide.QtGui import QBrush, QColor
 
-import container as container
+from PySide.QtCore import QSettings,  QRect,  Signal
+
+import container
 import re
 import os
 import json
 import codecs
-import time
+
+from time import gmtime, strftime
 
 from ui import main_window_ui
 import start_dlg
 
 __version__='1.0'
-__program_name__ = 'Sci Corpus - Scientific Corpus Manager'
+__pname__ = 'Sci Corpus'
+__ext_name__ = 'Scientific Corpus Manager'
 
 class MainWindow(QMainWindow):
+    
+    logSig = Signal(str)
+    
     def __init__(self, argv=None, parent=None):
         super(MainWindow, self).__init__(parent)
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
+        self.tabifyDockWidget(self.ui.dockWidgetLogView, self.ui.dockWidgetTableView)
         
         # We should put something util
-        start_dialog = start_dlg.StartDialog()
-        start_dialog.progress(10)
-        time.sleep(0.5)
-        start_dialog.progress(30)
-        time.sleep(1)
-        start_dialog.progress(60)
-        time.sleep(1)
-        start_dialog.progress(90)
-        time.sleep(2)
-        start_dialog.progress(100)
-        time.sleep(1)
-        start_dialog.close()
+        start = start_dlg.StartDialog(self)
+        start.show()
+        start.informationProgress('Starting')
+        start.updateProgress(10)
+        start.informationProgress('Loading interface')
+        start.updateProgress(30)
+        start.informationProgress('Loading preferences')
+        start.updateProgress(60)
+        start.informationProgress('Loading environment')
+        start.updateProgress(90)
+        start.informationProgress('Finishing to run')
+        start.updateProgress(100)
+        start.close()
         
-        self.container = container.ContainerDB()               
+        self.container = container.ContainerDB()
+        
         self.theme = 'Black'
         self.replaceBy = '...'
         self.marker = '{}'
@@ -67,8 +77,7 @@ class MainWindow(QMainWindow):
                     'hide_marked':self.hideMarked, 
                     'last_path': self.container.path}
         
-        # File
-        
+        # File ----------------------------------------------------------------
         self.ui.actionOpen.triggered.connect(self.openFile)
         self.ui.actionSave.triggered.connect(self.saveFile)
         self.ui.actionSaveAs.triggered.connect(self.saveFileAs)
@@ -77,93 +86,97 @@ class MainWindow(QMainWindow):
         self.ui.actionExport.triggered.connect(self.exportFile)
         self.ui.actionClose.triggered.connect(self.closeFile)
         
-        # Application
-        
+        # Application ---------------------------------------------------------
+        # Actions
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.actionTips.triggered.connect(self.tips)
+        # Signals
+        self.logSig.connect(self.showLogMessage)
         
-        # Section
-        
+        # Section --------------------------------------------------------------
+        # Buttons
         self.ui.pushButtonSectionAdd.clicked.connect(self.addSection)
         self.ui.pushButtonSectionRemove.clicked.connect(self.removeSection)
         self.ui.pushButtonSectionUpdate.clicked.connect(self.updateSection)
-        
+        # Actions
         self.ui.actionAddSection.triggered.connect(self.addSection)
         self.ui.actionRemoveSection.triggered.connect(self.removeSection)
         self.ui.actionUpdateSection.triggered.connect(self.updateSection)
         self.ui.actionTipsSection.triggered.connect(self.tipsSection)
-        
+        # Signals
         self.ui.listWidgetSection.doubleClicked.connect(lambda: \
-                self.ui.lineEditSection.setText(self.ui.listWidgetSection.currentItem().text()))
-        self.ui.listWidgetSection.itemSelectionChanged.connect(lambda: self.ui.lineEditSection.clear())
-                
-        self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSubSectionView)
-        self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSentenceView)
-        
-        self.ui.listWidgetSection.itemSelectionChanged.connect(self.updateSelectedNumbers)
-        
-        self.ui.listWidgetSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
+                self.ui.lineEditSection.setText(\
+                self.ui.listWidgetSection.currentItem().text()))
+        self.ui.listWidgetSection.itemSelectionChanged.connect(lambda: \
+                self.ui.lineEditSection.clear())
+        self.ui.listWidgetSection.itemSelectionChanged.connect(\
+                self.updateSubSectionView)
+        self.ui.listWidgetSection.itemSelectionChanged.connect(\
+                self.updateSentenceView)
+        self.ui.listWidgetSection.itemSelectionChanged.connect(\
+                self.updateSelectedNumbers)
+        # Properties
+        self.ui.listWidgetSection.setSelectionMode(\
+                QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetSection.setDragEnabled(False)
 
-        # Subsection
-        
+        # Subsection ----------------------------------------------------------
+        # Buttons
         self.ui.pushButtonSubSectionAdd.clicked.connect(self.addSubSection)
         self.ui.pushButtonSubSectionRemove.clicked.connect(self.removeSubSection)
         self.ui.pushButtonSubSectionUpdate.clicked.connect(self.updateSubSection)
-        
+        # Actions
         self.ui.actionAddSubSection.triggered.connect(self.addSubSection)
         self.ui.actionRemoveSubSection.triggered.connect(self.removeSubSection)
         self.ui.actionUpdateSubSection.triggered.connect(self.updateSubSection)
         self.ui.actionTipsSubSection.triggered.connect(self.tipsSubSection)
-        
+        # Signals
         self.ui.listWidgetSubSection.doubleClicked.connect(lambda: \
-                self.ui.lineEditSubSection.setText(self.ui.listWidgetSubSection.currentItem().text()))
-        self.ui.listWidgetSubSection.itemSelectionChanged.connect(lambda: self.ui.lineEditSubSection.clear())
-        
+                self.ui.lineEditSubSection.setText(\
+                self.ui.listWidgetSubSection.currentItem().text()))
+        self.ui.listWidgetSubSection.itemSelectionChanged.connect(lambda: \
+                self.ui.lineEditSubSection.clear())
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateFunctionView)
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateSentenceView)
-
         self.ui.listWidgetSubSection.itemSelectionChanged.connect(self.updateSelectedNumbers)
-
+        # Properties
         self.ui.listWidgetSubSection.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetSubSection.setDragEnabled(False)
         
-        # Function
-        
+        # Function -------------------------------------------------------------
+        # Buttons
         self.ui.pushButtonFunctionAdd.clicked.connect(self.addFunction)
         self.ui.pushButtonFunctionRemove.clicked.connect(self.removeFunction)
         self.ui.pushButtonFunctionUpdate.clicked.connect(self.updateFunction)
-        
+        # Actions
         self.ui.actionAddFunction.triggered.connect(self.addFunction)
         self.ui.actionRemoveFunction.triggered.connect(self.removeFunction)
         self.ui.actionUpdateFunction.triggered.connect(self.updateFunction)
         self.ui.actionTipsFunction.triggered.connect(self.tipsFunction)
-        
+        # Signals
         self.ui.listWidgetFunction.doubleClicked.connect(lambda: \
-                self.ui.lineEditFunction.setText(self.ui.listWidgetFunction.currentItem().text()))
-        self.ui.listWidgetFunction.itemSelectionChanged.connect(lambda: self.ui.lineEditFunction.clear())
-        
+                self.ui.lineEditFunction.setText(\
+                self.ui.listWidgetFunction.currentItem().text()))
+        self.ui.listWidgetFunction.itemSelectionChanged.connect(lambda: \
+                self.ui.lineEditFunction.clear())
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSentenceView)
-        
         self.ui.listWidgetFunction.itemSelectionChanged.connect(self.updateSelectedNumbers)
-
+        # Properties
         self.ui.listWidgetFunction.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.ui.listWidgetFunction.setDragEnabled(False)
         
-        # Sentence
-        
+        # Sentence ------------------------------------------------------------
+        # Buttons
         self.ui.pushButtonSentenceAdd.clicked.connect(self.addSentence)
         self.ui.pushButtonSentenceRemove.clicked.connect(self.removeSentence)
         self.ui.pushButtonSentenceUpdate.clicked.connect(self.updateSentence)
-        
+        # Actions
         self.ui.actionAddSentence.triggered.connect(self.addSentence)
         self.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
         self.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
         self.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
-        
-        # Signals for table headers
-        
+        # Signals
         self.ui.checkBoxSection.clicked.connect(lambda: \
                 self.ui.tableWidgetSentence.setColumnHidden(0, \
                 not self.ui.checkBoxSection.isChecked()))
@@ -179,52 +192,15 @@ class MainWindow(QMainWindow):
         self.ui.checkBoxReference.clicked.connect(lambda: \
                 self.ui.tableWidgetSentence.setColumnHidden(4, \
                 not self.ui.checkBoxReference.isChecked()))
-        
-        self.clearAll()
-        
-        # Setting table headers
-        
-        self.ui.tableWidgetSentence.setColumnHidden(0, \
-            not self.ui.checkBoxSection.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(1, \
-            not self.ui.checkBoxSubSection.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(2, \
-            not self.ui.checkBoxFunction.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(3, \
-            not self.ui.checkBoxSentence.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(4, \
-            not self.ui.checkBoxReference.isChecked())
-            
-        self.ui.tableWidgetSentence.setColumnCount(5)
-            
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem('Section'))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem('Sub Section'))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(2,QTableWidgetItem('Function'))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(3,QTableWidgetItem('Sentence'))
-        self.ui.tableWidgetSentence.setHorizontalHeaderItem(4,QTableWidgetItem('Reference'))
-        
-        self.ui.tableWidgetSentence.setColumnWidth(0,100)
-        self.ui.tableWidgetSentence.setColumnWidth(1,200)
-        self.ui.tableWidgetSentence.setColumnWidth(2,300)
-        self.ui.tableWidgetSentence.setColumnWidth(3,800)
-        self.ui.tableWidgetSentence.setColumnWidth(4,100)
-        
-        self.ui.tableWidgetSentence.setColumnHidden(0, \
-            not self.ui.checkBoxSection.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(1, \
-            not self.ui.checkBoxSubSection.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(2, \
-            not self.ui.checkBoxFunction.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(3,  \
-            not self.ui.checkBoxSentence.isChecked())
-        self.ui.tableWidgetSentence.setColumnHidden(4, \
-            not self.ui.checkBoxReference.isChecked())
-            
-        self.ui.tableWidgetSentence.setRowCount(1)
         self.ui.tableWidgetSentence.itemSelectionChanged.connect(self.updateSelectedNumbers)
-
-        self.ui.checkBoxStrip.setChecked(True)
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
+        # Properties
+        self.ui.tableWidgetSentence.setRowCount(0)
+        self.ui.checkBoxStrip.setChecked(True)
+        # Cleaning
+        self.clearAll()
+        self.updateSectionView()
+        self.updateSentenceView()
         
     def selectedTitles(self, selected_items):
         """
@@ -253,7 +229,7 @@ class MainWindow(QMainWindow):
         func = set()
         sent = set()
         
-        # This can be better :), maybe a property of container
+        # @TODO: This can be better :), maybe a property of container
         for secv, subsv, funcv, sentv, refv in self.container.listSentences():
             sec.add(secv)
             subs.add(subsv)
@@ -276,12 +252,13 @@ class MainWindow(QMainWindow):
         """
         Add a new section.
         """
-        
         sec = str(self.ui.lineEditSection.text())
         
         if sec != '':
             self.container.addDB(sect=[sec])
-            self.writeStatusBar('A new section "{}" has already added.'.format(sec))
+            self.logSig.emit('A new section "{}" has already added.'.format(sec))
+            self.showMessageOnStatusBar('A new section "{}" has already added.'.format(sec))
+            
         self.updateTotalNumbers()
         self.updateSectionView()
 
@@ -290,13 +267,13 @@ class MainWindow(QMainWindow):
         """
         Remove a section.
         """
-        
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         
         if sec != []:
             if self.removeQuestion("Section",sec) == QMessageBox.Yes:
                 self.container.remove(sect=sec)
-                self.writeStatusBar('Section(s) has already removed.'.format(sec))
+                self.showMessageOnStatusBar('Section(s) has already removed.'.format(sec))
+                
         self.updateTotalNumbers()
         self.updateSectionView()
                
@@ -305,19 +282,18 @@ class MainWindow(QMainWindow):
         """
         Updates old section with new section.
         """
-        
-        old_sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        old_sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         new_sec = str(self.ui.lineEditSection.text())
         
         if len(old_sec) != 1:
-            QMessageBox.error(self, 
+            QMessageBox.warning(self, 
                                 self.tr('Update'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_sec != '':
             if self.updateQuestion("Section",(old_sec[0], new_sec)) == QMessageBox.Yes:
                 self.container.update(section=[(new_sec,old_sec[0])])
-                self.writeStatusBar('Section "{}" has already updated to "{}".'.format(old_sec[0], new_sec))
+                self.showMessageOnStatusBar('Section "{}" has already updated to "{}".'.format(old_sec[0], new_sec))
 
         self.updateSectionView()
         
@@ -332,10 +308,8 @@ class MainWindow(QMainWindow):
             sec.add(secv)
         
         self.ui.listWidgetSection.clear()
-        
         sec = sorted(sec)
-        
-        self.ui.labelShownSection.setText(str(len(sec)))
+        self.ui.labelDisplayedSection.setText(str(len(sec)))
         
         if "Not Classified" in sec:
             sec.remove("Not Classified")
@@ -361,19 +335,20 @@ scientific text. In summary, they are the titles of each section.'),
                                 QMessageBox.Ok)
                                 
     # -----------------------------------------------------------------------
-    # Subsection methods
+    # Sub Section methods
     # -----------------------------------------------------------------------
 
     def addSubSection(self):
         """
         Add a new Subsection
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = str(self.ui.lineEditSubSection.text())
         
         if subs != '':
             self.container.addDB(sect=sec, subsect=[subs])
-            self.writeStatusBar('A new sub section "{}" has already added.'.format(subs))
+            self.showMessageOnStatusBar('A new sub section "{}" has already added.'.format(subs))
+            
         self.updateTotalNumbers()
         self.updateSubSectionView()
 
@@ -382,12 +357,12 @@ scientific text. In summary, they are the titles of each section.'),
         """
         Remove one subsection
         """
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         
         if subs != []:
             if self.removeQuestion("Subsection",subs) == QMessageBox.Yes:
                 self.container.remove(subsect=subs)
-                self.writeStatusBar('A sub section has already removed.')
+                self.showMessageOnStatusBar('A sub section has already removed.')
                 
         self.updateTotalNumbers()
         self.updateSubSectionView() 
@@ -397,18 +372,18 @@ scientific text. In summary, they are the titles of each section.'),
         """
         Updates one subsection
         """
-        old_subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        old_subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         new_subs = str(self.ui.lineEditSubSection.text())
         
         if len(old_subs) != 1:
-            QMessageBox.error(self, 
+            QMessageBox.warning(self, 
                                 self.tr('Update'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_subs != '':
            if self.updateQuestion("Subsection",(old_subs[0], new_subs)) == QMessageBox.Yes:
               self.container.update(subsection=[(new_subs,old_subs[0])])
-              self.writeStatusBar('Sub section "{}" has already updated to "{}".'.format(old_subs[0], new_subs))
+              self.showMessageOnStatusBar('Sub section "{}" has already updated to "{}".'.format(old_subs[0], new_subs))
         
         self.updateSubSectionView()
 
@@ -417,7 +392,7 @@ scientific text. In summary, they are the titles of each section.'),
         """
         Updates subsection view
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = set()
         subsecs = []
 
@@ -435,7 +410,6 @@ scientific text. In summary, they are the titles of each section.'),
         self.ui.listWidgetSubSection.clear()
         subs = sorted(subs)
 
-        
         if "Not Classified" in subs:
             subs.remove("Not Classified")
             subs.append("Not Classified")
@@ -444,7 +418,7 @@ scientific text. In summary, they are the titles of each section.'),
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSubSection.addItem(item)
             
-        self.ui.labelShownSubSection.setText(str(len(subs)))  
+        self.ui.labelDisplayedSubSection.setText(str(len(subs)))  
         self.updateFunctionView()
         self.updateSentenceView()
             
@@ -469,13 +443,13 @@ in an article.'),
         """
         Adds a new function.
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         func = str(self.ui.lineEditFunction.text())
         
         if func != '':
             self.container.addDB(sect=sec, subsect=subs, funct=[func])
-            self.writeStatusBar('A new function "{}" has already added.'.format(func))
+            self.showMessageOnStatusBar('A new function "{}" has already added.'.format(func))
         
         self.updateTotalNumbers()  
         self.updateFunctionView()
@@ -485,12 +459,12 @@ in an article.'),
         """
         Removes a function.
         """
-        func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        func = self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
         
         if func != []:
             if self.removeQuestion("Function",func) == QMessageBox.Yes:
                 self.container.remove(funct=func)
-                self.writeStatusBar('A function has already removed.')
+                self.showMessageOnStatusBar('A function has already removed.')
         
         self.updateTotalNumbers()
         self.updateFunctionView()
@@ -500,18 +474,18 @@ in an article.'),
         """
         Updates a function.
         """
-        old_func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        old_func = self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
         new_func = str(self.ui.lineEditFunction.text())
         
         if len(old_func) != 1:
-            QMessageBox.error(self, 
+            QMessageBox.warning(self, 
                                 self.tr('Update'),
                                 self.tr('Please select just one item to update.'),
                                 QMessageBox.Ok)
         elif new_func != '':
            if self.updateQuestion("Function",(old_func[0], new_func)) == QMessageBox.Yes:
               self.container.update(function=[(new_func,old_func[0])])
-              self.writeStatusBar('Function "{}" has already updated to "{}".'.format(old_func[0], new_func))
+              self.showMessageOnStatusBar('Function "{}" has already updated to "{}".'.format(old_func[0], new_func))
               
         self.updateFunctionView()
 
@@ -520,8 +494,8 @@ in an article.'),
         """
         Updates a function view.
         """
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         func = set()
         
         funcs = []
@@ -551,7 +525,7 @@ in an article.'),
         self.ui.listWidgetFunction.clear()
         func = sorted(func)
         
-        self.ui.labelShownFunction.setText(str(len(func)))
+        self.ui.labelDisplayedFunction.setText(str(len(func)))
 
         if "Not Classified" in func:
             func.remove("Not Classified")
@@ -583,13 +557,9 @@ in an article.'),
         """
         Adjusts sentences to be displayed on the screen.
         """
-
-        #print sent, type(sent)
-
         b  = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e  = [match.end() for match in re.finditer(re.escape(end), sent)]
 
-        
         #exception here b and e must have the same size!
         if(len(b) == len(e)):
             for i in range(0,len(b)):
@@ -632,9 +602,9 @@ in an article.'),
         Adds a new sentence.
         """
         # Getting information
-        sec = list(self.selectedTitles(self.ui.listWidgetSection.selectedItems()))
-        subs = list(self.selectedTitles(self.ui.listWidgetSubSection.selectedItems()))
-        func = list(self.selectedTitles(self.ui.listWidgetFunction.selectedItems()))
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        func = self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
         sent = str(self.ui.textEditSentence.toPlainText())
         ref = str(self.ui.lineEditReference.text())
         
@@ -643,7 +613,7 @@ in an article.'),
         
         # Insertting in DB
         self.container.addDB(sect=sec, subsect=subs, funct=func, phrase=[sent], ref=[ref])
-        self.writeStatusBar('A new sentence has already added.')
+        self.showMessageOnStatusBar('A new sentence has already added.')
         
         self.updateTotalNumbers()
         self.updateSentenceView()
@@ -658,37 +628,31 @@ in an article.'),
         self.updateSentenceView()
 
 
-    def updateSentence(self,  old_sentence,  new_sentence=''):
+    def updateSentence(self,  old_sentence='',  new_sentence=''):
         """
         Updates a sentence.
         """
         self.notImplementedYet()
-        self.updateTotalNumbers()
         self.updateSentenceView()
+        
         
     def updateSentenceView(self):
         """
         Updates a sentence view.
         """
+        
         sections = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         sub_sections =  self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         functions =  self.selectedTitles(self.ui.listWidgetFunction.selectedItems())       
-        sentences = self.container.listSentences(section=list(sections),subsection=list(sub_sections),function=list(functions))
+        sentences = self.container.listSentences(section=sections,subsection=sub_sections,function=functions)
         
-        self.ui.tableWidgetSentence.clear()
+        self.ui.tableWidgetSentence.clearContents()
         self.ui.tableWidgetSentence.setColumnCount(5)
-        
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(0,QTableWidgetItem('Section'))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(1,QTableWidgetItem('Sub Section'))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(2,QTableWidgetItem('Function'))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(3,QTableWidgetItem('Sentence'))
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(4,QTableWidgetItem('Reference'))
-        
-        self.ui.tableWidgetSentence.setColumnWidth(0,150)
-        self.ui.tableWidgetSentence.setColumnWidth(1,200)
-        self.ui.tableWidgetSentence.setColumnWidth(2,300)
-        self.ui.tableWidgetSentence.setColumnWidth(3,800)
-        self.ui.tableWidgetSentence.setColumnWidth(4,100)  
 
         row = 0
         strip = self.ui.checkBoxStrip.isChecked()
@@ -717,8 +681,7 @@ in an article.'),
                         sent_item.setBackground(QBrush(QColor(255,0,0,127)))
                 row += 1
                 
-        self.ui.labelShownSentence.setText(str(row))
-        
+        self.ui.labelDisplayedSentence.setText(str(row))
         self.ui.tableWidgetSentence.setRowCount(row)
         
         self.ui.tableWidgetSentence.setColumnHidden(0, \
@@ -761,7 +724,7 @@ in an article.'),
 
         if path != '':
             self.container.read_(path)
-            self.setWindowTitle(__program_name__+" : "+self.container.path)
+            self.setWindowTitle(__pname__+" V."+__version__+" : "+self.container.path)
             self.updateSelectedNumbers()
             self.updateTotalNumbers()
             self.updateSectionView()
@@ -772,7 +735,6 @@ in an article.'),
         """"
         Saves the file that is being used.
         """
-        
         if self.container.path == '':
             self.saveFileAs()
         else:
@@ -812,7 +774,7 @@ in an article.'),
                 self.saveFile()
 
         self.container.close_()
-        self.setWindowTitle(__program_name__+" V."+__version__)
+        self.setWindowTitle(__pname__+" V."+__version__)
         self.clearAll()    
         
         
@@ -834,48 +796,72 @@ in an article.'),
         """
         Import file with extension.
         """
+        #@TODO: show a dialog to choose separator and id
+        QMessageBox.information(self, 
+                self.tr('Import File'),
+                self.tr('Please, before you try import the file,\n \
+                        ensure that if CSV the separator is ; (semi collon) \n \
+                        and string identificator is " (double quote)'),
+                QMessageBox.Ok)
+                
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Import File'),
-                                           self.tr(''),
+                                           self.tr(os.path.dirname(self.container.path)),
                                            self.tr('(*.xml *.csv)'))[0]
 
         if path != '':
-            self.container.import_(path)
+            try:
+                self.container.import_(path)
+            except Exception, e:
+                self.clearAll()
+                QMessageBox.warning(self, 
+                        self.tr('Import File'),
+                        self.tr('We could not import the file. \nError:{}'.format(str(e))),
+                        QMessageBox.Ok)
         
         self.updateSectionView()
-        self.updateSubSectionView()
-        self.updateFunctionView()
         self.updateSentenceView()
+        
+    # -----------------------------------------------------------------------
+    # Application methods
+    # -----------------------------------------------------------------------
         
     def readPreferences(self):
         """
         Reads preferences from file.
         """
-        with codecs.open(os.path.abspath(os.path.join('~', 'scicorpuspreferences.ini')), 'rb',  'utf-8') as file:
+        with codecs.open(os.path.abspath(os.path.join(\
+                os.path.expanduser('~'), \
+                'scicorpuspreferences.ini')), 'wb', 'utf-8') as file:
             self.preferences = json.loads(file)
+        
         
     def writePreferences(self):
         """
         Writes preferences on file.
         """
-        with codecs.open(os.path.abspath(os.path.join('~', 'scicorpuspreferences.ini')), 'wb',  'utf-8') as file:
+        with codecs.open(os.path.abspath(os.path.join(\
+                os.path.expanduser('~'), \
+                'scicorpuspreferences.ini')), 'wb', 'utf-8') as file:
             json.dump(self.preferences, file,  indent=4,  sort_keys=True)
-            
 
-    # -----------------------------------------------------------------------
-    # Application methods
-    # -----------------------------------------------------------------------
 
-    def about(self):
+    def writeSettings(self):
         """
-        About shows the main information about the application.
+        Write settings fo window state and geometry.
         """
-        QMessageBox.about(self,
-                          self.tr('About Sci Corpus'),
-                          self.tr('This software is a corpus manager, that allows you to trainer.\
-\n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
-\n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
-\n\nVersion:{}'.format(__version__)))
+        settings = QSettings("SciCorpus", "SciCorpus")
+        settings.setValue("geometry", self.saveGeometry())
+        settings.setValue("windowState", self.saveState())
+
+
+    def readSettings(self):
+        """
+        Read settings of window state and geometry.
+        """
+        settings = QSettings ("SciCorpus", "SciCorpus")
+        self.restoreGeometry(settings.value("geometry").toByteArray())
+        self.restoreState(settings.value("windowState").toByteArray())
 
 
     def clearAll(self):
@@ -892,7 +878,7 @@ in an article.'),
         self.ui.listWidgetSubSection.clear()
         self.ui.listWidgetFunction.clear()
         # Clear table view
-        self.ui.tableWidgetSentence.clear()
+        self.ui.tableWidgetSentence.clearContents()
 
         
     def closeEvent(self, event):
@@ -910,27 +896,26 @@ in an article.'),
             event.accept()
         else:
             event.ignore()
-            
-        
-    def writeSettings(self):
-        settings = QSettings("SciCorpus", "SciCorpus")
-        settings.setValue("geometry", self.saveGeometry())
-        settings.setValue("windowState", self.saveState())
 
 
-    def readSettings(self):
-        settings = QSettings ("SciCorpus", "SciCorpus")
-        self.restoreGeometry(settings.value("geometry").toByteArray())
-        self.restoreState(settings.value("windowState").toByteArray())
-            
-            
-    def writeStatusBar(self,  msg):
+    def showMessageOnStatusBar(self,  msg):
         """
         Display message on status bar.
         """
         status_bar = self.statusBar()
         status_bar.clearMessage()
         status_bar.showMessage(str(msg), 5000)
+        
+        
+    def showLogMessage(self, msg):
+        """
+        Show log message in log view.
+        """
+        time_now = strftime("%a, %d %b %Y %H:%M:%S", gmtime())
+        new_text = '{} || {}'.format(time_now, str(msg))
+        self.ui.textEditLogView.append(new_text)
+        scrolbar = self.ui.textEditLogView.verticalScrollBar()
+        scrolbar.setValue(scrolbar.maximum())
 
 
     def tips(self):
@@ -971,12 +956,23 @@ in an article.'),
                                     self.tr("Do you want to update item '{}' to '{}' in {}?".format(old_who,new_who,category)),
                                     QMessageBox.Yes | QMessageBox.No,
                                     QMessageBox.No)
+                                    
+                                    
+    def about(self):
+        """
+        About shows the main information about the application.
+        """
+        QMessageBox.about(self,
+                          self.tr('About {}'.format(__pname__)),
+                          self.tr('This software is a corpus manager, that allows you to trainer.\
+\n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
+\n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
+\n\nVersion:{}'.format(__version__)))
+
 
 
 if __name__ == '__main__':
-    app = QApplication(__program_name__)
-    main_window = MainWindow()
-             
+    app = QApplication(__pname__)
     try:
         style_sheet = ''
         with open(os.path.abspath('ui/white_theme.sty'),'rb') as style_file:
@@ -986,10 +982,7 @@ if __name__ == '__main__':
         print 'Error in style sheet: ',  e
         pass
         
-    main_window.show()
-    main_window.setWindowTitle(__program_name__)
-    screenGeometry = QRect()
-    screenGeometry = app.desktop().screenGeometry()
-    main_window.setGeometry(screenGeometry)
-    
+    main_window = MainWindow()
+    main_window.setWindowTitle(__pname__+" V."+__version__) 
+    main_window.showMaximized()
     exit(app.exec_())

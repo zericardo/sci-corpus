@@ -442,3 +442,38 @@ class ContainerDB():
         elif (ext == '.json') or (ext == '.JSON'):
             print "Exporting JSON ..."
 
+    def crazyRepetition(self, sBase="", sConnect="",  sItems =[]):
+        """
+        Repeats the sentence in loop, avoiding extra work.
+
+        <Args>
+        sBase: String that will be repeated n times.
+        sConnect: String that will connect all the different sBase strings.
+        sItems: String list that will be replaced in the '?' signal on the sBase
+                sentences, making new ones.
+        <Returns>
+        sFinal: A string composed by all len(sItens) strings linked together with
+                sConnect string. 
+        """   
+   
+        sFinal=''
+
+        if(len(sItems)>0):
+      
+            queryList = []
+
+            for item in sItems:
+                queryList.append(sBase.replace("?","\""+item+"\""))
+
+            if(len(sItems)==1):
+                sFinal = queryList[0]
+            else:
+                for i in range(0,len(queryList)-1):
+                    sFinal += queryList[i]+" "+sConnect+" "+queryList[i+1]
+         
+
+        else:
+            raise AssertionError("Number of itens in the sItens is incompatible!")
+
+        return sFinal
+

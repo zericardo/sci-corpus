@@ -1,23 +1,74 @@
+#! python
+# -*- coding: utf-8 -*-
+
+"""
+Starting screen.
+
+Author: Daniel Pizetta <daniel.pizetta@usp.br>
+Date: 28/04/2014
+"""
+
 from PySide.QtGui import QDialog
-import ui.start_dlg_ui
+from PySide import QtCore
+import ui.start_dlg_ui 
+from time import sleep
 
 class StartDialog(QDialog):
     """
-    Shows starting dialog.
+    Starting screen class.
     """
-    def __init__(self,parent=None):
+    def __init__(self, parent=None, delay=0.3):
+        """
+        Contructor
+        """
         super(StartDialog, self).__init__(parent)
         self.ui = ui.start_dlg_ui.Ui_Dialog()
         self.ui.setupUi(self)
-        self.setModal(True)
-        self.ui.progressBar.setRange(0, 100)
-        self.show()
-        self.ui.progressBar.setValue(1)
+        self.setWindowFlags(QtCore.Qt.SplashScreen | \
+                            QtCore.Qt.WindowStaysOnTopHint |\
+                            QtCore.Qt.FramelessWindowHint |\
+                            QtCore.Qt.WindowTitleHint)
+        
+        self.delay = delay
+        
+        self.ui.progressBar.setRange(0,100)
+        self.ui.progressBar.setValue(0)
+        self.informationProgress("Starting")
 
     def version(self, version):
+        """
+        Set version to show.
+        
+        Parameters
+            version : int/float/str
+        """
         self.ui.labelVersion.setText("V."+str(version))
         
-    def progress(self,  value):
-        self.ui.progressBar.setValue(value)
+    def year(self, year):
+        """
+        Set year to show.
         
-    #@TODO: put another text message to inform what it is doing...
+        Parameters
+            year : int/str
+        """
+        self.ui.labelYear.setText(str(year))
+        
+    def updateProgress(self, value=0):
+        """
+        Update progress bar with value (0-100).
+        
+        Parameters
+            value : int (0-100)
+        """
+        self.ui.progressBar.setValue(value)
+        sleep(self.delay)
+        
+    def informationProgress(self, text=""):
+        """
+        Update string that shows information about progress.
+        
+        Parameters
+            text : str
+        """
+        self.ui.labelInformationProgress.setText(str(text)+" ...")
+
