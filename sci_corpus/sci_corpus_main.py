@@ -796,27 +796,32 @@ in an article.'),
         """
         Export file with extension.
         """
-        self.notImplementedYet()
-        """
+        
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
-                                           self.tr(self.container.path))
+                                           self.tr(self.container.path))[0]
         if path != '':
             self.container.export_(path)
-        """
+            
+        self.container.close_()
+        
+        
         
         
     def importFile(self):
         """
         Import file with extension.
         """
+        
+        #This is not general and should be moved to tips about importing
+        
         #@TODO: show a dialog to choose separator and id
-        QMessageBox.information(self, 
-                self.tr('Import File'),
-                self.tr('Please, before you try import the file,\n \
-                        ensure that if it is a CSV one, the separator is ; (semi collon) \n \
-                        and string identificator is " (double quote)'),
-                QMessageBox.Ok)
+        #QMessageBox.information(self, 
+        #        self.tr('Import File'),
+        #        self.tr('Please, before you try import the file,\n \
+        #                ensure that if it is a CSV one, the separator is ; (semi collon) \n \
+        #                and string identificator is " (double quote)'),
+        #        QMessageBox.Ok)
                 
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Import File'),

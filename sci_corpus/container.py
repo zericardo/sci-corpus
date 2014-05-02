@@ -3,7 +3,8 @@ import json
 import codecs
 import sqlite3
 import csv
-import xml.etree.ElementTree as ET
+#import xml.etree.cElementTree as ET
+from lxml import etree as ET
 import StringIO as strio
 from shutil import copy2
 
@@ -181,8 +182,8 @@ class ContainerDB():
         allInfo = []
 
         try:
-            cursor.execute('SELECT DISCTINC sec, subsec, func, phrase, ref from corpus')
-            allInfo.append(cursor.fetchall())
+            cursor.execute('SELECT DISTINCT sec, subsec, func, phrase, ref from corpus')
+            allInfo.extend(cursor.fetchall())
         
         except sqlite3.Error, err:
             print "[INFO listAll] %s" % err
@@ -350,7 +351,7 @@ class ContainerDB():
         try:
            self.__dbmem.close()
         except sqlite3.Error, err:
-            print "[INFO line 326] %s" % err
+            print "[INFO close] %s" % err
         else:
            self.__path = ''
            self.__isModified = False
@@ -434,7 +435,34 @@ class ContainerDB():
         
         if (ext == '.xml') or (ext == '.XML'):
             print "Exporting XML ..."
-
+          
+            try:
+                info = []
+                info = self.listAll()
+            except sqlite3.Error, err:
+                print "[INFO listall exporting] %s" % err 
+            else:
+                try:
+                    root = ET.Element('ARTINFO')
+                    for (secv, subsv, funcv, sentv, refv) in info:
+                        infopiece = ET.SubElement(root, 'INFOPIECE')
+                        sec = ET.SubElement(infopiece, 'SECTION')
+                        sec.text = secv
+                        subs = ET.SubElement(infopiece, 'SUBSECTION')
+                        subs.text = subsv
+                        func = ET.SubElement(infopiece, 'FUNCTION')
+                        func.text = funcv
+                        sent = ET.SubElement(infopiece, 'PHRASE')
+                        sent.text = sentv
+                        ref = ET.SubElement(infopiece, 'REF')
+                        ref.text = refv
+        
+                    #print ET.tostring(root, pretty_print=True, xml_declaration=True)
+                    tree = ET.ElementTree(root)
+                    tree.write(path, pretty_print=True, xml_declaration=True)
+               
+                except ET.ParseError, err:
+                    print "[INFO xml export] %s" % err
                 
         elif (ext == '.csv') or (ext == '.CSV'):
             print "Exporting CSV ..."
