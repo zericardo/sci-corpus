@@ -472,16 +472,32 @@ class ContainerDB():
 
     def crazyRepetition(self, sBase="", sConnect="",  sItems =[]):
         """
-        Repeats the sentence in loop, avoiding extra work.
+        Combines sentences in one string to make selection easier.
 
-        <Args>
-        sBase: String that will be repeated n times.
-        sConnect: String that will connect all the different sBase strings.
-        sItems: String list that will be replaced in the '?' signal on the sBase
-                sentences, making new ones.
-        <Returns>
-        sFinal: A string composed by all len(sItens) strings linked together with
-                sConnect string. 
+        When two or more parameters are selected on section, subsectio or
+        function, the program should return the sentences that lie on the
+        intersection of all the itens selected. In this way, this method 
+        returns a string that will be used in the selection of the intersection         of all the sentences that are in this intersection
+
+        Parameters:
+        -----------
+        sBase: string 
+
+               This string will be repeated n times.
+
+        sConnect: string 
+    
+                  This string  will connect all the different sBase strings.
+
+        sItems: list of strings 
+
+                Each string in this list will be replace the '?' signal on the                  base sentences, making new ones.
+
+        Returns:
+        --------
+        sFinal: string 
+
+                This string iscomposed by all len(sItens) strings linked togethe                r with sConnect string. 
         """   
    
         sFinal=''
