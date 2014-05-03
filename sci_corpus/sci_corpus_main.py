@@ -18,7 +18,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
 from PySide.QtGui import QBrush, QColor
-from PySide.QtCore import QSettings, Signal
+from PySide.QtCore import QSettings, Signal, Qt
 from time import gmtime, strftime
 from ui import main_window_ui
 
@@ -36,7 +36,7 @@ __ext_name__ = 'Scientific Corpus Manager'
 
 class MainWindow(QMainWindow):
     
-    logSig = Signal(str)
+    logSig = QtCore.Signal(str)
     
     def __init__(self, argv=None, parent=None):
         """
@@ -53,6 +53,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setAttribute(Qt.WA_DeleteOnClose)
         
         start = start_dlg.StartDialog(self)
         start.logSig.connect(self.showLogMessage)
