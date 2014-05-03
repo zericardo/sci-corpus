@@ -19,7 +19,7 @@ class StartDialog(QDialog):
     Starting screen class.
     """
     
-    logSig = QtCore.Signal(str)
+    logSig = Signal(str)
     
     def __init__(self, parent=None, delay=0.3):
         """
@@ -39,10 +39,10 @@ class StartDialog(QDialog):
         self.ui.progressBar.setRange(0,100)
         self.ui.progressBar.setValue(0)
         
-        self.setWindowFlags(QtCore.Qt.SplashScreen | \
-                            QtCore.Qt.WindowStaysOnTopHint |\
-                            QtCore.Qt.FramelessWindowHint |\
-                            QtCore.Qt.WindowTitleHint)
+        self.setWindowFlags(Qt.SplashScreen | \
+                            Qt.WindowStaysOnTopHint |\
+                            Qt.FramelessWindowHint |\
+                            Qt.WindowTitleHint)
         self.__delay = delay
         self.informationProgress("Starting")
 
