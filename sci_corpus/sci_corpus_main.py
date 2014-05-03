@@ -18,18 +18,15 @@ This script provides a graphical interface for sci-corpus program standalone.
 from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
 from PySide.QtGui import QBrush, QColor
-
 from PySide.QtCore import QSettings, Signal
+from time import gmtime, strftime
+from ui import main_window_ui
 
 import container
 import re
 import os
 import json
 import codecs
-
-from time import gmtime, strftime
-
-from ui import main_window_ui
 import start_dlg
 import preferences_dlg
 
@@ -54,18 +51,16 @@ class MainWindow(QMainWindow):
                 Widget set as a parent.
         """
         super(MainWindow, self).__init__(parent)
+        self.ui = main_window_ui.Ui_MainWindow()
+        self.ui.setupUi(self)
         
         start = start_dlg.StartDialog(self)
         start.logSig.connect(self.showLogMessage)
         start.show()
-        
-        start.updateProgress(5)
         start.informationProgress('Starting')
         
         start.updateProgress(10)
         start.informationProgress('Loading interface')
-        self.ui = main_window_ui.Ui_MainWindow()
-        self.ui.setupUi(self)
         self.tabifyDockWidget(self.ui.dockWidgetLogView, self.ui.dockWidgetTableView)
 
         start.updateProgress(20)
