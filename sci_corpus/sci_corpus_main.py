@@ -710,10 +710,14 @@ in an article.'),
 
         row = 0
         strip = self.ui.checkBoxStrip.isChecked()
+        self.ui.tableWidgetSentence.setRowCount(row)
 
         for secv, subsv, funcv, sentv, refv in sentences:
             if sentv != u'NULL':
-
+                # This must be provided by method of list sentences..not return NULL sentences.
+                # Or maybe, put a check box to choose if will be show or not null sentences.
+                self.ui.tableWidgetSentence.setRowCount(row+1)
+                
                 sec_item = QTableWidgetItem(str(secv))
                 subs_item = QTableWidgetItem(str(subsv))
                 func_item = QTableWidgetItem(str(funcv))
@@ -739,7 +743,6 @@ in an article.'),
                 row += 1
                 
         self.ui.labelDisplayedSentence.setText(str(row))
-        self.ui.tableWidgetSentence.setRowCount(row)
         
         self.ui.tableWidgetSentence.setColumnHidden(0, \
             not self.ui.checkBoxSection.isChecked())
