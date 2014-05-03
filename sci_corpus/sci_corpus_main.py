@@ -36,7 +36,7 @@ __ext_name__ = 'Scientific Corpus Manager'
 
 class MainWindow(QMainWindow):
     
-    logSig = QtCore.Signal(str)
+    logSig = Signal(str)
     
     def __init__(self, argv=None, parent=None):
         """
@@ -1073,4 +1073,4 @@ if __name__ == '__main__':
         
     main_window.setWindowTitle(__pname__+" V."+__version__) 
     main_window.showMaximized()
-    exit(app.exec_())
+    app.exec_()
