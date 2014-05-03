@@ -88,10 +88,11 @@ class ContainerDB():
     def addDB(self,sect=['Not Classified'],subsect=['Not Classified'],funct=['Not Classified'],phrase=['NULL'],ref=['NULL']):
 
         cursor = self.__dbmem.cursor()
-
-        if sect == ['']: sect = ['Not Classified']
-        if subsect == ['']: subsect = ['Not Classified']
-        if funct == ['']: funct = ['Not Classified']
+        # We need to review this test
+        # But now its working. Actually sect, subsect and funct can be empty lists.
+        if sect == []: sect = ['Not Classified']
+        if subsect == []: subsect = ['Not Classified']
+        if funct == []: funct = ['Not Classified']
         if phrase == ['']: phrase = ['NULL']
         if ref == ['']: ref = ['NULL']
 
