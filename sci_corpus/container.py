@@ -4,7 +4,7 @@ import codecs
 import sqlite3
 import csv
 #import xml.etree.cElementTree as ET
-from lxml import etree as ET
+from xml import etree as ET
 import StringIO as strio
 from shutil import copy2
 
