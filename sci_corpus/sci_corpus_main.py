@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-Graphical interface for sci-corpus program.
+.. module:: sci_corpus_main
+   :platform: Unix, Windows
+   :synopsis: Graphical interface for sci-corpus program.
 
-Author: Daniel Pizetta <daniel.pizetta@usp.br>
-        Tiago de Campos <tiago.campos@usp.br>
-        José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
-        
-Date: 04/04/2014
+.. moduleauthor:: Daniel Pizetta <daniel.pizetta@usp.br>
+.. moduleauthor:: Tiago de Campos <tiago.campos@usp.br>
+.. moduleauthor:: José Ricardo Furlan Ronqui <jose.ronqui@usp.br>
+
+Date: 04/04/2014 #@TODO: how to put this?
 
 This script provides a graphical interface for sci-corpus program standalone.
 """
@@ -40,28 +42,49 @@ class MainWindow(QMainWindow):
     logSig = Signal(str)
     
     def __init__(self, argv=None, parent=None):
-        super(MainWindow, self).__init__(parent)
-        self.ui = main_window_ui.Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.tabifyDockWidget(self.ui.dockWidgetLogView, self.ui.dockWidgetTableView)
+        """
+        Constructor for Main Window class.
         
-        # We should put something util
+        Parameters:
+        -----------
+        argv: list
+              List of arguments.
+              
+        parent: QWidget
+                Widget set as a parent.
+        """
+        super(MainWindow, self).__init__(parent)
+        
         start = start_dlg.StartDialog(self)
         start.logSig.connect(self.showLogMessage)
         start.show()
+        
+        start.updateProgress(5)
         start.informationProgress('Starting')
+        
         start.updateProgress(10)
         start.informationProgress('Loading interface')
+        self.ui = main_window_ui.Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.tabifyDockWidget(self.ui.dockWidgetLogView, self.ui.dockWidgetTableView)
+
+        start.updateProgress(20)
+        start.informationProgress('Creating a container')
+        self.container = container.ContainerDB()
+        
         start.updateProgress(30)
         start.informationProgress('Loading preferences')
+        #self.readPreferences()
+        
         start.updateProgress(60)
-        start.informationProgress('Loading environment')
+        start.informationProgress('Setting environment')
+        
+        
         start.updateProgress(90)
         start.informationProgress('Finishing to run')
+        
         start.updateProgress(100)
         start.close()
-        
-        self.container = container.ContainerDB()
         
         self.theme = 'White'
         self.replaceBy = '...'
@@ -70,21 +93,42 @@ class MainWindow(QMainWindow):
         self.openLast = True
         self.workspace = os.path.expanduser('~')
         
+        self.defaultPreferences = { 'section': True, 
+                                    'subsection': True, 
+                                    'function': True, 
+                                    'sentence': True, 
+                                    'reference': False,
+                                    'strip': True, 
+                                    'theme': 'White',
+                                    'marker': '{}', 
+                                    'replace_by': '...',
+                                    'replace_where': 'Outside Markers',
+                                    'workspace': os.path.expanduser('~'),
+                                    'open_last': True, 
+                                    'last_path': self.container.path}
+                
         self.preferences = {'section':self.ui.checkBoxSection.isChecked(), 
                             'subsection': self.ui.checkBoxSubSection.isChecked(), 
                             'function': self.ui.checkBoxFunction.isChecked(), 
                             'sentence': self.ui.checkBoxSentence.isChecked(), 
                             'reference': self.ui.checkBoxReference.isChecked(),
                             'strip': self.ui.checkBoxStrip.isChecked(), 
-                            
                             'theme':self.theme,
-                            
                             'marker': self.marker, 
-                            'replace_by':self.replaceBy,
-                            'replace_where':self.replaceWhere,
-                            'workspace':self.workspace,
-                            'open_last':self.openLast, 
+                            'replace_by': self.replaceBy,
+                            'replace_where': self.replaceWhere,
+                            'workspace': self.workspace,
+                            'open_last': self.openLast, 
                             'last_path': self.container.path}
+        
+        # Application ---------------------------------------------------------
+        # Actions
+        self.ui.actionQuit.triggered.connect(self.close)
+        self.ui.actionAbout.triggered.connect(self.about)
+        self.ui.actionTips.triggered.connect(self.tips)
+        self.ui.actionPreferences.triggered.connect(self.setupPreferences)
+        # Signals
+        self.logSig.connect(self.showLogMessage)
         
         # File ----------------------------------------------------------------
         self.ui.actionOpen.triggered.connect(self.openFile)
@@ -94,16 +138,6 @@ class MainWindow(QMainWindow):
         self.ui.actionImport.triggered.connect(self.importFile)
         self.ui.actionExport.triggered.connect(self.exportFile)
         self.ui.actionClose.triggered.connect(self.closeFile)
-        
-        # Application ---------------------------------------------------------
-        # Actions
-        self.ui.actionQuit.triggered.connect(self.close)
-        self.ui.actionAbout.triggered.connect(self.about)
-        self.ui.actionTips.triggered.connect(self.tips)
-        
-        self.ui.actionPreferences.triggered.connect(self.setupPreferences)
-        # Signals
-        self.logSig.connect(self.showLogMessage)
         
         # Section --------------------------------------------------------------
         # Buttons
@@ -208,7 +242,8 @@ class MainWindow(QMainWindow):
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
         self.ui.checkBoxStrip.setChecked(True)
-        # Cleaning
+        
+        # Cleaning ----------------------------------------------------------
         self.clearAll()
         self.updateSectionView()
         self.updateSentenceView()
@@ -216,9 +251,18 @@ class MainWindow(QMainWindow):
     def selectedTitles(self, selected_items):
         """
         Return a list of selected titles.
+        
+        Parameters:
+        -----------
+        selected_items: QList
+                        Items from list or table view.
+                        
+        Returns:
+        titles: list(str)
+                Returns converted list of string items.
         """
         titles = []
-        for item in  selected_items:
+        for item in selected_items:
             titles.append(str(item.text()))
         return titles  
         
@@ -351,7 +395,7 @@ scientific text. In summary, they are the titles of each section.'),
 
     def addSubSection(self):
         """
-        Add a new Subsection
+        Add a new Subsection.
         """
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = str(self.ui.lineEditSubSection.text())
@@ -366,7 +410,7 @@ scientific text. In summary, they are the titles of each section.'),
     
     def removeSubSection(self):
         """
-        Remove one subsection
+        Remove one subsection.
         """
         subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         
@@ -381,7 +425,7 @@ scientific text. In summary, they are the titles of each section.'),
                 
     def updateSubSection(self):
         """
-        Updates one subsection
+        Updates one subsection.
         """
         old_subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
         new_subs = str(self.ui.lineEditSubSection.text())
@@ -401,7 +445,7 @@ scientific text. In summary, they are the titles of each section.'),
 
     def updateSubSectionView(self):
         """
-        Updates subsection view
+        Updates subsection view.
         """
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = set()
@@ -466,7 +510,7 @@ in an article.'),
         self.updateFunctionView()
         
         
-    def removeFunction(self, function=''):
+    def removeFunction(self):
         """
         Removes a function.
         """
@@ -564,7 +608,7 @@ in an article.'),
     # -----------------------------------------------------------------------
 
 
-    def adjustSentence(self,sent="", begin="{", end="}", replace_where='Inside markers', replace_by="..."):
+    def adjustSentence(self, sent="", begin="{", end="}", replace_where='Inside markers', replace_by="..."):
         """
         Adjusts sentences to be displayed on the screen.
         """
@@ -618,13 +662,16 @@ in an article.'),
         func = self.selectedTitles(self.ui.listWidgetFunction.selectedItems())
         sent = str(self.ui.textEditSentence.toPlainText())
         ref = str(self.ui.lineEditReference.text())
-        
+        # Cleaning
         self.ui.textEditSentence.clear()
         self.ui.lineEditReference.clear()
-        
-        # Insertting in DB
-        self.container.addDB(sect=sec, subsect=subs, funct=func, phrase=[sent], ref=[ref])
-        self.showMessageOnStatusBar('A new sentence was added.')
+
+        if sent != '':
+                # Insertting in DB
+                self.container.addDB(sect=sec, subsect=subs, funct=func, phrase=[sent], ref=[ref])
+                self.logSig.emit('A new sentence was added in \n Section(s):{} \n Sub Section(s): {} \n \
+                                  Function(s): {} \n Sentence: {} \n Reference: {}'.format(sec, subs, func, sent, ref))
+                self.showMessageOnStatusBar('A new sentence was added.')
         
         self.updateTotalNumbers()
         self.updateSentenceView()
