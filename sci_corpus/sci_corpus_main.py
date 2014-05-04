@@ -780,7 +780,8 @@ in an article.'),
         """
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Open File'),
-                                           self.tr(self.container.path))[0]
+                                           self.tr(self.container.path),
+                                           self.tr('(*.db)'))[0]
 
         if path != '':
             self.container.read_(path)
@@ -807,7 +808,8 @@ in an article.'),
         """
         path = QFileDialog.getSaveFileName(self,
                                  self.tr('Save As'),
-                                 self.tr(self.container.path))[0]
+                                 self.tr(self.container.path),
+                                 self.tr('(*.db)'))[0]
         if path != '':
             self.container.write_(path)
         
@@ -845,13 +847,11 @@ in an article.'),
         
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
-                                           self.tr(self.container.path))[0]
+                                           self.tr(self.container.path),
+                                           self.tr('(*.xml *.csv *.json)'))[0]
         if path != '':
             self.container.export_(path)
             
-        self.container.close_()
-        
-        
         
         
     def importFile(self):
@@ -859,20 +859,28 @@ in an article.'),
         Import file with extension.
         """
         
-        #This is not general and should be moved to tips about importing
-        
+        # This is not general and should be moved to tips about importing
+        # This should be here, because without this information 
+        # you cant open a csv file. We need to put more information
+        # about other types too.
         #@TODO: show a dialog to choose separator and id
-        #QMessageBox.information(self, 
-        #        self.tr('Import File'),
-        #        self.tr('Please, before you try import the file,\n \
-        #                ensure that if it is a CSV one, the separator is ; (semi collon) \n \
-        #                and string identificator is " (double quote)'),
-        #        QMessageBox.Ok)
+        QMessageBox.information(self, 
+                self.tr('Import File'),
+                self.tr('Please, before you try import the file, ensure that if it is a:\
+\n* CSV:  separator is ; (semi collon)\
+       \n quote char is " (double quote) and \
+       \n quoting is for All elements.\
+       \n Example: "SECTION";"SUB SECTION";"FUNCTION";"SENTENCE";"REFERENCE"\
+       \n          "Abstract";"Gap";"Importance";"However, this problem still unsolved";""\
+\n* JSON: fields are list of list: \
+       \n Example: [["SECTION", "SUB SECTION", "FUNCTION", "SENTENCE", "REFERENCE"],\
+       \n           ["Abstract","Gap","Importance","However, this problem still unsolved",""]]'),
+                QMessageBox.Ok)
                 
         path = QFileDialog.getOpenFileName(self,
                                            self.tr('Import File'),
                                            self.tr(os.path.dirname(self.container.path)),
-                                           self.tr('(*.xml *.csv)'))[0]
+                                           self.tr('(*.xml *.csv *.json)'))[0]
 
         if path != '':
             try:
