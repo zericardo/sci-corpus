@@ -431,8 +431,7 @@ class ContainerDB():
         elif (ext == '.json') or (ext == '.JSON'):
             print "Importing JSON ..."
             with codecs.open(path, 'rb', 'utf-8') as json_file:
-                json_fields = json.loads(json_file)
-                text = fp.read()
+                text = json_file.read()
                 json_fields = json.loads(str(text))
                 for row in json_fields:
                     try:
