@@ -410,37 +410,41 @@ class ContainerDB():
         elif (ext == '.csv') or (ext == '.CSV'):
             print "Importing CSV ..."
             with codecs.open(path, 'rb', 'utf-8') as csv_file:
-                csv_fields = csv.reader(csv_file, delimiter=';', quotechar='"')
-                column_titles = csv_fields.pop(0)
-                
+                csv_fields = csv.reader(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
+                row_number = 0
                 for row in csv_fields:
-                    try:
-                        [sec,  subs,  func,  sent,  ref]  = row
-                        # Splitting many fields in the same category
-                        sec = [x.encode("utf-8") for x in sec.split(',')]
-                        subs = [x.encode("utf-8") for x in subs.split(',')]
-                        func = [x.encode("utf-8") for x in func.split(',')]
-                        self.addDB(sec,subs,func,[sent.encode("utf-8")],[ref.encode("utf-8")])
-                    except Exception, e:
-                        print "Error when importing CSV: {}".format(str(e))
+                    if row_number == 0:
+                        column_titles = row
+                    else:
+                        try:
+                            [sec,  subs,  func,  sent,  ref]  = row
+                            # Splitting many fields in the same category
+                            sec = [x.encode("utf-8") for x in sec.split(',')]
+                            subs = [x.encode("utf-8") for x in subs.split(',')]
+                            func = [x.encode("utf-8") for x in func.split(',')]
+                            self.addDB(sec,subs,func,[sent.encode("utf-8")],[ref.encode("utf-8")])
+                            self.isModified = True
+                        except Exception, e:
+                            print "Error when importing CSV: {}".format(str(e))
+                    row_number += 1
             
         elif (ext == '.json') or (ext == '.JSON'):
             print "Importing JSON ..."
             with codecs.open(path, 'rb', 'utf-8') as json_file:
                 json_fields = json.loads(json_file)
+                text = fp.read()
+                json_fields = json.loads(str(text))
                 for row in json_fields:
                     try:
-                        (sec,  subs,  func,  sent,  ref)  = row
-                        # Splitting many fields in the same category
-                        sec = [x.encode("utf-8") for x in sec.split(',')]
-                        subs = [x.encode("utf-8") for x in subs.split(',')]
-                        func = [x.encode("utf-8") for x in func.split(',')]
-                        self.addDB(sec,subs,func,[sent.encode("utf-8")],[ref.encode("utf-8")])
+                        [sec,  subs,  func,  sent,  ref]  = row
+                        self.addDB([sec.encode('utf-8')],[subs.encode('utf-8')],[func.encode('utf-8')],
+                                   [sent.encode("utf-8")],[ref.encode("utf-8")])
+                        self.isModified = True
                     except Exception, e:
                         print "Error when importing JSON: {}".format(str(e))
             
         else:
-            raise IOError("Not recognized file type to import. Please, use XML or CSV.")
+            raise IOError("Not recognized file type to import. Please, use XML, CSV or JSON.")
                     
         
     def export_(self,  path=''):
@@ -482,20 +486,32 @@ class ContainerDB():
             elif (ext == '.csv') or (ext == '.CSV'):
                 print "Exporting CSV ..."
                 
-                with codecs.open(path, 'rb', 'utf-8') as csv_file:
+                with codecs.open(path, 'wb', 'utf-8') as csv_file:
                     csv_fields = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
-                    
-                for (secv, subsv, funcv, sentv, refv) in info:
-                    csv_fields.writerow([secv, subsv, funcv, sentv, refv])
+                    csv_fields.writerow(["SECTION", "SUB SECTION", "FUNCTION", "SENTENCE", "REFERENCE"])
+                    for (secv, subsv, funcv, sentv, refv) in info:
+                        if sentv == 'NULL':
+                            sentv = ""
+                        if refv == 'NULL':
+                            refv = ""
+                        csv_fields.writerow([secv, subsv, funcv, sentv, refv])
 
             elif (ext == '.json') or (ext == '.JSON'):
                 print "Exporting JSON ..."
+                info_without_null = []
                 
+                for (secv, subsv, funcv, sentv, refv) in info:
+                    if sentv == 'NULL':
+                        sentv = ""
+                    if refv == 'NULL':
+                        refv = ""
+                    info_without_null.append([secv, subsv, funcv, sentv, refv])
+                    
                 with codecs.open(path, 'wb', 'utf-8') as json_file:
-                    json_fields = json_file.dump(info)
+                    json.dump(info, json_file, encoding='utf-8', indent=4)
                 
             else:
-                raise IOError("Not recognized file type to import. Please, use XML or CSV.")
+                raise IOError("Not recognized file type to import. Please, use XML, CSV or JSON.")
 
     def crazyRepetition(self, sBase="", sConnect="",  sItems =[]):
         """
