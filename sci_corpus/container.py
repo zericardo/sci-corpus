@@ -89,10 +89,10 @@ class ContainerDB():
 
         cursor = self.__dbmem.cursor()
         # We need to review this test
-        # But now its working. Actually sect, subsect and funct can be empty lists.
-        if sect == []: sect = ['Not Classified']
-        if subsect == []: subsect = ['Not Classified']
-        if funct == []: funct = ['Not Classified']
+        # But now its working. Actually sect, subsect and funct can be empty lists or list with empty strings.
+        if (sect == []) or (sect == ['']): sect = ['Not Classified']
+        if (subsect == []) or (subsect == ['']): subsect = ['Not Classified']
+        if (funct == []) or (funct == ['']): funct = ['Not Classified']
         if phrase == ['']: phrase = ['NULL']
         if ref == ['']: ref = ['NULL']
 
@@ -409,20 +409,38 @@ class ContainerDB():
 
         elif (ext == '.csv') or (ext == '.CSV'):
             print "Importing CSV ..."
-            with codecs.open(path, 'rb', 'utf-8') as csvfile:
-                spamreader = csv.reader(csvfile, delimiter=';', quotechar='"')
-                row_number = 0
-                for row in spamreader:
-                    if row_number != 0:
+            with codecs.open(path, 'rb', 'utf-8') as csv_file:
+                csv_fields = csv.reader(csv_file, delimiter=';', quotechar='"')
+                column_titles = csv_fields.pop(0)
+                
+                for row in csv_fields:
+                    try:
                         [sec,  subs,  func,  sent,  ref]  = row
                         # Splitting many fields in the same category
                         sec = [x.encode("utf-8") for x in sec.split(',')]
                         subs = [x.encode("utf-8") for x in subs.split(',')]
                         func = [x.encode("utf-8") for x in func.split(',')]
-                        self.addDB(sect=sec,subsect=subs,funct=func,phrase=[sent.encode("utf-8")],ref=[ref.encode("utf-8")])
-                    row_number += 1                    
+                        self.addDB(sec,subs,func,[sent.encode("utf-8")],[ref.encode("utf-8")])
+                    except Exception, e:
+                        print "Error when importing CSV: {}".format(str(e))
+            
         elif (ext == '.json') or (ext == '.JSON'):
             print "Importing JSON ..."
+            with codecs.open(path, 'rb', 'utf-8') as json_file:
+                json_fields = json.loads(json_file)
+                for row in json_fields:
+                    try:
+                        (sec,  subs,  func,  sent,  ref)  = row
+                        # Splitting many fields in the same category
+                        sec = [x.encode("utf-8") for x in sec.split(',')]
+                        subs = [x.encode("utf-8") for x in subs.split(',')]
+                        func = [x.encode("utf-8") for x in func.split(',')]
+                        self.addDB(sec,subs,func,[sent.encode("utf-8")],[ref.encode("utf-8")])
+                    except Exception, e:
+                        print "Error when importing JSON: {}".format(str(e))
+            
+        else:
+            raise IOError("Not recognized file type to import. Please, use XML or CSV.")
                     
         
     def export_(self,  path=''):
@@ -433,16 +451,14 @@ class ContainerDB():
 
         path = os.path.abspath(path)
         ext = os.path.splitext(path)[1]
-        
-        if (ext == '.xml') or (ext == '.XML'):
-            print "Exporting XML ..."
-          
-            try:
-                info = []
-                info = self.listAll()
-            except sqlite3.Error, err:
-                print "[INFO listall exporting] %s" % err 
-            else:
+        try:
+            info = []
+            info = self.listAll()
+        except sqlite3.Error, err:
+            print "[INFO listall exporting] %s" % err 
+        else:
+            if (ext == '.xml') or (ext == '.XML'):
+                print "Exporting XML ..."
                 try:
                     root = ET.Element('ARTINFO')
                     for (secv, subsv, funcv, sentv, refv) in info:
@@ -457,19 +473,29 @@ class ContainerDB():
                         sent.text = sentv
                         ref = ET.SubElement(infopiece, 'REF')
                         ref.text = refv
-        
                     #print ET.tostring(root, pretty_print=True, xml_declaration=True)
                     tree = ET.ElementTree(root)
                     tree.write(path, pretty_print=True, xml_declaration=True)
-               
                 except ET.ParseError, err:
                     print "[INFO xml export] %s" % err
+                    
+            elif (ext == '.csv') or (ext == '.CSV'):
+                print "Exporting CSV ..."
                 
-        elif (ext == '.csv') or (ext == '.CSV'):
-            print "Exporting CSV ..."
-            
-        elif (ext == '.json') or (ext == '.JSON'):
-            print "Exporting JSON ..."
+                with codecs.open(path, 'rb', 'utf-8') as csv_file:
+                    csv_fields = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
+                    
+                for (secv, subsv, funcv, sentv, refv) in info:
+                    csv_fields.writerow([secv, subsv, funcv, sentv, refv])
+
+            elif (ext == '.json') or (ext == '.JSON'):
+                print "Exporting JSON ..."
+                
+                with codecs.open(path, 'wb', 'utf-8') as json_file:
+                json_fields = json_file.dump(info)
+                
+            else:
+                raise IOError("Not recognized file type to import. Please, use XML or CSV.")
 
     def crazyRepetition(self, sBase="", sConnect="",  sItems =[]):
         """
