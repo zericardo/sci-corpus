@@ -3,8 +3,8 @@ import json
 import codecs
 import sqlite3
 import csv
-#import xml.etree.cElementTree as ET
-from xml import etree as ET
+import xml.etree.cElementTree as ET
+#from xml import etree as ET
 import StringIO as strio
 from shutil import copy2
 
@@ -492,7 +492,7 @@ class ContainerDB():
                 print "Exporting JSON ..."
                 
                 with codecs.open(path, 'wb', 'utf-8') as json_file:
-                json_fields = json_file.dump(info)
+                    json_fields = json_file.dump(info)
                 
             else:
                 raise IOError("Not recognized file type to import. Please, use XML or CSV.")
@@ -504,7 +504,8 @@ class ContainerDB():
         When two or more parameters are selected on section, subsectio or
         function, the program should return the sentences that lie on the
         intersection of all the itens selected. In this way, this method 
-        returns a string that will be used in the selection of the intersection         of all the sentences that are in this intersection
+        returns a string that will be used in the selection of the intersection
+        of all the sentences that are in this intersection
 
         Parameters:
         -----------
@@ -518,13 +519,15 @@ class ContainerDB():
 
         sItems: list of strings 
 
-                Each string in this list will be replace the '?' signal on the                  base sentences, making new ones.
+                Each string in this list will be replace the '?' signal on the 
+                base sentences, making new ones.
 
         Returns:
         --------
         sFinal: string 
 
-                This string iscomposed by all len(sItens) strings linked togethe                r with sConnect string. 
+                This string iscomposed by all len(sItens) strings linked together 
+                with sConnect string. 
         """   
    
         sFinal=''
