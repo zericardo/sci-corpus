@@ -3,8 +3,7 @@ import json
 import codecs
 import sqlite3
 import csv
-import xml.etree.cElementTree as ET
-#from xml import etree as ET
+from lxml import etree as ET
 import StringIO as strio
 from shutil import copy2
 
@@ -20,11 +19,24 @@ class ContainerDB():
 
 
     def createNconnectDB(self, path=''):
-        '''
-        Make a sqlite connection and creates a table.
-        If no path, the connection will be with memory
-        otherwise, with the database file referenced by path
-        '''
+        """
+        Create a connection to a sqlite3 database and and a table to store
+        the sentences information.
+
+        When path='' creats a connection with a in-memory database. Otherwise
+        connects to a file specified by path.
+        
+        Parameters:
+        -----------
+        path: string 
+
+               This string contains the path.
+               
+        Returns:
+        --------
+        No explicity return, intead this function assign to self.__dbfile 
+        or self.__dbmem a sql connection.
+        """   
 
         try:
             if path != '':
@@ -51,9 +63,23 @@ class ContainerDB():
 
 
     def importToMemory(self):
-        '''
-        This function imports a DB file to memory
-        '''
+        """
+        Imports a file database to a memory database
+
+        This function has to be called after createNconnectDB(path).
+        
+        
+        Parameters:
+        -----------
+        None: 
+        
+               
+        Returns:
+        --------
+        No explicity return, intead this function reads from self.__dbfile
+        and write to self.__dbmem.
+        
+        """   
         try:
              tempfile = strio.StringIO()
              for line in self.__dbfile.iterdump():
@@ -68,10 +94,26 @@ class ContainerDB():
         except sqlite3.Error, err:
             print "[INFO importToMemory] %s" % err
 
+
+
     def importToDBFile(self):
-        '''
-        This function imports a memory table to DB file
-        '''
+        """
+        Imports a in-memory database to a file database
+
+        This function has to be called after createNconnectDB(path).
+        
+        
+        Parameters:
+        -----------
+        None: 
+        
+               
+        Returns:
+        --------
+        No explicity return, intead this function reads from self.__dbmem
+        and write to self.__dbfile.
+        
+        """   
         try:
              tempfile = strio.StringIO()
              for line in self.__dbmem.iterdump():
@@ -86,6 +128,41 @@ class ContainerDB():
 
 
     def addDB(self,sect=['Not Classified'],subsect=['Not Classified'],funct=['Not Classified'],phrase=['NULL'],ref=['NULL']):
+        """
+        Add a entry on the corpus table.
+        An entry is composed of: (section, subsection, function, sentence, reference)
+        By default, sect=subsec=funct='Not Classified' and phrase=ref='NULL'. In doing
+        so, we avoid have to pass always all the arguments.
+        
+        Parameters:
+        -----------
+        sect: list of strings 
+           
+              Store all the sections that will be inserted
+        
+        secsect: list of strings 
+           
+              Store all the subsections that will be inserted
+        
+        function: list of strings 
+           
+              Store all the functions that will be inserted
+        
+        phrase: list of strings 
+           
+              Store all the sentences that will be inserted
+           
+        ref: list of strings 
+           
+              Store all the references that will be inserted
+               
+        Returns:
+        --------
+        No explicity return, intead this function adds an entry in corpus 
+        table of self.__dbmem connection
+        
+        """   
+
 
         cursor = self.__dbmem.cursor()
         # We need to review this test
@@ -175,9 +252,19 @@ class ContainerDB():
             return phrases
 
     def listAll(self):
-        '''
-        return a list o tuples with all info
-        '''
+        """
+        Dump the database.
+        
+        Parameters:
+        -----------
+        None
+               
+        Returns:
+        --------
+        Return a list of tuples with all (sections, subsections, functions,
+        sentences, references) of the corpus table.
+        
+        """ 
         cursor = self.__dbmem.cursor()
 
         allInfo = []
@@ -194,7 +281,42 @@ class ContainerDB():
 
 
     def update(self, section=[('NULL','NULL')],subsection=[('NULL','NULL')],function=[('NULL','NULL')],phrase=[('NULL','NULL')],ref=[('NULL','NULL')]):
-
+        """
+        Updates an entry.
+        
+        This function substitute a value on a given entry of corpus table.
+        All the arguments is a list of tuples and each tuple is of the form 
+        (old_value,new_value)
+        
+        Parameters:
+        -----------
+        section: list of tuples
+            
+                 Sections to be updated
+                 
+        subsection: list of tuples
+            
+                 Subsections to be updated
+                 
+        function: list of tuples
+            
+                 Functions to be updated
+                 
+        phrase: list of tuples
+            
+                 Sentences to be updated
+                 
+        ref: list of tuples
+            
+                 References to be updated
+               
+        Returns:
+        --------
+        This function hasnt a explicity return. Intead it will update an
+        entry on the corpus table.
+        
+        """ 
+        
         cursor = self.__dbmem.cursor()
 
         try:
@@ -225,7 +347,38 @@ class ContainerDB():
             self.isModified  = True
 
     def remove(self,sect=[],subsect=[],funct=[],phrase=[]):
+        """
+        Removes an entry.
+        
+        This function substitute a value on a given entry of corpus table.
+        If it is a section, subsection or function it will update the entry
+        by 'Not Classified' and if is a sentences, by 'NULL'
+        
+        Parameters:
+        -----------
+        section: list of strings
+            
+                 Sections to be removed
+                 
+        subsection: list of strings
+            
+                 Subsections to be removed
+                 
+        function: list of strings
+            
+                 Functions to be removed
+                 
+        phrase: list of strings
+            
+                 Sentences to be removed
 
+               
+        Returns:
+        --------
+        This function hasnt a explicity return. Intead it will update an
+        entry on the corpus table.
+        
+        """ 
         cursor = self.__dbmem.cursor()
 
         try:
@@ -252,7 +405,24 @@ class ContainerDB():
 
 
     def bulk_add(self, info):
+        """
+        Add a lot of entry at a time
+        
+       
+        Parameters:
+        -----------
+        info: list of tuples
+        
+              This argument is formated in the following manner:
+              [(section, subsection, function, sentence, reference), ...]
 
+               
+        Returns:
+        --------
+        This function hasnt a explicity return. Intead it will add entrys
+        on corpus table.
+        
+        """ 
         cursor = self.__dbmem.cursor()
 
         #print info
