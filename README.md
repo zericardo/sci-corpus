@@ -7,3 +7,4 @@ dependences:
    PySide
    sqlite3
    python-unipath
+   lxml
