@@ -15,10 +15,10 @@ class ContainerDB():
         self.__path = ''
         self.__defaultpath = '../examples/backup.db'
         self.__isModified = False
-        self.createNconnectDB()
+        self.createNconnectDB(flag=True)
 
 
-    def createNconnectDB(self, path=''):
+    def createNconnectDB(self, path='',flag=False):
         """
         Create a connection to a sqlite3 database and and a table to store
         the sentences information.
@@ -50,16 +50,17 @@ class ContainerDB():
             print "[INFO creatNconnect] %s" % err
 
         else:
-            if path != '':
-                self.__dbfile.cursor().execute('''CREATE TABLE IF NOT EXISTS
-                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-                            func TEXT, phrase TEXT, ref TEXT)''')
-                self.__dbfile.commit()
-            else:
-                self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
-                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-                            func TEXT, phrase TEXT, ref TEXT)''')
-                self.__dbmem.commit()
+			if flag == True:
+				if path != '':
+					self.__dbfile.cursor().execute('''CREATE TABLE IF NOT EXISTS
+							corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+							func TEXT, phrase TEXT, ref TEXT)''')
+					self.__dbfile.commit()
+				else:
+					self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
+							corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+							func TEXT, phrase TEXT, ref TEXT)''')
+					self.__dbmem.commit()
 
 
     def importToMemory(self):
@@ -527,7 +528,7 @@ class ContainerDB():
            self.__path = ''
            self.__isModified = False
         finally:
-            self.createNconnectDB()
+            self.createNconnectDB(flag=True)
 
 
     def import_(self,  path=''):
