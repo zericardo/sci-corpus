@@ -1,9 +1,10 @@
-sci-corpus
+Sci Corpus
 ==========
 
 Scientific corpus manager.
 
-dependences:
-   PySide
-   sqlite3
-   python-lxml
+Dependences:
+   * Python 2.7 > 
+   * PySide 1.1 >
+   * sqlite3 
+   * python-lxml
