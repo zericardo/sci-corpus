@@ -5,7 +5,7 @@ import sqlite3
 import csv
 from lxml import etree as ET
 import StringIO as strio
-from shutil import copy2
+import shutil.copy2
 
 
 class ContainerDB():
