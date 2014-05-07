@@ -5,7 +5,7 @@ import sqlite3
 import csv
 from lxml import etree as ET
 import StringIO as strio
-import shutil.copy2
+from shutil import copy2
 
 
 class ContainerDB():
@@ -511,7 +511,7 @@ class ContainerDB():
         if path == '':
             path = self.path
             try:
-                shutil.copy2(path, self.__defaultpath)
+                copy2(path, self.__defaultpath)
                 os.remove(path)
             except OSError as e:
                 print ("Error: %s - %s." % (e.filename, e.strerror))
