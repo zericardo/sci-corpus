@@ -30,7 +30,7 @@ import codecs
 import start_dlg
 import preferences_dlg
 
-__version__ = '1.0'
+__version__ = 'v.0.4.1'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -58,6 +58,8 @@ class MainWindow(QMainWindow):
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         start = start_dlg.StartDialog(self)
+        start.version(__version__)
+        start.year(2014)
         start.logSig.connect(self.showLogMessage)
         start.show()
         start.informationProgress('Starting')
@@ -845,8 +847,8 @@ in an article.'),
         if path != '':
             self.container.read_(path)
             self.setWindowTitle(
-                __pname__ +
-                " V." +
+                __pname__+
+                " "+
                 __version__ +
                 " : " +
                 self.container.path)
@@ -889,7 +891,7 @@ in an article.'),
                 self.saveFile()
 
         self.container.close_()
-        self.setWindowTitle(__pname__ + " V." + __version__)
+        self.setWindowTitle(__pname__ + " " + __version__)
         self.clearAll()
 
     def exportFile(self):
@@ -1082,7 +1084,7 @@ in an article.'),
                           self.tr('This software is a corpus manager, that allows you to trainer.\
 \n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
 \n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
-\n\nVersion:{}'.format(__version__)))
+\n\n{}'.format(__version__)))
 
 
 if __name__ == '__main__':
@@ -1105,6 +1107,6 @@ if __name__ == '__main__':
         print 'Error in style sheet: ', e
         pass
 
-    main_window.setWindowTitle(__pname__ + " V." + __version__)
+    main_window.setWindowTitle(__pname__+ " "+ __version__)
     main_window.showMaximized()
     app.exec_()
