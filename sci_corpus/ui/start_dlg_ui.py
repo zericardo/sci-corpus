@@ -109,7 +109,7 @@ class Ui_Dialog(object):
         self.labelVersion.setText(
             QtGui.QApplication.translate(
                 "Dialog",
-                "<html><head/><body><p><span style=\" font-size:8pt;\">V.1.0 </span></p></body></html>",
+                "<html><head/><body><p><span style=\" font-size:8pt;\">v.0.0.0 </span></p></body></html>",
                 None,
                 QtGui.QApplication.UnicodeUTF8))
 

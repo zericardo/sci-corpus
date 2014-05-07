@@ -30,7 +30,7 @@ import codecs
 import start_dlg
 import preferences_dlg
 
-__version__ = '1.0'
+__version__ = 'v.0.4.1'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -58,6 +58,8 @@ class MainWindow(QMainWindow):
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         start = start_dlg.StartDialog(self)
+        start.version(__version__)
+        start.year(2014)
         start.logSig.connect(self.showLogMessage)
         start.show()
         start.informationProgress('Starting')
@@ -250,6 +252,7 @@ class MainWindow(QMainWindow):
         self.ui.tableWidgetSentence.itemSelectionChanged.connect(
             self.updateSelectedNumbers)
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
+        self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.updateFromTable)
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
         self.ui.checkBoxStrip.setChecked(True)
@@ -258,6 +261,21 @@ class MainWindow(QMainWindow):
         self.clearAll()
         self.updateSectionView()
         self.updateSentenceView()
+        
+    def updateFromTable(self,  row,  column):
+        """
+        Updates from row, column in table.
+        """
+        # This is not the best way, but it works for now.
+        self.sec = self.ui.tableWidgetSentence.item(row, 0).text()
+        self.subs = self.ui.tableWidgetSentence.item(row, 1).text()
+        self.func = self.ui.tableWidgetSentence.item(row, 2).text()
+        self.sent = self.ui.tableWidgetSentence.item(row, 3).text()
+        self.ref = self.ui.tableWidgetSentence.item(row, 4).text()
+
+        # Maybe you need to find in DB the whole sentence and then set text.
+        self.ui.textEditSentence.setText(self.sent)
+        self.ui.lineEditReference.setText(self.ref)
 
     def selectedTitles(self, selected_items):
         """
@@ -677,7 +695,7 @@ in an article.'),
         self.ui.lineEditReference.clear()
 
         if sent != '':
-                # Insertting in DB
+            # Insertting in DB
             self.container.addDB(
                 sect=sec,
                 subsect=subs,
@@ -693,12 +711,35 @@ in an article.'),
 
     def removeSentence(self):
         """Removes a sentence."""
-        self.notImplementedYet()
+        
+        # IT HAS A PROBLEM, IF MORE THEN ONE COLUMn WAS DISPLAYED.
+        # But for now its ok. I dont know how to provide just some items.
+        # IT HAS ANOTHER PROBLEM: IT DELETES ALL SENTENCES THAT ARE EQUAL
+        # But, because the user has selected a section, sub section and function
+        # It was expected that just that sentence that he select.
+        
+        sent = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
+        
+        if sent != []:
+            if self.removeQuestion("Sentence", sent) == QMessageBox.Yes:
+                print 'Removing sentences: ',  sent
+                self.container.remove(phrase=sent)
+                self.showMessageOnStatusBar('Sentence(s) has already removed.')
+                
         self.updateTotalNumbers()
         self.updateSentenceView()
 
     def updateSentence(self, old_sentence='', new_sentence=''):
         """Updates a sentence."""
+        # Please, see the self.updateFromTable() and add function do get the 
+        # I cant select 
+        
+        old_sent = self.sent
+        old_ref = self.ref
+        
+        sent = str(self.ui.textEditSentence.toPlainText())
+        ref = str(self.ui.lineEditReference.text())
+        
         self.notImplementedYet()
         self.updateSentenceView()
 
@@ -815,8 +856,8 @@ in an article.'),
         if path != '':
             self.container.read_(path)
             self.setWindowTitle(
-                __pname__ +
-                " V." +
+                __pname__+
+                " "+
                 __version__ +
                 " : " +
                 self.container.path)
@@ -859,7 +900,7 @@ in an article.'),
                 self.saveFile()
 
         self.container.close_()
-        self.setWindowTitle(__pname__ + " V." + __version__)
+        self.setWindowTitle(__pname__ + " " + __version__)
         self.clearAll()
 
     def exportFile(self):
@@ -883,12 +924,12 @@ in an article.'),
         QMessageBox.information(self,
                                 self.tr('Import File'),
                                 self.tr('Please, before you try import the file, ensure that if it is a:\
-\n* CSV:  separator is ; (semi collon)\
+\nCSV:  separator is ; (semi collon)\
        \n quote char is " (double quote) and \
        \n quoting is for All elements.\
        \n Example: "SECTION";"SUB SECTION";"FUNCTION";"SENTENCE";"REFERENCE"\
        \n          "Abstract";"Gap";"Importance";"However, this problem still unsolved";""\
-\n* JSON: fields are list of list: \
+\nJSON: fields are list of list: \
        \n Example: [["SECTION", "SUB SECTION", "FUNCTION", "SENTENCE", "REFERENCE"],\
        \n           ["Abstract","Gap","Importance","However, this problem still unsolved",""]]'),
                                 QMessageBox.Ok)
@@ -1026,8 +1067,7 @@ in an article.'),
             self.tr('Remove'),
             self.tr(
                 "Do you want to remove item(s) {} from {}?".format(
-                    str(who)[
-                        1:-1],
+                    str(who)[1:-1],
                     category)),
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No)
@@ -1053,7 +1093,7 @@ in an article.'),
                           self.tr('This software is a corpus manager, that allows you to trainer.\
 \n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
 \n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
-\n\nVersion:{}'.format(__version__)))
+\n\n{}'.format(__version__)))
 
 
 if __name__ == '__main__':
@@ -1076,6 +1116,6 @@ if __name__ == '__main__':
         print 'Error in style sheet: ', e
         pass
 
-    main_window.setWindowTitle(__pname__ + " V." + __version__)
+    main_window.setWindowTitle(__pname__+ " "+ __version__)
     main_window.showMaximized()
     app.exec_()

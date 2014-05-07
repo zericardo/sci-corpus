@@ -57,7 +57,7 @@ class StartDialog(QDialog):
                  Program version to be shown.
 
         """
-        self.ui.labelVersion.setText("V." + str(version))
+        self.ui.labelVersion.setText(str(version))
 
     def year(self, year):
         """
