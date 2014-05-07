@@ -132,7 +132,7 @@ class ContainerDB():
             funct=['Not Classified'],
             phrase=['NULL'],
             ref=['NULL']):
-        """
+       """
         Add a entry on the corpus table.
         An entry is composed of: (section, subsection, function, sentence, reference)
         By default, sect=subsec=funct='Not Classified' and phrase=ref='NULL'. In doing
@@ -167,35 +167,100 @@ class ContainerDB():
 
         """
 
+       cursor = self.__dbmem.cursor()
+       # We need to review this test
+       # But now its working. Actually sect, subsect and funct can be empty
+       # lists or list with empty strings.
+       if (sect == []) or (sect == ['']):
+           sect = ['Not Classified']
+       if (subsect == []) or (subsect == ['']):
+           subsect = ['Not Classified']
+       if (funct == []) or (funct == ['']):
+           funct = ['Not Classified']
+       if phrase == ['']:
+           phrase = ['NULL']
+       if ref == ['']:
+           ref = ['NULL']
+
+       try:
+           whatadd = [
+               (a, b, c, d, e)
+               for a in sect for b in subsect
+               for c in funct for d in phrase for e in ref]
+           cursor.executemany(
+               '''INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)''',
+               whatadd)
+
+       except sqlite3.Error as err:
+           print "[INFO addDB] %s" % err
+
+       else:
+           self.isModified = True
+
+    def listSections(self):
+
         cursor = self.__dbmem.cursor()
-        # We need to review this test
-        # But now its working. Actually sect, subsect and funct can be empty
-        # lists or list with empty strings.
-        if (sect == []) or (sect == ['']):
-            sect = ['Not Classified']
-        if (subsect == []) or (subsect == ['']):
-            subsect = ['Not Classified']
-        if (funct == []) or (funct == ['']):
-            funct = ['Not Classified']
-        if phrase == ['']:
-            phrase = ['NULL']
-        if ref == ['']:
-            ref = ['NULL']
+        
+        cursor.execute('SELECT DISTINCT sec FROM corpus')
+        
+        return [a for (a,) in cursor.fetchall()]
+        
+           
+    def crazyRepetition(self, sBase="", sConnect="", sItems=[]):
+        """
+        Combines sentences in one string to make selection easier.
 
-        try:
-            whatadd = [
-                (a, b, c, d, e)
-                for a in sect for b in subsect
-                for c in funct for d in phrase for e in ref]
-            cursor.executemany(
-                '''INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)''',
-                whatadd)
+        When two or more parameters are selected on section, subsectio or
+        function, the program should return the sentences that lie on the
+        intersection of all the itens selected. In this way, this method
+        returns a string that will be used in the selection of the intersection
+        of all the sentences that are in this intersection
 
-        except sqlite3.Error as err:
-            print "[INFO addDB] %s" % err
+        Parameters:
+        -----------
+        sBase: string
+
+               This string will be repeated n times.
+
+        sConnect: string
+
+                  This string  will connect all the different sBase strings.
+
+        sItems: list of strings
+
+                Each string in this list will be replace the '?' signal on the
+                base sentences, making new ones.
+
+        Returns:
+        --------
+        sFinal: string
+
+                This string iscomposed by all len(sItens) strings linked together
+                with sConnect string.
+
+        """
+
+        sFinal = ''
+
+        if(len(sItems) > 0):
+
+            queryList = []
+
+            for item in sItems:
+                queryList.append(sBase.replace("?", "\"" + item + "\""))
+
+            if(len(sItems) == 1):
+                sFinal = queryList[0]
+            else:
+                for i in range(0, len(queryList) - 1):
+                    sFinal += queryList[i] + " " + \
+                        sConnect + " " + queryList[i + 1]
 
         else:
-            self.isModified = True
+            raise AssertionError(
+                "Number of itens in the sItens is incompatible!")
+
+        return sFinal
 
     def listCategories(self, section=[], subsection=[], function=[]):
 
@@ -236,6 +301,36 @@ class ContainerDB():
             final.extend(subsecfunc)
             final.extend(functions)
             return final
+
+    def listSubSections(self,qsections=[]):
+            cursor = self.__dbmem.cursor()
+            query=''
+            if(qsections!=[]):
+                query=self.crazyRepetition('SELECT DISTINCT subsec FROM corpus WHERE sec=?','INTERSECT', qsections)
+            else:
+                query='SELECT DISTINCT subsec FROM corpus'
+
+            cursor.execute(query)
+            return [a for (a,) in cursor.fetchall()]
+            
+    def listFunctions(self, qsections=[], qsubsections=[]):
+           '''
+           Coisa
+           '''
+           cursor = self.__dbmem.cursor()
+           query='' 
+           if(qsections==[] and qsubsections==[]):
+               query='SELECT DISTINCT func FROM corpus'                               
+           elif(qsections!=[] and qsubsections==[]):
+               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?','INTERSECT', qsections) 
+           elif(qsubsections!=[]):
+               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?','INTERSECT', qsubsections) 
+           else:
+              print "Deu pau Juvenal!"
+
+           cursor.execute(query)
+           return [a for (a,) in cursor.fetchall()]
+        
 
     def listSentences(self, section=[], subsection=[], function=[]):
 
@@ -280,6 +375,7 @@ class ContainerDB():
 
         finally:
             return phrases
+
 
     def listAll(self):
         """
@@ -731,58 +827,4 @@ class ContainerDB():
                 raise IOError(
                     "Not recognized file type to import. Please, use XML, CSV or JSON.")
 
-    def crazyRepetition(self, sBase="", sConnect="", sItems=[]):
-        """
-        Combines sentences in one string to make selection easier.
-
-        When two or more parameters are selected on section, subsectio or
-        function, the program should return the sentences that lie on the
-        intersection of all the itens selected. In this way, this method
-        returns a string that will be used in the selection of the intersection
-        of all the sentences that are in this intersection
-
-        Parameters:
-        -----------
-        sBase: string
-
-               This string will be repeated n times.
-
-        sConnect: string
-
-                  This string  will connect all the different sBase strings.
-
-        sItems: list of strings
-
-                Each string in this list will be replace the '?' signal on the
-                base sentences, making new ones.
-
-        Returns:
-        --------
-        sFinal: string
-
-                This string iscomposed by all len(sItens) strings linked together
-                with sConnect string.
-
-        """
-
-        sFinal = ''
-
-        if(len(sItems) > 0):
-
-            queryList = []
-
-            for item in sItems:
-                queryList.append(sBase.replace("?", "\"" + item + "\""))
-
-            if(len(sItems) == 1):
-                sFinal = queryList[0]
-            else:
-                for i in range(0, len(queryList) - 1):
-                    sFinal += queryList[i] + " " + \
-                        sConnect + " " + queryList[i + 1]
-
-        else:
-            raise AssertionError(
-                "Number of itens in the sItens is incompatible!")
-
-        return sFinal
+    

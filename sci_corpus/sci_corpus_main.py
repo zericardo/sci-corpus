@@ -363,10 +363,11 @@ class MainWindow(QMainWindow):
 
     def updateSectionView(self):
         """Updates section view."""
-        sec = set()
+        sec = self.container.listSections()
+        #sec = set()
         # @TODO: In the future, not use for
-        for secv, subsv, funcv in self.container.listCategories():
-            sec.add(secv)
+        #for secv, subsv, funcv in self.container.listCategories2():
+        #    sec.add(secv)
 
         self.ui.listWidgetSection.clear()
         sec = sorted(sec)
@@ -447,11 +448,17 @@ scientific text. In summary, they are the titles of each section.'),
     def updateSubSectionView(self):
         """Updates subsection view."""
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
-        subs = set()
-        subsecs = []
-
+        #subs = set()
+        #subsecs = []
+        
+        subs=self.container.listSubSections(qsections=sec)
+        
+        #for secv, subsv, funcv in self.container.listCategories2(qsections=sec):
+         #   subs.add(subsv)
+        
+        '''
         if sec == []:
-            for secv, subsv, funcv in self.container.listCategories(section=sec):
+            for secv, subsv, funcv in self.container.listCategories2(section=sec):
                 subs.add(subsv)
         # This havent be treat here, this need to be treated on contianer.
         else:
@@ -463,18 +470,18 @@ scientific text. In summary, they are the titles of each section.'),
             subs = subsecs[0]
             for i in range(len(sec) - 1):
                 subs = subs & subsecs[i + 1]
-
+        '''
         self.ui.listWidgetSubSection.clear()
         subs = sorted(subs)
-
+        
         if "Not Classified" in subs:
             subs.remove("Not Classified")
             subs.append("Not Classified")
-
+        
         for row, value in enumerate(subs):
             item = QListWidgetItem(str(value))
             self.ui.listWidgetSubSection.addItem(item)
-
+        
         self.ui.labelDisplayedSubSection.setText(str(len(subs)))
         self.updateFunctionView()
         self.updateSentenceView()
@@ -546,11 +553,13 @@ in an article.'),
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = self.selectedTitles(
             self.ui.listWidgetSubSection.selectedItems())
-        func = set()
+        func = self.container.listFunctions(qsections=sec,qsubsections=subs)
+        
+        #func = set()
 
-        funcs = []
+        #funcs = []
 
-        if sec == [] and subs == []:
+        '''if sec == [] and subs == []:
             for secv, subsv, funcv in self.container.listCategories(section=sec):
                 func.add(funcv)
         # This havent be treat here, this need to be treated on contianer.
@@ -576,7 +585,7 @@ in an article.'),
 
             func = funcs[0]
             for i in range(len(funcs) - 1):
-                func = func & funcs[i + 1]
+                func = func & funcs[i + 1]'''
 
         self.ui.listWidgetFunction.clear()
         func = sorted(func)
