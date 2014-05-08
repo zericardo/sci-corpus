@@ -54,13 +54,17 @@ class ContainerDB():
             if flag:
                 if path != '':
                     self.__dbfile.cursor().execute('''CREATE TABLE IF NOT EXISTS
-							corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-							func TEXT, phrase TEXT, ref TEXT)''')
+                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                            func TEXT, phrase TEXT, ref TEXT)''')
+                    self.__dbfile.cursor().execute('''INSERT INTO corpus(sec,subsec,func,phrase,ref)
+                     VALUES(?,?,?,?,?)''',('Not Classified','Not Classified','Not Classified','NULL','NULL'))
                     self.__dbfile.commit()
                 else:
                     self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
-							corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
-							func TEXT, phrase TEXT, ref TEXT)''')
+                            corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
+                            func TEXT, phrase TEXT, ref TEXT)''')
+                    self.__dbmem.cursor().execute('''INSERT INTO corpus(sec,subsec,func,phrase,ref)
+                     VALUES(?,?,?,?,?)''',('Not Classified','Not Classified','Not Classified','NULL','NULL'))
                     self.__dbmem.commit()
 
     def importToMemory(self):
@@ -196,14 +200,6 @@ class ContainerDB():
 
        else:
            self.isModified = True
-
-    def listSections(self):
-
-        cursor = self.__dbmem.cursor()
-        
-        cursor.execute('SELECT DISTINCT sec FROM corpus')
-        
-        return [a for (a,) in cursor.fetchall()]
         
            
     def crazyRepetition(self, sBase="", sConnect="", sItems=[]):
@@ -262,6 +258,23 @@ class ContainerDB():
 
         return sFinal
 
+    def searchByID(self, searchID = -1):
+    
+        cursor = self.__dbmem.cursor()
+        
+        try:
+            if searchID > 0:
+                query = 'SELECT DISTINCT phrase, ref FROM corpus WHERE id=?'
+                cursor.execute(query,(searchID,))
+                preRetorno =  cursor.fetchall()
+            
+        except sqlite3.Error as err:
+            print "[INFO search by ID] %s" % err
+        
+        else:
+            return preRetorno
+                
+
     def listCategories(self, section=[], subsection=[], function=[]):
 
         cursor = self.__dbmem.cursor()
@@ -302,6 +315,16 @@ class ContainerDB():
             final.extend(functions)
             return final
 
+
+    def listSections(self):
+
+        cursor = self.__dbmem.cursor()
+        
+        cursor.execute('SELECT DISTINCT sec FROM corpus')
+        
+        return [a for (a,) in cursor.fetchall()]
+
+
     def listSubSections(self,qsections=[]):
             cursor = self.__dbmem.cursor()
             query=''
@@ -312,6 +335,7 @@ class ContainerDB():
 
             cursor.execute(query)
             return [a for (a,) in cursor.fetchall()]
+
             
     def listFunctions(self, qsections=[], qsubsections=[]):
            '''
@@ -341,12 +365,12 @@ class ContainerDB():
         try:
             if section == [] and subsection == [] and function == []:
                 cursor.execute(
-                    '''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus''')
+                    '''SELECT DISTINCT * FROM corpus''')
                 phrases.extend(cursor.fetchall())
 
             if section != [] and subsection == [] and function == []:
                 cursor.execute(
-                    'SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec in ({0})'.format(
+                    'SELECT DISTINCT * FROM corpus WHERE sec in ({0})'.format(
                         ','.join(
                             '?' for _ in section)),
                     section)
@@ -356,7 +380,7 @@ class ContainerDB():
                 secsubsecTuple = [(a, b) for a in section for b in subsection]
                 for i in range(len(secsubsecTuple)):
                     cursor.execute(
-                        '''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec=? AND subsec=?''',
+                        '''SELECT DISTINCT * FROM corpus WHERE sec=? AND subsec=?''',
                         secsubsecTuple[i])
                     phrases.extend(cursor.fetchall())
 
@@ -366,7 +390,7 @@ class ContainerDB():
                                       for b in subsection for c in function]
                 for i in range(len(secsubsecfuncTuple)):
                     cursor.execute(
-                        '''SELECT DISTINCT sec, subsec, func, phrase, ref FROM corpus WHERE sec=? AND subsec=? AND func=?''',
+                        '''SELECT DISTINCT * FROM corpus WHERE sec=? AND subsec=? AND func=?''',
                         secsubsecfuncTuple[i])
                     phrases.extend(cursor.fetchall())
 
@@ -405,6 +429,7 @@ class ContainerDB():
 
         finally:
             return allInfo
+
 
     def update(
         self, section=[
@@ -477,6 +502,51 @@ class ContainerDB():
 
         else:
             self.isModified = True
+
+
+    def upSent(self, upSent=(), upRef=()):
+        """
+        Updates a phrase
+
+        This function substitute the value of a sentence and reference by
+        a new one.
+    
+        Parameters:
+        -----------
+        upSent: tuple of strings
+
+                Old sentence and new sentence (oldSent,newSent) 
+
+        upRef: tuple of strings
+
+                Old reference and new reference (oldRef,newRef) 
+
+
+        Returns:
+        --------
+        This function hasnt a explicity return. Instead it will update an
+        entry on the corpus table.
+
+        """
+        
+        cursor = self.__dbmem.cursor()
+        
+        whatup = tuple()
+        whatup+=(upSent[1],)
+        whatup+=(upRef[1],)
+        whatup+=(upSent[0],)
+        whatup+=(upRef[0],)
+        
+        try:
+            cursor.execute('''UPDATE corpus
+                            SET phrase=?, ref=? WHERE phrase=? AND ref=?''', whatup)
+                            
+        except sqlite3.Error as err:
+            print "[INFO updateSentence] %s" % err
+        
+        else:
+            self.isModified = True
+        
 
     def remove(self, sect=[], subsect=[], funct=[], phrase=[]):
         """
@@ -607,7 +677,7 @@ class ContainerDB():
         if path == '':
             path = self.path
             try:
-                copy2(path, self.__defaultpath)
+                copy2(path, os.path.abspath(self.__defaultpath))
                 os.remove(path)
             except OSError as e:
                 print ("Error: %s - %s." % (e.filename, e.strerror))
@@ -616,13 +686,12 @@ class ContainerDB():
                 self.importToDBFile()
         else:
             self.path = path
-            try:
+            
+            if os.path.exists(path):
                 os.remove(path)
-            except OSError as e:
-                print ("Error: %s - %s." % (e.filename, e.strerror))
-            finally:
-                self.createNconnectDB(path)
-                self.importToDBFile()
+                
+            self.createNconnectDB(path)
+            self.importToDBFile()
 
         self.isModified = False
 
