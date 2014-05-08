@@ -12,18 +12,20 @@ Date: 01/05/2014
 from PySide.QtGui import QDialog, QFileDialog
 import ui.preferences_dlg_ui
 import os
+import platform
 
 
 class PreferencesDialog(QDialog):
 
     """Preferences dialog."""
 
-    def __init__(self, preferences, parent=None):
+    def __init__(self, preferences, initial=False, parent=None):
         """Contructor."""
         super(PreferencesDialog, self).__init__(parent)
         self.ui = ui.preferences_dlg_ui.Ui_Preferences()
         self.ui.setupUi(self)
         self.preferences = preferences
+        print 'Initial preferences: ',  self.preferences
 
         self.ui.pushButtonOk.clicked.connect(self.accept)
         self.ui.pushButtonCancel.clicked.connect(self.reject)
@@ -37,12 +39,24 @@ class PreferencesDialog(QDialog):
             self.preferences['replace_where'])
         self.ui.comboBoxReplace.setCurrentIndex(index)
         self.ui.lineEditReplaceBy.setText(str(self.preferences['replace_by']))
-        self.ui.lineEditWorkspace.setText(str(self.preferences['workspace']))
+
+        os_sys = platform.system()
+        if os_sys == 'Windows':
+            self.workspace = self.preferences['win_workspace']
+        if os_sys == 'Linux':
+            self.workspace = self.preferences['lin_workspace']
+        if os_sys == 'Mac':
+            self.workspace = self.preferences['mac_workspace']
+            
+        self.ui.lineEditWorkspace.setText(str(self.workspace))
         self.ui.checkBoxOpenLast.setChecked(self.preferences['open_last'])
-        self.ui.checkBoxCreateDir.setChecked(True)
+        #self.ui.checkBoxCreateDir.setChecked(True)
         self.ui.checkBoxCreateDir.clicked.connect(self.createDir)
 
-        self.createDir()
+        if initial == True:
+            self.ui.groupBoxAppearance.setHidden(True)
+            self.ui.groupBoxSentenceStrip.setHidden(True)
+            
 
     def createDir(self):
         """Create a directory for workspace."""
@@ -59,11 +73,10 @@ class PreferencesDialog(QDialog):
         path = QFileDialog.getExistingDirectory(
             self,
             self.tr('Choose a workspace for your Sci Corpus'),
-            self.tr(
-                self.preferences['workspace']))
+            self.tr(self.workspace))
         if path != '':
             self.createDir()
-            self.preferences['workspace'] = os.path.abspath(path)
+            self.workspace = os.path.abspath(path)
             self.ui.lineEditWorkspace.setText(os.path.abspath(path))
 
     def accept(self):
@@ -73,14 +86,22 @@ class PreferencesDialog(QDialog):
         self.preferences['replace_where'] = str(
             self.ui.comboBoxReplace.currentText())
         self.preferences['replace_by'] = str(self.ui.lineEditReplaceBy.text())
-        self.preferences['workspace'] = str(self.ui.lineEditWorkspace.text())
+        self.workspace = str(self.ui.lineEditWorkspace.text())
+        os_sys = platform.system()
+        if os_sys == 'Windows':
+            self.preferences['win_workspace'] = self.workspace
+        if os_sys == 'Linux':
+            self.preferences['lin_workspace']= self.workspace
+        if os_sys == 'Mac':
+            self.preferences['mac_workspace'] = self.workspace
+            
         self.preferences['open_last'] = self.ui.checkBoxOpenLast.isChecked()
 
         #@TODO: put the try block here
-        if not os.path.exists(self.preferences['workspace']):
-            os.makedirs(self.preferences['workspace'])
+        if not os.path.exists(self.workspace):
+            os.makedirs(self.workspace)
 
-        print self.preferences
+        print 'Final preferences: ',  self.preferences
         QDialog.accept(self)
 
     def reject(self):

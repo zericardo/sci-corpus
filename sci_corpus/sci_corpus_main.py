@@ -29,8 +29,9 @@ import json
 import codecs
 import start_dlg
 import preferences_dlg
+import platform
 
-__version__ = 'v.0.4.1'
+__version__ = 'v.0.5.0'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -56,6 +57,26 @@ class MainWindow(QMainWindow):
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        
+        self.workspace = os.path.abspath(os.path.expanduser('~'))
+        self.defaultPref = {
+            'section': True,
+            'subsection': True,
+            'function': True,
+            'sentence': True,
+            'reference': False,
+            'strip': True,
+            'theme': 'White',
+            'marker': '{}',
+            'replace_by': '...',
+            'replace_where': 'Outside Markers',
+            'win_workspace':'',
+            'lin_workspace':'',
+            'mac_workspace':'',
+            'open_last': True,
+            'last_path': os.path.abspath(os.path.expanduser('~'))}
+        self.preferences = self.defaultPref
+        self.setupWorkspace()
 
         start = start_dlg.StartDialog(self)
         start.version(__version__)
@@ -76,7 +97,8 @@ class MainWindow(QMainWindow):
 
         start.updateProgress(30)
         start.informationProgress('Loading preferences')
-        # self.readPreferences()
+        
+        self.readPreferences()
 
         start.updateProgress(60)
         start.informationProgress('Setting environment')
@@ -87,49 +109,16 @@ class MainWindow(QMainWindow):
         start.updateProgress(100)
         start.close()
 
-        self.theme = 'White'
-        self.replaceBy = '...'
-        self.marker = '{}'
-        self.replaceWhere = 'Outside markers'
-        self.openLast = True
-        self.workspace = os.path.expanduser('~')
 
-        self.defaultPreferences = {
-            'section': True,
-            'subsection': True,
-            'function': True,
-            'sentence': True,
-            'reference': False,
-            'strip': True,
-            'theme': 'White',
-            'marker': '{}',
-            'replace_by': '...',
-            'replace_where': 'Outside Markers',
-            'workspace': os.path.expanduser('~'),
-            'open_last': True,
-            'last_path': self.container.path}
-
-        self.preferences = {
-            'section': self.ui.checkBoxSection.isChecked(),
-            'subsection': self.ui.checkBoxSubSection.isChecked(),
-            'function': self.ui.checkBoxFunction.isChecked(),
-            'sentence': self.ui.checkBoxSentence.isChecked(),
-            'reference': self.ui.checkBoxReference.isChecked(),
-            'strip': self.ui.checkBoxStrip.isChecked(),
-            'theme': self.theme,
-            'marker': self.marker,
-            'replace_by': self.replaceBy,
-            'replace_where': self.replaceWhere,
-            'workspace': self.workspace,
-            'open_last': self.openLast,
-            'last_path': self.container.path}
 
         # Application ---------------------------------------------------------
         # Actions
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.actionTips.triggered.connect(self.tips)
-        self.ui.actionPreferences.triggered.connect(self.setupPreferences)
+        self.ui.actionPreferences.triggered.connect(
+            lambda: preferences_dlg.PreferencesDialog(
+                self.preferences, False,  self).exec_())
         # Signals
         self.logSig.connect(self.showLogMessage)
 
@@ -261,6 +250,9 @@ class MainWindow(QMainWindow):
         self.clearAll()
         self.updateSectionView()
         self.updateSentenceView()
+        
+        if self.preferences['open_last'] == True:
+            self.openFile(self.preferences['last_path'])
         
     def updateFromTable(self,  row,  column):
         """
@@ -846,13 +838,13 @@ in an article.'),
     # File methods
     # -----------------------------------------------------------------------
 
-    def openFile(self):
-        """" Opens a new file."""
-        path = QFileDialog.getOpenFileName(self,
-                                           self.tr('Open File'),
-                                           self.tr(self.container.path),
-                                           self.tr('(*.db)'))[0]
-
+    def openFile(self,  path=''):
+        """Opens a new file."""
+        if path == '':
+            path = QFileDialog.getOpenFileName(self,
+                                               self.tr('Open File'),
+                                               self.tr(self.workspace),
+                                               self.tr('(*.db)'))[0]
         if path != '':
             self.container.read_(path)
             self.setWindowTitle(
@@ -861,6 +853,7 @@ in an article.'),
                 __version__ +
                 " : " +
                 self.container.path)
+            self.preferences['last_path'] = path
             self.updateSelectedNumbers()
             self.updateTotalNumbers()
             self.updateSectionView()
@@ -877,7 +870,7 @@ in an article.'),
         """" Saves a new file."""
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Save As'),
-                                           self.tr(self.container.path),
+                                           self.tr(self.workspace),
                                            self.tr('(*.db)'))[0]
         if path != '':
             self.container.write_(path)
@@ -908,7 +901,7 @@ in an article.'),
 
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
-                                           self.tr(self.container.path),
+                                           self.tr(self.workspace),
                                            self.tr('(*.xml *.csv *.json)'))[0]
         if path != '':
             self.container.export_(path)
@@ -938,8 +931,7 @@ in an article.'),
             self,
             self.tr('Import File'),
             self.tr(
-                os.path.dirname(
-                    self.container.path)),
+                os.path.dirname(self.workspace)),
             self.tr('(*.xml *.csv *.json)'))[0]
 
         if path != '':
@@ -962,35 +954,69 @@ in an article.'),
     # Application methods
     # -----------------------------------------------------------------------
 
-    def setupPreferences(self):
-        """Call setup preferences dialog."""
-        print self.preferences
-        dialog = preferences_dlg.PreferencesDialog(self.preferences, self)
-        if dialog.exec_():
-            print self.preferences
+    def setupWorkspace(self):
+        """Setup user preferences."""
+
+        os_sys = platform.system()
+        if os_sys == 'Windows':
+            self.workspace = os.path.abspath(self.preferences['win_workspace'])
+        elif os_sys == 'Linux':
+            self.workspace = os.path.abspath(self.preferences['lin_workspace'])
+        elif os_sys == 'Mac':
+            self.workspace = os.path.abspath(self.preferences['mac_workspace'])
+          
 
     def readPreferences(self):
         """Reads preferences from file."""
+        
+        os_sys = platform.system()
+        filepath = ''
+        
+        if os_sys == 'Windows':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'scicorpus.ini'))
+        elif os_sys == 'Linux' or os_sys == 'Mac':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'.scicorpus.ini'))
+
         try:
-            with codecs.open(os.path.abspath('scicorpus.ini'), 'wb', 'utf-8') as file:
-                config = json.loads(file)
+            with codecs.open(filepath, 'rb', 'utf-8') as ini_file:
+                text = ini_file.read()
+                config = json.loads(str(text))
         except Exception:
+            self.logSig.emit("File scicorpus.ini not found.")
+            preferences_dlg.PreferencesDialog(self.preferences, True,  self).exec_()
             pass
         else:
-            self.timeToStart = config['time_to_start']
-            self.preferencesPath = config['preferences_path']
-            try:
-                with codecs.open(self.preferencesPath, 'wb', 'utf-8') as file:
-                    self.preferences = json.loads(file)
-            except Exception:
-                pass
+            self.preferences = config
+            self.logSig.emit("File scicorpus.ini was found.")
+        finally:
+            self.setupWorkspace()
+            self.ui.checkBoxSection.setChecked(self.preferences['section'])
+            self.ui.checkBoxSubSection.setChecked(self.preferences['subsection'])
+            self.ui.checkBoxFunction.setChecked(self.preferences['function'])
+            self.ui.checkBoxSentence.setChecked(self.preferences['sentence'])
+            self.ui.checkBoxReference.setChecked(self.preferences['reference'])
+            self.ui.checkBoxStrip.setChecked(self.preferences['strip'])
 
     def writePreferences(self):
         """Writes preferences on file."""
-        with codecs.open(os.path.abspath(os.path.join(
-                os.path.expanduser('~'),
-                'scicorpuspreferences.ini')), 'wb', 'utf-8') as file:
-            json.dump(self.preferences, file, indent=4, sort_keys=True)
+        
+        os_sys = platform.system()
+        
+        if os_sys == 'Windows':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'scicorpus.ini'))
+        elif os_sys == 'Linux' or os_sys == 'Mac':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'.scicorpus.ini'))
+            
+        self.preferences['section'] = self.ui.checkBoxSection.isChecked()
+        self.preferences['subsection'] = self.ui.checkBoxSubSection.isChecked()
+        self.preferences['function'] = self.ui.checkBoxFunction.isChecked()
+        self.preferences['sentence'] = self.ui.checkBoxSentence.isChecked()
+        self.preferences['reference'] = self.ui.checkBoxReference.isChecked()
+        self.preferences['strip'] = self.ui.checkBoxStrip.isChecked()
+        
+        with codecs.open(filepath, 'wb', 'utf-8') as pref_file:
+            json.dump(self.preferences, pref_file, indent=4, sort_keys=True)
+
 
     def writeSettings(self):
         """Write settings fo window state and geometry."""
@@ -1028,6 +1054,7 @@ in an article.'),
             QMessageBox.No)
         if answer == QMessageBox.Yes:
             self.closeFile()
+            self.writePreferences()
             self.writeSettings()
             event.accept()
         else:
@@ -1102,7 +1129,7 @@ if __name__ == '__main__':
     style_sheet = ''
     style_path = ''
 
-    if main_window.theme == 'Black':
+    if main_window.preferences['theme'] == 'Black':
         style_path = 'ui/black_theme.sty'
     else:
         style_path = 'ui/white_theme.sty'
