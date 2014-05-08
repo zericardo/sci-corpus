@@ -241,7 +241,8 @@ class MainWindow(QMainWindow):
         self.ui.tableWidgetSentence.itemSelectionChanged.connect(
             self.updateSelectedNumbers)
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
-        self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.updateFromTable)
+        self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.getSentFromTableNDisplay)
+        self.ui.tableWidgetSentence.cellClicked.connect(self.getSentFromTable)
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
         self.ui.checkBoxStrip.setChecked(True)
@@ -250,24 +251,34 @@ class MainWindow(QMainWindow):
         self.clearAll()
         self.updateSectionView()
         self.updateSentenceView()
+
+    def getSentFromTable(self, row,  column):
+        """
+        Get a sentence from table's click
+        """
+       
+        self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
+
+        [(self.sent, self.ref)] = self.container.searchByID(self.ID)
         
+        
+
         if self.preferences['open_last'] == True:
             self.openFile(self.preferences['last_path'])
-        
-    def updateFromTable(self,  row,  column):
-        """
-        Updates from row, column in table.
-        """
-        # This is not the best way, but it works for now.
-        self.sec = self.ui.tableWidgetSentence.item(row, 0).text()
-        self.subs = self.ui.tableWidgetSentence.item(row, 1).text()
-        self.func = self.ui.tableWidgetSentence.item(row, 2).text()
-        self.sent = self.ui.tableWidgetSentence.item(row, 3).text()
-        self.ref = self.ui.tableWidgetSentence.item(row, 4).text()
+    
+    def getSentFromTableNDisplay(self, row,  column):
 
-        # Maybe you need to find in DB the whole sentence and then set text.
+        """
+        Get a sentence from table's doubleclick and display in text editor
+        """
+       
+        self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
+
+        [(self.sent, self.ref)] = self.container.searchByID(self.ID)
+        
         self.ui.textEditSentence.setText(self.sent)
         self.ui.lineEditReference.setText(self.ref)
+
 
     def selectedTitles(self, selected_items):
         """
@@ -307,7 +318,7 @@ class MainWindow(QMainWindow):
         sent = set()
 
         # @TODO: This can be better :), maybe a property of container
-        for secv, subsv, funcv, sentv, refv in self.container.listSentences():
+        for idv, secv, subsv, funcv, sentv, refv in self.container.listSentences():
             sec.add(secv)
             subs.add(subsv)
             func.add(funcv)
@@ -374,11 +385,6 @@ class MainWindow(QMainWindow):
     def updateSectionView(self):
         """Updates section view."""
         sec = self.container.listSections()
-        #sec = set()
-        # @TODO: In the future, not use for
-        #for secv, subsv, funcv in self.container.listCategories2():
-        #    sec.add(secv)
-
         self.ui.listWidgetSection.clear()
         sec = sorted(sec)
         self.ui.labelDisplayedSection.setText(str(len(sec)))
@@ -458,29 +464,7 @@ scientific text. In summary, they are the titles of each section.'),
     def updateSubSectionView(self):
         """Updates subsection view."""
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
-        #subs = set()
-        #subsecs = []
-        
         subs=self.container.listSubSections(qsections=sec)
-        
-        #for secv, subsv, funcv in self.container.listCategories2(qsections=sec):
-         #   subs.add(subsv)
-        
-        '''
-        if sec == []:
-            for secv, subsv, funcv in self.container.listCategories2(section=sec):
-                subs.add(subsv)
-        # This havent be treat here, this need to be treated on contianer.
-        else:
-            for i in range(len(sec)):
-                subsecs.append(
-                    {subsv for secv, subsv,
-                     funcv in self.container.listCategories(
-                         section=[sec[i]])})
-            subs = subsecs[0]
-            for i in range(len(sec) - 1):
-                subs = subs & subsecs[i + 1]
-        '''
         self.ui.listWidgetSubSection.clear()
         subs = sorted(subs)
         
@@ -565,38 +549,6 @@ in an article.'),
             self.ui.listWidgetSubSection.selectedItems())
         func = self.container.listFunctions(qsections=sec,qsubsections=subs)
         
-        #func = set()
-
-        #funcs = []
-
-        '''if sec == [] and subs == []:
-            for secv, subsv, funcv in self.container.listCategories(section=sec):
-                func.add(funcv)
-        # This havent be treat here, this need to be treated on contianer.
-        elif sec != [] and subs == []:
-            for i in range(len(sec)):
-                funcs.append(
-                    {funcv for secv, subsv,
-                     funcv in self.container.listCategories(
-                         section=[sec[i]])})
-
-            func = funcs[0]
-            for i in range(len(sec) - 1):
-                func = func & funcs[i + 1]
-
-        elif sec != [] and subs != []:
-            for i in range(len(sec)):
-                for j in range(len(subs)):
-                    funcs.append(
-                        {funcv for secv, subsv,
-                         funcv in self.container.listCategories(
-                             section=[sec[i]],
-                             subsection=[subs[j]])})
-
-            func = funcs[0]
-            for i in range(len(funcs) - 1):
-                func = func & funcs[i + 1]'''
-
         self.ui.listWidgetFunction.clear()
         func = sorted(func)
 
@@ -704,35 +656,38 @@ in an article.'),
     def removeSentence(self):
         """Removes a sentence."""
         
-        # IT HAS A PROBLEM, IF MORE THEN ONE COLUMn WAS DISPLAYED.
-        # But for now its ok. I dont know how to provide just some items.
-        # IT HAS ANOTHER PROBLEM: IT DELETES ALL SENTENCES THAT ARE EQUAL
-        # But, because the user has selected a section, sub section and function
-        # It was expected that just that sentence that he select.
+        #sent = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
         
-        sent = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
+        sent = self.sent
         
-        if sent != []:
+        print sent
+        
+        if sent != '':
             if self.removeQuestion("Sentence", sent) == QMessageBox.Yes:
                 print 'Removing sentences: ',  sent
-                self.container.remove(phrase=sent)
-                self.showMessageOnStatusBar('Sentence(s) has already removed.')
+                self.container.remove(phrase=[sent])
+                self.showMessageOnStatusBar('Sentence(s) was removed.')
                 
         self.updateTotalNumbers()
         self.updateSentenceView()
 
     def updateSentence(self, old_sentence='', new_sentence=''):
         """Updates a sentence."""
-        # Please, see the self.updateFromTable() and add function do get the 
-        # I cant select 
-        
+       
         old_sent = self.sent
         old_ref = self.ref
         
         sent = str(self.ui.textEditSentence.toPlainText())
         ref = str(self.ui.lineEditReference.text())
         
-        self.notImplementedYet()
+        if sent != '' and ref != '' and old_sent != '' and old_ref != '':
+            if self.updateQuestion("Sentence", (old_sent, sent)) == QMessageBox.Yes:
+                self.container.upSent((old_sent,sent),(old_ref,ref))
+                self.showMessageOnStatusBar(
+                    'Sentence "{}" was updated to "{}".'.format(
+                        old_sent,
+                        sent))
+                
         self.updateSentenceView()
 
     def updateSentenceView(self):
@@ -750,7 +705,7 @@ in an article.'),
             function=functions)
 
         self.ui.tableWidgetSentence.clearContents()
-        self.ui.tableWidgetSentence.setColumnCount(5)
+        self.ui.tableWidgetSentence.setColumnCount(6)
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(
             0,
             QTableWidgetItem('Section'))
@@ -767,11 +722,15 @@ in an article.'),
             4,
             QTableWidgetItem('Reference'))
 
+        #the last column will be always hidden cause it will contain the
+        #unique ID from the entry. Its necessary to update properly.
+        self.ui.tableWidgetSentence.setColumnHidden(5, True)
+
         row = 0
         strip = self.ui.checkBoxStrip.isChecked()
         self.ui.tableWidgetSentence.setRowCount(row)
 
-        for secv, subsv, funcv, sentv, refv in sentences:
+        for idv, secv, subsv, funcv, sentv, refv in sentences:
             if sentv != u'NULL':
                 # This must be provided by method of list sentences..not return NULL sentences.
                 # Or maybe, put a check box to choose if will be show or not
@@ -783,12 +742,14 @@ in an article.'),
                 func_item = QTableWidgetItem(str(funcv))
                 sent_item = QTableWidgetItem(str(sentv))
                 ref_item = QTableWidgetItem(str(refv))
+                id_item = QTableWidgetItem(str(idv))
 
                 self.ui.tableWidgetSentence.setItem(row, 0, sec_item)
                 self.ui.tableWidgetSentence.setItem(row, 1, subs_item)
                 self.ui.tableWidgetSentence.setItem(row, 2, func_item)
                 self.ui.tableWidgetSentence.setItem(row, 3, sent_item)
                 self.ui.tableWidgetSentence.setItem(row, 4, ref_item)
+                self.ui.tableWidgetSentence.setItem(row, 5, id_item)
 
                 if strip:
                     try:
