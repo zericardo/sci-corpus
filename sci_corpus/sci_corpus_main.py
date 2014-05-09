@@ -251,6 +251,9 @@ class MainWindow(QMainWindow):
         self.clearAll()
         self.updateSectionView()
         self.updateSentenceView()
+        
+        if self.preferences['open_last'] == True:
+            self.openFile(str(self.preferences['last_path']))
 
     def getSentFromTable(self, row,  column):
         """
@@ -258,11 +261,8 @@ class MainWindow(QMainWindow):
         """
        
         self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
-
         [(self.sent, self.ref)] = self.container.searchByID(self.ID)
         
-        #if self.preferences['open_last'] == True:
-        #    self.openFile(self.preferences['last_path'])
     
     def getSentFromTableNDisplay(self, row,  column):
 
@@ -273,7 +273,6 @@ class MainWindow(QMainWindow):
         self.getSentFromTable(row,  column)
        
         #self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
-
         #[(self.sent, self.ref)] = self.container.searchByID(self.ID)
         
         self.ui.textEditSentence.setText(self.sent)
@@ -804,7 +803,7 @@ in an article.'),
         if path == '':
             path = QFileDialog.getOpenFileName(self,
                                                self.tr('Open File'),
-                                               self.tr(self.workspace),
+                                               self.tr(str(self.workspace)),
                                                self.tr('(*.db)'))[0]
         if path != '':
             self.closeFile()
@@ -832,7 +831,7 @@ in an article.'),
         """" Saves a new file."""
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Save As'),
-                                           self.tr(self.workspace),
+                                           self.tr(str(self.workspace)),
                                            self.tr('(*.db)'))[0]
         if path != '':
             self.container.write_(path)
@@ -866,7 +865,7 @@ in an article.'),
 
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
-                                           self.tr(self.workspace),
+                                           self.tr(str(self.workspace)),
                                            self.tr('(*.xml *.csv *.json)'))[0]
         if path != '':
             self.container.export_(path)
@@ -896,7 +895,7 @@ in an article.'),
             self,
             self.tr('Import File'),
             self.tr(
-                os.path.dirname(self.workspace)),
+                os.path.dirname(str(self.workspace))),
             self.tr('(*.xml *.csv *.json)'))[0]
 
         if path != '':
