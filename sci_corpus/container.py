@@ -92,6 +92,8 @@ class ContainerDB():
             self.__dbfile.close()
             tempfile.seek(0)
 
+            #print tempfile
+
             self.__dbmem.cursor().execute('DROP TABLE corpus')
             self.__dbmem.cursor().executescript(tempfile.read())
             self.__dbmem.commit()

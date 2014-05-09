@@ -31,7 +31,7 @@ import start_dlg
 import preferences_dlg
 import platform
 
-__version__ = 'v.0.6.0'
+__version__ = 'v.0.6.1'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -261,10 +261,8 @@ class MainWindow(QMainWindow):
 
         [(self.sent, self.ref)] = self.container.searchByID(self.ID)
         
-        
-
-        if self.preferences['open_last'] == True:
-            self.openFile(self.preferences['last_path'])
+        #if self.preferences['open_last'] == True:
+        #    self.openFile(self.preferences['last_path'])
     
     def getSentFromTableNDisplay(self, row,  column):
 
@@ -272,9 +270,11 @@ class MainWindow(QMainWindow):
         Get a sentence from table's doubleclick and display in text editor
         """
        
-        self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
+        self.getSentFromTable(row,  column)
+       
+        #self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
 
-        [(self.sent, self.ref)] = self.container.searchByID(self.ID)
+        #[(self.sent, self.ref)] = self.container.searchByID(self.ID)
         
         self.ui.textEditSentence.setText(self.sent)
         self.ui.lineEditReference.setText(self.ref)
@@ -663,7 +663,7 @@ in an article.'),
         print sent
         
         if sent != '':
-            if self.removeQuestion("Sentence", sent) == QMessageBox.Yes:
+            if self.removeQuestion("Sentence", [sent]) == QMessageBox.Yes:
                 print 'Removing sentences: ',  sent
                 self.container.remove(phrase=[sent])
                 self.showMessageOnStatusBar('Sentence(s) was removed.')
@@ -807,6 +807,7 @@ in an article.'),
                                                self.tr(self.workspace),
                                                self.tr('(*.db)'))[0]
         if path != '':
+            self.closeFile()
             self.container.read_(path)
             self.setWindowTitle(
                 __pname__+
@@ -856,6 +857,9 @@ in an article.'),
         self.container.close_()
         self.setWindowTitle(__pname__ + " " + __version__)
         self.clearAll()
+        self.updateSelectedNumbers()
+        self.updateTotalNumbers()
+        self.updateSectionView()
 
     def exportFile(self):
         """Export file with extension."""
