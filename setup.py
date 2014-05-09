@@ -1,7 +1,8 @@
+#! python
 # -*- coding: utf-8 -*-
 
 """
-To install just execute.
+Script to install Sci Corpus.
 
 # python setup.py install
 
@@ -9,32 +10,31 @@ Have fun :)
 
 """
 
-#from distutils.core import setup
-import sys
-from cx_Freeze import setup, Executable
+from distutils.core import setup
+import platform
+import os
+from sci_corpus import sci_corpus_main
 
 print 'Installing Scientific Corpus ...'
 
 base = None
-if sys.platform == "win32":
+
+if platform.system() == 'Windows':
     base = "Win32GUI"
 
-setup(name='sci-corpus',
-      version='0.1',
-      description='Scientific Corpus Manager',
+setup(name=sci_corpus_main.__pname__,
+      version=sci_corpus_main.__version__,
+      description=sci_corpus_main.__ext_name__,
+      
       author='Daniel Cosmo Pizetta, Jose Ricardo Furlan Ronqui, Tiago de Campos',
       author_email='daniel.pizetta@usp.br, jose.ronqui@usp.br, tiago.campos@usp.br',
-      #options = {'build_exe':build_exe_options}
-      executables=[Executable("sci_corpus/sci_corpus_main.py", base=base)],
-      download_url='https://github.com/zericardo182/sci-corpus')
-
-"""
+      
+      download_url='https://github.com/zericardo182/sci-corpus',
+      
       packages=['sci_corpus',
-                'sci_corpus.xxx'],
-
-      package_data={'/Sci Corpus':['README.txt',
-                        'sci_corpus/ui/*.ui']},
+                'sci_corpus.ui'],
       
-      scripts=['sci_corpus/scripts/sci_corpus.py'],
+      package_data={'/Sci Corpus':['examples',
+                                   'docs']}
       
-"""
+      scripts=['sci_corpus/scripts/sci_corpus.py'])
