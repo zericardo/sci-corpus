@@ -31,7 +31,7 @@ import start_dlg
 import preferences_dlg
 import platform
 
-__version__ = 'v.0.6.2'
+__version__ = 'v.0.7.0'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -866,7 +866,7 @@ in an article.'),
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
                                            self.tr(str(self.workspace)),
-                                           self.tr('(*.xml *.csv *.json)'))[0]
+                                           self.tr('(*.xml *.csv *.json *.pdf)'))[0]
         if path != '':
             self.container.export_(path)
 
