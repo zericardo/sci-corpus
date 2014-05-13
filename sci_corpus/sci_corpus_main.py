@@ -31,7 +31,7 @@ import start_dlg
 import preferences_dlg
 import platform
 
-__version__ = 'v.0.6.1'
+__version__ = 'v.0.6.2'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 

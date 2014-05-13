@@ -92,8 +92,6 @@ class ContainerDB():
             self.__dbfile.close()
             tempfile.seek(0)
 
-            #print tempfile
-
             self.__dbmem.cursor().execute('DROP TABLE corpus')
             self.__dbmem.cursor().executescript(tempfile.read())
             self.__dbmem.commit()
@@ -190,7 +188,7 @@ class ContainerDB():
 
        try:
            whatadd = [
-               (a, b, c, d, e)
+               (a.strip(), b.strip(), c.strip(), d.strip(), e.strip())
                for a in sect for b in subsect
                for c in funct for d in phrase for e in ref]
            cursor.executemany(
@@ -746,18 +744,23 @@ class ContainerDB():
                 try:
                     for w in root.findall('INFOPIECE'):
                         sec = w.find('SECTION').text
+                        sec = sec.strip()
                         if sec is None:
                             sec = 'Not Classified'
                         subs = w.find('SUBSECTION').text
+                        subs = subs.strip()
                         if subs is None:
                             subs = 'Not Classified'
                         func = w.find('FUNCTION').text
+                        func = func.strip()
                         if func is None:
                             func = 'Not Classified'
                         sent = w.find('PHRASE').text
+                        sent = sent.strip()
                         if sent is None:
                             sent = 'Not Classified'
                         ref = w.find('REF').text
+                        ref = ref.strip()
                         if ref is None:
                             ref = 'Not Classified'
 
