@@ -21,7 +21,7 @@ class ContainerDB():
         self.__isModified = False
         self.createNconnectDB(flag=True)
 
-    def exportToPDF(self,path):
+    def exportToPDF(self, path):
 
         doc = SimpleDocTemplate(path,pagesize=A4,
                                 rightMargin=72,leftMargin=72,
