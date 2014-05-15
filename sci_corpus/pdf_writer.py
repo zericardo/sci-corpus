@@ -15,21 +15,29 @@ PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
 
 class MyDocTemplate(BaseDocTemplate):
         
-    def __init__(self, filename, container, **kw):
+    def __init__(self, filepath, **kw):
     
         self.title = 'SciCorpus'
         self.author = 'SciCorpus Team'
         self.description = 'This is a scientific CORPUS'
-        self.container = container
         
-        self.ls = self.container.listSections()
+        for key, value in kw.items():
+            if key == 'container':
+                self.__container = kw['container']
         
         self.allowSplitting = 0
-        apply(BaseDocTemplate.__init__, (self, filename), kw)  
+        apply(BaseDocTemplate.__init__, (self, filepath), kw)  
         self.addPageTemplates([PageTemplate('first', [Frame(0, 0, 8.27*inch, 11.69*inch, id='F1')],
                                onPage=self.myFirstPage),
                                PageTemplate('laters', [Frame(0, 0, 8.27*inch, 11.69*inch, id='F2')], 
                                onPage=self.myLaterPages)])
+    @property
+    def container(self):
+        return self.__container
+
+    @container.setter
+    def container(self, value):
+        self.__container = value
 
     def afterFlowable(self, flowable):
         "Registers TOC entries."
@@ -48,11 +56,11 @@ class MyDocTemplate(BaseDocTemplate):
     
         canvas.saveState()
         canvas.setFont('Helvetica-Bold',26)
-        canvas.drawString(8.27*inch/2.0, 11.69*inch-108, self.title)
+        canvas.drawString(8.27*inch/2.0, 11.69*inch-108, 'SciCorpus')
         canvas.setFont('Helvetica',16)
-        canvas.drawString(8.27*inch/2.0, 11.69*inch-208, self.author)
+        canvas.drawString(8.27*inch/2.0, 11.69*inch-208, 'SciCorpus Team')
         canvas.setFont('Helvetica',14)
-        canvas.drawString(8.27*inch/2.0, 11.69*inch-308, self.description)
+        canvas.drawString(8.27*inch/2.0, 11.69*inch-308, 'This is a scientific CORPUS')
         canvas.line(50,50,8.27*inch-50,50)
         canvas.setFont('Times-Roman',9)
         canvas.drawString(55, 40, "Created by SciCorpus")
@@ -77,6 +85,7 @@ class MyDocTemplate(BaseDocTemplate):
         doc = MyDocTemplate(path,pagesize=A4,
                                 rightMargin=rmargin*mm,leftMargin=lmargin*mm,
                                 topMargin=tmargin*mm,bottomMargin=bmargin*mm)
+                                
         #doc = SimpleDocTemplate(path,pagesize=A4,
         #                        rightMargin=rmargin*mm,leftMargin=lmargin*mm,
         #                        topMargin=tmargin*mm,bottomMargin=bmargin*mm)
@@ -105,28 +114,28 @@ class MyDocTemplate(BaseDocTemplate):
         #    ParagraphStyle(fontSize=18, name='TOCHeading2', leftIndent=40, firstLineIndent=-20, spaceBefore=5, leading=12),  
         #]  
         
-        Story.append(toc)
         Story.append(Paragraph('<b>Table of contents</b>', centered))  
+        Story.append(toc)
         Story.append(PageBreak())
         Story.append(NextPageTemplate('laters'))
                 
-        for sec in LS():
+        for snum, sec in enumerate(self.container.listSections()):
             if sec != 'Not Classified':
-                Story.append(Paragraph(sec,styles["Heading1"]))
+                Story.append(Paragraph(str(snum)+'.  '+sec,styles["Heading1"]))
                 Story.append(Spacer(1, 12))
-                for subs in listSubSections(qsections=[sec]):
+                for ssnum, subs in enumerate(self.container.listSubSections(qsections=[sec])):
                     if subs != 'Not Classified':
-                        Story.append(Paragraph(subs,styles["Heading2"]))
+                        Story.append(Paragraph(str(snum)+'.'+str(ssnum)+'.  '+subs,styles["Heading2"]))
                         Story.append(Spacer(1, 12))
-                        for func in listFunctions(qsections=[sec],qsubsections=[subs]):
+                        for fnum, func in enumerate(self.container.listFunctions(qsections=[sec],qsubsections=[subs])):
                             if func != 'Not Classified':
-                                Story.append(Paragraph(func,styles["Heading3"]))
+                                Story.append(Paragraph(str(snum)+'.'+str(ssnum)+'.'+str(fnum)+'.  '+func,styles["Heading3"]))
                                 Story.append(Spacer(1, 12))
-                                for idv, secv, subsv, funcv, sentv, refv in listSentences(section=[sec],subsection=[subs],function=[func]):
+                                for idv, secv, subsv, funcv, sentv, refv in self.container.listSentences(section=[sec],subsection=[subs],function=[func]):
                                     if sentv != 'NULL':
                                         ptext = sentv + ' Reference: ' + refv
                                         Story.append(Paragraph(ptext,styles["Bullet"]))
                                         Story.append(Spacer(1, 12))
 
-
+        print "Exporting PDF ..."
         doc.multiBuild(Story)

@@ -24,7 +24,7 @@ from ui import main_window_ui
 from reportlab.platypus.doctemplate import BaseDocTemplate
 
 import container
-import pdfwriter
+import pdf_writer
 import re
 import os
 import json
@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
 
         start.updateProgress(50)
         start.informationProgress('Loading pdfwriter')
-        self.pdfwriter = pdfwriter.MyDocTemplate(BaseDocTemplate,self.container) 
+        self.pdfwriter = pdf_writer.MyDocTemplate(BaseDocTemplate,container=self.container) 
 
         start.updateProgress(60)
         start.informationProgress('Setting environment')
@@ -391,7 +391,6 @@ class MainWindow(QMainWindow):
     def updateSectionView(self):
         """Updates section view."""
         sec = self.container.listSections()
-        print sec
         self.ui.listWidgetSection.clear()
         sec = sorted(sec)
         self.ui.labelDisplayedSection.setText(str(len(sec)))
@@ -666,8 +665,6 @@ in an article.'),
         #sent = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
         
         sent = self.sent
-        
-        print sent
         
         if sent != '':
             if self.removeQuestion("Sentence", [sent]) == QMessageBox.Yes:
