@@ -33,7 +33,7 @@ import start_dlg
 import preferences_dlg
 import platform
 
-__version__ = 'v.0.7.2'
+__version__ = 'v.0.8.2'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -469,17 +469,21 @@ scientific text. In summary, they are the titles of each section.'),
 
     def updateSubSectionView(self):
         """Updates subsection view."""
+        
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs=self.container.listSubSections(qsections=sec)
+        subs_all = self.container.listSubSections()
         self.ui.listWidgetSubSection.clear()
-        subs = sorted(subs)
+        subs_all = sorted(subs_all)
         
-        if "Not Classified" in subs:
-            subs.remove("Not Classified")
-            subs.append("Not Classified")
+        if "Not Classified" in subs_all:
+            subs_all.remove("Not Classified")
+            subs_all.append("Not Classified")
         
-        for row, value in enumerate(subs):
+        for row, value in enumerate(subs_all):
             item = QListWidgetItem(str(value))
+            if value in subs:
+                item.setBackground(QBrush(QColor(0, 0, 255, 30)))
             self.ui.listWidgetSubSection.addItem(item)
         
         self.ui.labelDisplayedSubSection.setText(str(len(subs)))
@@ -550,22 +554,24 @@ in an article.'),
 
     def updateFunctionView(self):
         """Updates a function view."""
-        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
-        subs = self.selectedTitles(
-            self.ui.listWidgetSubSection.selectedItems())
-        func = self.container.listFunctions(qsections=sec,qsubsections=subs)
         
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        func = self.container.listFunctions(qsections=sec,qsubsections=subs)
+        func_all = self.container.listFunctions()
         self.ui.listWidgetFunction.clear()
-        func = sorted(func)
+        func_all = sorted(func_all)
 
         self.ui.labelDisplayedFunction.setText(str(len(func)))
 
         if "Not Classified" in func:
-            func.remove("Not Classified")
-            func.append("Not Classified")
+            func_all.remove("Not Classified")
+            func_all.append("Not Classified")
 
-        for row, value in enumerate(func):
+        for row, value in enumerate(func_all):
             item = QListWidgetItem(str(value))
+            if value in func:
+                item.setBackground(QBrush(QColor(0, 0, 255, 30)))
             self.ui.listWidgetFunction.addItem(item)
 
         self.updateSentenceView()
