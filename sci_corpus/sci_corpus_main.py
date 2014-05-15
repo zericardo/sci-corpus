@@ -59,7 +59,7 @@ class MainWindow(QMainWindow):
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        
+        self.firstTimeOpened = True
         self.workspace = os.path.abspath(os.path.expanduser('~'))
         self.defaultPref = {
             'section': True,
@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
             'lin_workspace':'',
             'mac_workspace':'',
             'open_last': True,
-            'last_path': os.path.abspath(os.path.expanduser('~'))}
+            'last_path': ''}
         self.preferences = self.defaultPref
         self.setupWorkspace()
 
@@ -259,7 +259,7 @@ class MainWindow(QMainWindow):
         self.updateSectionView()
         self.updateSentenceView()
         
-        if self.preferences['open_last'] == True:
+        if self.preferences['open_last'] and not self.firstTimeOpened:
             self.openFile(str(self.preferences['last_path']))
 
     def getSentFromTable(self, row,  column):
@@ -818,18 +818,26 @@ in an article.'),
                                                self.tr('(*.db)'))[0]
         if path != '':
             self.closeFile()
-            self.container.read_(path)
-            self.setWindowTitle(
-                __pname__+
-                " "+
-                __version__ +
-                " : " +
-                self.container.path)
-            self.preferences['last_path'] = path
-            self.updateSelectedNumbers()
-            self.updateTotalNumbers()
-            self.updateSectionView()
-            self.isModified = False
+            try:
+                self.container.read_(path)
+            except Exception:
+                QMessageBox.critical(self,
+                        self.tr('Error'),
+                        self.tr('We could not open this file.'),
+                        QMessageBox.Ok)
+                self.closeFile()
+            else:
+                self.setWindowTitle(
+                    __pname__+
+                    " "+
+                    __version__ +
+                    " : " +
+                    self.container.path)
+                self.preferences['last_path'] = path
+                self.updateSelectedNumbers()
+                self.updateTotalNumbers()
+                self.updateSectionView()
+                self.isModified = False
 
     def saveFile(self):
         """" Saves the file that is being used."""
@@ -966,6 +974,7 @@ in an article.'),
             preferences_dlg.PreferencesDialog(self.preferences, True,  self).exec_()
             pass
         else:
+            self.firstTimeOpened = False
             self.preferences = config
             self.logSig.emit("File scicorpus.ini was found.")
         finally:

@@ -55,12 +55,15 @@ class PreferencesDialog(QDialog):
         if os_sys == 'Mac':
             self.workspace = self.preferences['mac_workspace']
             
+        if self.workspace == '':
+            self.workspace = os.path.abspath(os.path.expanduser('~'))
+        
         self.ui.lineEditWorkspace.setText(str(self.workspace))
         self.ui.checkBoxOpenLast.setChecked(self.preferences['open_last'])
         #self.ui.checkBoxCreateDir.setChecked(True)
         self.ui.checkBoxCreateDir.clicked.connect(self.createDir)
 
-        if initial == True:
+        if initial:
             # Put some message to choose the workspace
             # in initial dialog
             self.ui.groupBoxAppearance.setHidden(True)
