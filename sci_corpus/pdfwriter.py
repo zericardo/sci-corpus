@@ -13,15 +13,16 @@ from reportlab.lib.units import cm, inch
 
 PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
 
-class MyDocTemplate(BaseDocTemplate, container):
+class MyDocTemplate(BaseDocTemplate):
         
-    def __init__(self, filename, **kw):
+    def __init__(self, filename, container, **kw):
     
         self.title = 'SciCorpus'
         self.author = 'SciCorpus Team'
         self.description = 'This is a scientific CORPUS'
+        self.container = container
         
-        self.ls = container.listSections
+        self.ls = self.container.listSections()
         
         self.allowSplitting = 0
         apply(BaseDocTemplate.__init__, (self, filename), kw)  
