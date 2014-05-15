@@ -1,12 +1,16 @@
 #! python
 # -*- coding: utf-8 -*-
-
 """
 Script to install Sci Corpus.
 
-# python setup.py install
+.. module:: setup
+   :platform: Unix, Windows
+   :synopsis: Script to install Sci Corpus.
+   
+.. moduleauthor:: Daniel Pizetta <daniel.pizetta@usp.br>
 
-Have fun :)
+This script install sci corpus in your computer.
+
 
 """
 
@@ -15,10 +19,6 @@ import platform
 import os
 import sys
 from sci_corpus import sci_corpus_main
-
-
-print 'Preparing to install Sci Corpus ...'
-
 
 def dependancyChecks():
     """
@@ -60,6 +60,9 @@ def dependancyChecks():
 	else:
 		print("Dependancy checker was not found errors.")
 
+
+
+print 'Preparing to install Sci Corpus ...'
 
 dependancyChecks()
 
