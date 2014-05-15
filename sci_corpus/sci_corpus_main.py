@@ -21,8 +21,10 @@ from PySide.QtGui import QBrush, QColor
 from PySide.QtCore import QSettings, Signal, Qt
 from time import gmtime, strftime
 from ui import main_window_ui
+from reportlab.platypus.doctemplate import BaseDocTemplate
 
 import container
+import pdfwriter
 import re
 import os
 import json
@@ -95,10 +97,15 @@ class MainWindow(QMainWindow):
         start.informationProgress('Creating a container')
         self.container = container.ContainerDB()
 
+
         start.updateProgress(30)
         start.informationProgress('Loading preferences')
         
         self.readPreferences()
+
+        start.updateProgress(50)
+        start.informationProgress('Loading pdfwriter')
+        self.pdfwriter = pdfwriter.MyDocTemplate(BaseDocTemplate,self.container) 
 
         start.updateProgress(60)
         start.informationProgress('Setting environment')
@@ -384,6 +391,7 @@ class MainWindow(QMainWindow):
     def updateSectionView(self):
         """Updates section view."""
         sec = self.container.listSections()
+        print sec
         self.ui.listWidgetSection.clear()
         sec = sorted(sec)
         self.ui.labelDisplayedSection.setText(str(len(sec)))
@@ -838,7 +846,12 @@ in an article.'),
 
     def printFile(self):
         """Generates a PDF file with all sentences included in database."""
-        self.notImplementedYet()
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Save As'),
+                                           self.tr(str(self.workspace)),
+                                           self.tr('(*.pdf)'))[0]
+        if path != '':
+            self.pdfwriter.exportToPDF(path)
 
     def closeFile(self):
         """Closes current file."""
@@ -866,7 +879,7 @@ in an article.'),
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
                                            self.tr(str(self.workspace)),
-                                           self.tr('(*.xml *.csv *.json *.pdf)'))[0]
+                                           self.tr('(*.xml *.csv *.json)'))[0]
         if path != '':
             self.container.export_(path)
 

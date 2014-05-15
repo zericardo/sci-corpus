@@ -7,9 +7,6 @@ from lxml import etree as ET
 import StringIO as strio
 from shutil import copy2
 
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 class ContainerDB():
 
@@ -20,60 +17,8 @@ class ContainerDB():
         self.__defaultpath = '../examples/backup.db'
         self.__isModified = False
         self.createNconnectDB(flag=True)
+        
 
-    def exportToPDF(self, path):
-
-        doc = SimpleDocTemplate(path,pagesize=A4,
-                                rightMargin=72,leftMargin=72,
-                                topMargin=72,bottomMargin=18)
-
-        Story = []
-        
-        styles=getSampleStyleSheet()
-        
-        styles.add(ParagraphStyle(name='Center', alignment=1, fontName='Helvetica-Bold', fontSize=24))
-        styles.add(ParagraphStyle(name='Justify', alignment=4, fontName='Helvetica', fontSize=10, firstLineIndent=24,leftIndent=20))
-        styles.add(ParagraphStyle(name='Section', alignment=0, fontName='Helvetica-Bold', fontSize=16, firstLineIndent=12))
-        styles.add(ParagraphStyle(name='Subsection', alignment=0, fontName='Helvetica-Bold', fontSize=14, firstLineIndent=16))
-        styles.add(ParagraphStyle(name='Function', alignment=0, fontName='Helvetica-Bold', fontSize=12, firstLineIndent=20))
-        
-        header = 'Scientific Corpus' 
-        
-        Story.append(Paragraph(header,styles["Center"]))
-        Story.append(Spacer(1, 12))
-        Story.append(Spacer(1, 12))
-        Story.append(Spacer(1, 12))
-        Story.append(Spacer(1, 12))
-        
-        #styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-        
-        sections = sorted(self.listSections())
-        for sec in sections:
-            if sec != 'Not Classified':
-                Story.append(Paragraph(sec,styles["Section"]))
-                Story.append(Spacer(1, 12))
-                subsections = sorted(self.listSubSections(qsections=[sec]))
-                for subs in subsections:
-                    if subs != 'Not Classified':
-                        Story.append(Paragraph(subs,styles["Subsection"]))
-                        Story.append(Spacer(1, 12))
-                        functions = sorted(self.listFunctions(qsections=[sec],qsubsections=[subs]))
-                        for func in functions:
-                            if func != 'Not Classified':
-                                Story.append(Paragraph(func,styles["Function"]))
-                                Story.append(Spacer(1, 12))
-                                sentences=self.listSentences(section=[sec],subsection=[subs],function=[func])
-                                for idv, secv, subsv, funcv, sentv, refv in sentences:
-                                    if sentv != 'NULL':
-                                        ptext = sentv + 'Reference: ' + refv
-                                        Story.append(Paragraph(ptext,styles["Justify"]))
-                                        Story.append(Spacer(1, 12))
-                                        #ptext = '<font size=12>%s</font>' % refv
-                                        #Story.append(Paragraph(ptext,styles["Normal"]))
-                                        #Story.append(Spacer(1, 12))
-        
-        
-        doc.build(Story)
 
     def createNconnectDB(self, path='', flag=False):
         """
@@ -953,11 +898,6 @@ class ContainerDB():
 
                 with codecs.open(path, 'wb', 'utf-8') as json_file:
                     json.dump(info, json_file, encoding='utf-8', indent=4)
-                
-            elif (ext == '.pdf') or (ext == '.PDF'):
-                print "Exporting PDF ..."
-                
-                self.exportToPDF(path)
 
             else:
                 raise IOError(
