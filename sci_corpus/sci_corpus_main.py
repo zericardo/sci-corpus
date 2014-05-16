@@ -36,7 +36,7 @@ import platform
 from time import gmtime, strftime
 from reportlab.platypus.doctemplate import BaseDocTemplate
 
-__version__ = 'v.0.8.0'
+__version__ = 'v.0.9.0'
 __name__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
