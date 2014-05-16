@@ -21,16 +21,19 @@ from PySide.QtGui import QBrush, QColor
 from PySide.QtCore import QSettings, Signal, Qt
 from time import gmtime, strftime
 from ui import main_window_ui
+from reportlab.platypus.doctemplate import BaseDocTemplate
 
 import container
+import pdf_writer
 import re
 import os
 import json
 import codecs
 import start_dlg
 import preferences_dlg
+import platform
 
-__version__ = 'v.0.4.1'
+__version__ = 'v.0.8.0'
 __pname__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -56,6 +59,26 @@ class MainWindow(QMainWindow):
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.firstTimeOpened = True
+        self.workspace = os.path.abspath(os.path.expanduser('~'))
+        self.defaultPref = {
+            'section': True,
+            'subsection': True,
+            'function': True,
+            'sentence': True,
+            'reference': False,
+            'strip': True,
+            'theme': 'White',
+            'marker': '{}',
+            'replace_by': '...',
+            'replace_where': 'Outside Markers',
+            'win_workspace':'',
+            'lin_workspace':'',
+            'mac_workspace':'',
+            'open_last': True,
+            'last_path': ''}
+        self.preferences = self.defaultPref
+        self.setupWorkspace()
 
         start = start_dlg.StartDialog(self)
         start.version(__version__)
@@ -74,9 +97,15 @@ class MainWindow(QMainWindow):
         start.informationProgress('Creating a container')
         self.container = container.ContainerDB()
 
+
         start.updateProgress(30)
         start.informationProgress('Loading preferences')
-        # self.readPreferences()
+        
+        self.readPreferences()
+
+        start.updateProgress(50)
+        start.informationProgress('Loading pdfwriter')
+        self.pdfwriter = pdf_writer.MyDocTemplate(BaseDocTemplate,container=self.container) 
 
         start.updateProgress(60)
         start.informationProgress('Setting environment')
@@ -87,49 +116,16 @@ class MainWindow(QMainWindow):
         start.updateProgress(100)
         start.close()
 
-        self.theme = 'White'
-        self.replaceBy = '...'
-        self.marker = '{}'
-        self.replaceWhere = 'Outside markers'
-        self.openLast = True
-        self.workspace = os.path.expanduser('~')
 
-        self.defaultPreferences = {
-            'section': True,
-            'subsection': True,
-            'function': True,
-            'sentence': True,
-            'reference': False,
-            'strip': True,
-            'theme': 'White',
-            'marker': '{}',
-            'replace_by': '...',
-            'replace_where': 'Outside Markers',
-            'workspace': os.path.expanduser('~'),
-            'open_last': True,
-            'last_path': self.container.path}
-
-        self.preferences = {
-            'section': self.ui.checkBoxSection.isChecked(),
-            'subsection': self.ui.checkBoxSubSection.isChecked(),
-            'function': self.ui.checkBoxFunction.isChecked(),
-            'sentence': self.ui.checkBoxSentence.isChecked(),
-            'reference': self.ui.checkBoxReference.isChecked(),
-            'strip': self.ui.checkBoxStrip.isChecked(),
-            'theme': self.theme,
-            'marker': self.marker,
-            'replace_by': self.replaceBy,
-            'replace_where': self.replaceWhere,
-            'workspace': self.workspace,
-            'open_last': self.openLast,
-            'last_path': self.container.path}
 
         # Application ---------------------------------------------------------
         # Actions
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.actionTips.triggered.connect(self.tips)
-        self.ui.actionPreferences.triggered.connect(self.setupPreferences)
+        self.ui.actionPreferences.triggered.connect(
+            lambda: preferences_dlg.PreferencesDialog(
+                self.preferences, False,  self).exec_())
         # Signals
         self.logSig.connect(self.showLogMessage)
 
@@ -252,7 +248,8 @@ class MainWindow(QMainWindow):
         self.ui.tableWidgetSentence.itemSelectionChanged.connect(
             self.updateSelectedNumbers)
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
-        self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.updateFromTable)
+        self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.getSentFromTableNDisplay)
+        self.ui.tableWidgetSentence.cellClicked.connect(self.getSentFromTable)
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
         self.ui.checkBoxStrip.setChecked(True)
@@ -262,20 +259,32 @@ class MainWindow(QMainWindow):
         self.updateSectionView()
         self.updateSentenceView()
         
-    def updateFromTable(self,  row,  column):
-        """
-        Updates from row, column in table.
-        """
-        # This is not the best way, but it works for now.
-        self.sec = self.ui.tableWidgetSentence.item(row, 0).text()
-        self.subs = self.ui.tableWidgetSentence.item(row, 1).text()
-        self.func = self.ui.tableWidgetSentence.item(row, 2).text()
-        self.sent = self.ui.tableWidgetSentence.item(row, 3).text()
-        self.ref = self.ui.tableWidgetSentence.item(row, 4).text()
+        if self.preferences['open_last'] and not self.firstTimeOpened:
+            self.openFile(str(self.preferences['last_path']))
 
-        # Maybe you need to find in DB the whole sentence and then set text.
+    def getSentFromTable(self, row,  column):
+        """
+        Get a sentence from table's click
+        """
+       
+        self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
+        [(self.sent, self.ref)] = self.container.searchByID(self.ID)
+        
+    
+    def getSentFromTableNDisplay(self, row,  column):
+
+        """
+        Get a sentence from table's doubleclick and display in text editor
+        """
+       
+        self.getSentFromTable(row,  column)
+       
+        #self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
+        #[(self.sent, self.ref)] = self.container.searchByID(self.ID)
+        
         self.ui.textEditSentence.setText(self.sent)
         self.ui.lineEditReference.setText(self.ref)
+
 
     def selectedTitles(self, selected_items):
         """
@@ -315,7 +324,7 @@ class MainWindow(QMainWindow):
         sent = set()
 
         # @TODO: This can be better :), maybe a property of container
-        for secv, subsv, funcv, sentv, refv in self.container.listSentences():
+        for idv, secv, subsv, funcv, sentv, refv in self.container.listSentences():
             sec.add(secv)
             subs.add(subsv)
             func.add(funcv)
@@ -382,11 +391,6 @@ class MainWindow(QMainWindow):
     def updateSectionView(self):
         """Updates section view."""
         sec = self.container.listSections()
-        #sec = set()
-        # @TODO: In the future, not use for
-        #for secv, subsv, funcv in self.container.listCategories2():
-        #    sec.add(secv)
-
         self.ui.listWidgetSection.clear()
         sec = sorted(sec)
         self.ui.labelDisplayedSection.setText(str(len(sec)))
@@ -465,39 +469,21 @@ scientific text. In summary, they are the titles of each section.'),
 
     def updateSubSectionView(self):
         """Updates subsection view."""
+        
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
-        #subs = set()
-        #subsecs = []
-        
         subs=self.container.listSubSections(qsections=sec)
-        
-        #for secv, subsv, funcv in self.container.listCategories2(qsections=sec):
-         #   subs.add(subsv)
-        
-        '''
-        if sec == []:
-            for secv, subsv, funcv in self.container.listCategories2(section=sec):
-                subs.add(subsv)
-        # This havent be treat here, this need to be treated on contianer.
-        else:
-            for i in range(len(sec)):
-                subsecs.append(
-                    {subsv for secv, subsv,
-                     funcv in self.container.listCategories(
-                         section=[sec[i]])})
-            subs = subsecs[0]
-            for i in range(len(sec) - 1):
-                subs = subs & subsecs[i + 1]
-        '''
+        subs_all = self.container.listSubSections()
         self.ui.listWidgetSubSection.clear()
-        subs = sorted(subs)
+        subs_all = sorted(subs_all)
         
-        if "Not Classified" in subs:
-            subs.remove("Not Classified")
-            subs.append("Not Classified")
+        if "Not Classified" in subs_all:
+            subs_all.remove("Not Classified")
+            subs_all.append("Not Classified")
         
-        for row, value in enumerate(subs):
+        for row, value in enumerate(subs_all):
             item = QListWidgetItem(str(value))
+            if value in subs:
+                item.setBackground(QBrush(QColor(0, 0, 255, 30)))
             self.ui.listWidgetSubSection.addItem(item)
         
         self.ui.labelDisplayedSubSection.setText(str(len(subs)))
@@ -568,54 +554,24 @@ in an article.'),
 
     def updateFunctionView(self):
         """Updates a function view."""
-        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
-        subs = self.selectedTitles(
-            self.ui.listWidgetSubSection.selectedItems())
-        func = self.container.listFunctions(qsections=sec,qsubsections=subs)
         
-        #func = set()
-
-        #funcs = []
-
-        '''if sec == [] and subs == []:
-            for secv, subsv, funcv in self.container.listCategories(section=sec):
-                func.add(funcv)
-        # This havent be treat here, this need to be treated on contianer.
-        elif sec != [] and subs == []:
-            for i in range(len(sec)):
-                funcs.append(
-                    {funcv for secv, subsv,
-                     funcv in self.container.listCategories(
-                         section=[sec[i]])})
-
-            func = funcs[0]
-            for i in range(len(sec) - 1):
-                func = func & funcs[i + 1]
-
-        elif sec != [] and subs != []:
-            for i in range(len(sec)):
-                for j in range(len(subs)):
-                    funcs.append(
-                        {funcv for secv, subsv,
-                         funcv in self.container.listCategories(
-                             section=[sec[i]],
-                             subsection=[subs[j]])})
-
-            func = funcs[0]
-            for i in range(len(funcs) - 1):
-                func = func & funcs[i + 1]'''
-
+        sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
+        subs = self.selectedTitles(self.ui.listWidgetSubSection.selectedItems())
+        func = self.container.listFunctions(qsections=sec,qsubsections=subs)
+        func_all = self.container.listFunctions()
         self.ui.listWidgetFunction.clear()
-        func = sorted(func)
+        func_all = sorted(func_all)
 
         self.ui.labelDisplayedFunction.setText(str(len(func)))
 
         if "Not Classified" in func:
-            func.remove("Not Classified")
-            func.append("Not Classified")
+            func_all.remove("Not Classified")
+            func_all.append("Not Classified")
 
-        for row, value in enumerate(func):
+        for row, value in enumerate(func_all):
             item = QListWidgetItem(str(value))
+            if value in func:
+                item.setBackground(QBrush(QColor(0, 0, 255, 30)))
             self.ui.listWidgetFunction.addItem(item)
 
         self.updateSentenceView()
@@ -712,35 +668,36 @@ in an article.'),
     def removeSentence(self):
         """Removes a sentence."""
         
-        # IT HAS A PROBLEM, IF MORE THEN ONE COLUMn WAS DISPLAYED.
-        # But for now its ok. I dont know how to provide just some items.
-        # IT HAS ANOTHER PROBLEM: IT DELETES ALL SENTENCES THAT ARE EQUAL
-        # But, because the user has selected a section, sub section and function
-        # It was expected that just that sentence that he select.
+        #sent = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
         
-        sent = self.selectedTitles(self.ui.tableWidgetSentence.selectedItems())
+        sent = self.sent
         
-        if sent != []:
-            if self.removeQuestion("Sentence", sent) == QMessageBox.Yes:
+        if sent != '':
+            if self.removeQuestion("Sentence", [sent]) == QMessageBox.Yes:
                 print 'Removing sentences: ',  sent
-                self.container.remove(phrase=sent)
-                self.showMessageOnStatusBar('Sentence(s) has already removed.')
+                self.container.remove(phrase=[sent])
+                self.showMessageOnStatusBar('Sentence(s) was removed.')
                 
         self.updateTotalNumbers()
         self.updateSentenceView()
 
     def updateSentence(self, old_sentence='', new_sentence=''):
         """Updates a sentence."""
-        # Please, see the self.updateFromTable() and add function do get the 
-        # I cant select 
-        
+       
         old_sent = self.sent
         old_ref = self.ref
         
         sent = str(self.ui.textEditSentence.toPlainText())
         ref = str(self.ui.lineEditReference.text())
         
-        self.notImplementedYet()
+        if sent != '' and ref != '' and old_sent != '' and old_ref != '':
+            if self.updateQuestion("Sentence", (old_sent, sent)) == QMessageBox.Yes:
+                self.container.upSent((old_sent,sent),(old_ref,ref))
+                self.showMessageOnStatusBar(
+                    'Sentence "{}" was updated to "{}".'.format(
+                        old_sent,
+                        sent))
+                
         self.updateSentenceView()
 
     def updateSentenceView(self):
@@ -758,7 +715,7 @@ in an article.'),
             function=functions)
 
         self.ui.tableWidgetSentence.clearContents()
-        self.ui.tableWidgetSentence.setColumnCount(5)
+        self.ui.tableWidgetSentence.setColumnCount(6)
         self.ui.tableWidgetSentence.setHorizontalHeaderItem(
             0,
             QTableWidgetItem('Section'))
@@ -775,11 +732,15 @@ in an article.'),
             4,
             QTableWidgetItem('Reference'))
 
+        #the last column will be always hidden cause it will contain the
+        #unique ID from the entry. Its necessary to update properly.
+        self.ui.tableWidgetSentence.setColumnHidden(5, True)
+
         row = 0
         strip = self.ui.checkBoxStrip.isChecked()
         self.ui.tableWidgetSentence.setRowCount(row)
 
-        for secv, subsv, funcv, sentv, refv in sentences:
+        for idv, secv, subsv, funcv, sentv, refv in sentences:
             if sentv != u'NULL':
                 # This must be provided by method of list sentences..not return NULL sentences.
                 # Or maybe, put a check box to choose if will be show or not
@@ -791,12 +752,14 @@ in an article.'),
                 func_item = QTableWidgetItem(str(funcv))
                 sent_item = QTableWidgetItem(str(sentv))
                 ref_item = QTableWidgetItem(str(refv))
+                id_item = QTableWidgetItem(str(idv))
 
                 self.ui.tableWidgetSentence.setItem(row, 0, sec_item)
                 self.ui.tableWidgetSentence.setItem(row, 1, subs_item)
                 self.ui.tableWidgetSentence.setItem(row, 2, func_item)
                 self.ui.tableWidgetSentence.setItem(row, 3, sent_item)
                 self.ui.tableWidgetSentence.setItem(row, 4, ref_item)
+                self.ui.tableWidgetSentence.setItem(row, 5, id_item)
 
                 if strip:
                     try:
@@ -846,25 +809,35 @@ in an article.'),
     # File methods
     # -----------------------------------------------------------------------
 
-    def openFile(self):
-        """" Opens a new file."""
-        path = QFileDialog.getOpenFileName(self,
-                                           self.tr('Open File'),
-                                           self.tr(self.container.path),
-                                           self.tr('(*.db)'))[0]
-
+    def openFile(self,  path=''):
+        """Opens a new file."""
+        if path == '':
+            path = QFileDialog.getOpenFileName(self,
+                                               self.tr('Open File'),
+                                               self.tr(str(self.workspace)),
+                                               self.tr('(*.db)'))[0]
         if path != '':
-            self.container.read_(path)
-            self.setWindowTitle(
-                __pname__+
-                " "+
-                __version__ +
-                " : " +
-                self.container.path)
-            self.updateSelectedNumbers()
-            self.updateTotalNumbers()
-            self.updateSectionView()
-            self.isModified = False
+            self.closeFile()
+            try:
+                self.container.read_(path)
+            except Exception:
+                QMessageBox.critical(self,
+                        self.tr('Error'),
+                        self.tr('We could not open this file.'),
+                        QMessageBox.Ok)
+                self.closeFile()
+            else:
+                self.setWindowTitle(
+                    __pname__+
+                    " "+
+                    __version__ +
+                    " : " +
+                    self.container.path)
+                self.preferences['last_path'] = path
+                self.updateSelectedNumbers()
+                self.updateTotalNumbers()
+                self.updateSectionView()
+                self.isModified = False
 
     def saveFile(self):
         """" Saves the file that is being used."""
@@ -877,14 +850,19 @@ in an article.'),
         """" Saves a new file."""
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Save As'),
-                                           self.tr(self.container.path),
+                                           self.tr(str(self.workspace)),
                                            self.tr('(*.db)'))[0]
         if path != '':
             self.container.write_(path)
 
     def printFile(self):
         """Generates a PDF file with all sentences included in database."""
-        self.notImplementedYet()
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Save As'),
+                                           self.tr(str(self.workspace)),
+                                           self.tr('(*.pdf)'))[0]
+        if path != '':
+            self.pdfwriter.exportToPDF(path)
 
     def closeFile(self):
         """Closes current file."""
@@ -902,13 +880,16 @@ in an article.'),
         self.container.close_()
         self.setWindowTitle(__pname__ + " " + __version__)
         self.clearAll()
+        self.updateSelectedNumbers()
+        self.updateTotalNumbers()
+        self.updateSectionView()
 
     def exportFile(self):
         """Export file with extension."""
 
         path = QFileDialog.getSaveFileName(self,
                                            self.tr('Export File'),
-                                           self.tr(self.container.path),
+                                           self.tr(str(self.workspace)),
                                            self.tr('(*.xml *.csv *.json)'))[0]
         if path != '':
             self.container.export_(path)
@@ -938,8 +919,7 @@ in an article.'),
             self,
             self.tr('Import File'),
             self.tr(
-                os.path.dirname(
-                    self.container.path)),
+                os.path.dirname(str(self.workspace))),
             self.tr('(*.xml *.csv *.json)'))[0]
 
         if path != '':
@@ -962,35 +942,70 @@ in an article.'),
     # Application methods
     # -----------------------------------------------------------------------
 
-    def setupPreferences(self):
-        """Call setup preferences dialog."""
-        print self.preferences
-        dialog = preferences_dlg.PreferencesDialog(self.preferences, self)
-        if dialog.exec_():
-            print self.preferences
+    def setupWorkspace(self):
+        """Setup user preferences."""
+
+        os_sys = platform.system()
+        if os_sys == 'Windows':
+            self.workspace = os.path.abspath(self.preferences['win_workspace'])
+        elif os_sys == 'Linux':
+            self.workspace = os.path.abspath(self.preferences['lin_workspace'])
+        elif os_sys == 'Mac':
+            self.workspace = os.path.abspath(self.preferences['mac_workspace'])
+          
 
     def readPreferences(self):
         """Reads preferences from file."""
+        
+        os_sys = platform.system()
+        filepath = ''
+        
+        if os_sys == 'Windows':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'scicorpus.ini'))
+        elif os_sys == 'Linux' or os_sys == 'Mac':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'.scicorpus.ini'))
+
         try:
-            with codecs.open(os.path.abspath('scicorpus.ini'), 'wb', 'utf-8') as file:
-                config = json.loads(file)
+            with codecs.open(filepath, 'rb', 'utf-8') as ini_file:
+                text = ini_file.read()
+                config = json.loads(str(text))
         except Exception:
+            self.logSig.emit("File scicorpus.ini not found.")
+            preferences_dlg.PreferencesDialog(self.preferences, True,  self).exec_()
             pass
         else:
-            self.timeToStart = config['time_to_start']
-            self.preferencesPath = config['preferences_path']
-            try:
-                with codecs.open(self.preferencesPath, 'wb', 'utf-8') as file:
-                    self.preferences = json.loads(file)
-            except Exception:
-                pass
+            self.firstTimeOpened = False
+            self.preferences = config
+            self.logSig.emit("File scicorpus.ini was found.")
+        finally:
+            self.setupWorkspace()
+            self.ui.checkBoxSection.setChecked(self.preferences['section'])
+            self.ui.checkBoxSubSection.setChecked(self.preferences['subsection'])
+            self.ui.checkBoxFunction.setChecked(self.preferences['function'])
+            self.ui.checkBoxSentence.setChecked(self.preferences['sentence'])
+            self.ui.checkBoxReference.setChecked(self.preferences['reference'])
+            self.ui.checkBoxStrip.setChecked(self.preferences['strip'])
 
     def writePreferences(self):
         """Writes preferences on file."""
-        with codecs.open(os.path.abspath(os.path.join(
-                os.path.expanduser('~'),
-                'scicorpuspreferences.ini')), 'wb', 'utf-8') as file:
-            json.dump(self.preferences, file, indent=4, sort_keys=True)
+        
+        os_sys = platform.system()
+        
+        if os_sys == 'Windows':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'scicorpus.ini'))
+        elif os_sys == 'Linux' or os_sys == 'Mac':
+            filepath = os.path.abspath(os.path.join(os.path.expanduser('~'),'.scicorpus.ini'))
+            
+        self.preferences['section'] = self.ui.checkBoxSection.isChecked()
+        self.preferences['subsection'] = self.ui.checkBoxSubSection.isChecked()
+        self.preferences['function'] = self.ui.checkBoxFunction.isChecked()
+        self.preferences['sentence'] = self.ui.checkBoxSentence.isChecked()
+        self.preferences['reference'] = self.ui.checkBoxReference.isChecked()
+        self.preferences['strip'] = self.ui.checkBoxStrip.isChecked()
+        
+        with codecs.open(filepath, 'wb', 'utf-8') as pref_file:
+            json.dump(self.preferences, pref_file, indent=4, sort_keys=True)
+
 
     def writeSettings(self):
         """Write settings fo window state and geometry."""
@@ -1028,6 +1043,7 @@ in an article.'),
             QMessageBox.No)
         if answer == QMessageBox.Yes:
             self.closeFile()
+            self.writePreferences()
             self.writeSettings()
             event.accept()
         else:
@@ -1102,7 +1118,7 @@ if __name__ == '__main__':
     style_sheet = ''
     style_path = ''
 
-    if main_window.theme == 'Black':
+    if main_window.preferences['theme'] == 'Black':
         style_path = 'ui/black_theme.sty'
     else:
         style_path = 'ui/white_theme.sty'
