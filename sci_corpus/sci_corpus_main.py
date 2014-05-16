@@ -821,10 +821,6 @@ in an article.'),
             try:
                 self.container.read_(path)
             except Exception:
-                QMessageBox.critical(self,
-                        self.tr('Error'),
-                        self.tr('We could not open this file.'),
-                        QMessageBox.Ok)
                 self.closeFile()
             else:
                 self.setWindowTitle(
