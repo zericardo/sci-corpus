@@ -306,7 +306,8 @@ class ContainerDB():
             cursor = self.__dbmem.cursor()
             query=''
             if(qsections!=[]):
-                query=self.crazyRepetition('SELECT DISTINCT subsec FROM corpus WHERE sec=?','INTERSECT', qsections)
+                query=self.crazyRepetition('SELECT DISTINCT subsec FROM corpus WHERE sec=?',
+                                           'INTERSECT', qsections)
             else:
                 query='SELECT DISTINCT subsec FROM corpus'
 
@@ -319,12 +320,26 @@ class ContainerDB():
            '''
            cursor = self.__dbmem.cursor()
            query='' 
-           if(qsections==[] and qsubsections==[]):
-               query='SELECT DISTINCT func FROM corpus'                               
-           elif(qsections!=[] and qsubsections==[]):
-               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?','INTERSECT', qsections) 
-           elif(qsubsections!=[]):
-               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?','INTERSECT', qsubsections) 
+           if(qsections == [] and qsubsections == []):
+
+               query='SELECT DISTINCT func FROM corpus'   
+                            
+           elif(qsections != [] and qsubsections == []):
+
+               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?',
+                                          'UNION', qsections) 
+           elif(qsections == [] and qsubsections != []):
+
+               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?',
+                                          'INTERSECT', qsubsections)
+
+           elif(qsections != [] and qsubsections != []):
+               query1 = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?',
+                                          'INTERSECT', qsections) 
+               query2 = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?',
+                                          'INTERSECT', qsubsections)
+
+               query = query1 +" INTERSECT "+query2
            else:
               print "Deu pau Juvenal!"
 
