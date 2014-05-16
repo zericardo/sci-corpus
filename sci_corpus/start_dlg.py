@@ -11,7 +11,7 @@
 
 from PySide.QtGui import QDialog
 from PySide.QtCore import Signal, Qt
-import ui.start_dlg_ui
+from sci_corpus.ui import start_dlg_ui
 from time import sleep
 
 
@@ -34,7 +34,7 @@ class StartDialog(QDialog):
 
         """
         super(StartDialog, self).__init__(parent)
-        self.ui = ui.start_dlg_ui.Ui_Dialog()
+        self.ui = start_dlg_ui.Ui_Dialog()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.ui.progressBar.setRange(0, 100)

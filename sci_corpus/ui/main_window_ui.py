@@ -1217,4 +1217,4 @@ class Ui_MainWindow(object):
                 None,
                 QtGui.QApplication.UnicodeUTF8))
 
-import sci_corpus_resource_rc
+from sci_corpus.ui import sci_corpus_resource_rc

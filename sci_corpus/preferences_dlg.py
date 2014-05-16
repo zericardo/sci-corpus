@@ -16,7 +16,7 @@ This script provides a graphical interface for preferences setup.
 
 import os
 import platform
-import ui.preferences_dlg_ui
+import sci_corpus.ui as preferences_dlg_ui
 
 from PySide.QtGui import QDialog, QFileDialog
 
@@ -27,7 +27,7 @@ class PreferencesDialog(QDialog):
     def __init__(self, preferences, initial=False, parent=None):
         """Contructor."""
         super(PreferencesDialog, self).__init__(parent)
-        self.ui = ui.preferences_dlg_ui.Ui_Preferences()
+        self.ui = preferences_dlg_ui.Ui_Preferences()
         self.ui.setupUi(self)
         self.preferences = preferences
         

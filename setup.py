@@ -15,7 +15,6 @@ This script install sci corpus in your computer.
 """
 
 from distutils.core import setup
-import platform
 import os
 import sys
 from sci_corpus import sci_corpus_main
@@ -29,44 +28,65 @@ def dependancyChecks():
     
     errors=[]
 
-    print('Checking dependencies ...')
+    print '\nChecking dependencies ...'
 
-    print("Checking Python ...")
+    print "Checking Python ..."
     if sys.version_info < (2, 7, 0):
-        print('Sorry, you must have Python 2.7.0 or higher.')
-        print('You can find here: <https://www.python.org/>')
+        print 'Sorry, you must have Python 2.7.0 or higher.'
+        print 'You can find here: <https://www.python.org/>'
         errors.append('Python')
     elif sys.version_info > (2, 9, 9):
-        print('Sorry, Sci Corpus requires Python 2.7 for running.')
+        print 'Sorry, Sci Corpus requires Python 2.7 for running.'
         errors.append('Python')
     else:
-    	print("Python Version: {0:d}.{1:d}.{2:d}".format(*sys.version_info[:3]))
+    	print "Python Version: {}".format(*sys.version_info[:4])
 
-    print("Checking PySide Library ...")
+    print "Checking PySide Library ..."
     try:
         import PySide
     except ImportError as msg:
-        print('Sorry, please install PySide 1.1.0 or higher.')
-        print('You can find here: <http://qt-project.org/wiki/PySide>')
-        print('Error: {0}'.format(msg))
+        print 'Sorry, please install PySide 1.1.0 or higher.'
+        print 'You can find here: <http://qt-project.org/wiki/PySide>'
+        print 'Error: {0}'.format(msg)
         errors.append('PySide')
     else:
-        print("PySide Version: {0:d}.{1:d}.{2:d}".format(PySide.__version_info__[:3]))
-        print("Qt Version: {0:d}.{1:d}.{2:d}".format(PySide.QtCore.__version_info__[:3]))
+        print "PySide Version: {}".format(PySide.__version_info__[:3])
+        print "Qt Version: {}".format(PySide.QtCore.__version_info__[:3])
+        
+        
+    print "Checking LXML ..."
+    try:
+        import lxml
+    except ImportError as msg:
+        print 'Sorry, please install LXML 1.1.0 or higher.'
+        print 'You can find here: <http://lxml.de/index.html#download>'
+        print 'Error: {0}'.format(msg)
+        errors.append('LXML')
+    else:
+        print "LXML Ok"
+        
+    print "Checking ReportLab ..."
+    try:
+        import reportlab
+    except ImportError as msg:
+        print 'Sorry, please install Report Lab.'
+        print 'You can find here: <https://pypi.python.org/pypi/reportlab>'
+        print 'Error: {0}'.format(msg)
+        errors.append('LXML')
+    else:
+        print "ReportLab Ok"
 
 	if errors != []:
-		print("Please correct the errors shown and try again.")
+		print "Please correct the errors shown and try again."
 		exit(1)
 	else:
-		print("Dependancy checker was not found errors.")
+		print "Dependancy checker was complete without errors."
 
-
-
-print 'Preparing to install Sci Corpus ...'
+print '\nPreparing to install Sci Corpus ...'
 
 dependancyChecks()
 
-print('Installing Sci Corpus ...')
+print '\nInstalling Sci Corpus ...'
 
 classifiers=[
     'Development Status :: 4 - Beta',
@@ -76,22 +96,20 @@ classifiers=[
     'Operating System :: Microsoft :: Windows',
     'Operating System :: POSIX',
     'Programming Language :: Python',
-    'Topic :: Office/Business',
-]
+    'Topic :: Office/Business']
+    
+workspace = os.path.abspath(os.path.join(os.path.expanduser('~'),'Sci Corpus'))
 
-setup(name=sci_corpus_main.__pname__,
+#print 'Workspace: ', workspace
+
+setup(name=sci_corpus_main.__name__,
       version=sci_corpus_main.__version__,
       description=sci_corpus_main.__ext_name__,
-      
       author='Daniel Cosmo Pizetta, Jose Ricardo Furlan Ronqui, Tiago de Campos',
       author_email='daniel.pizetta@usp.br, jose.ronqui@usp.br, tiago.campos@usp.br',
-      
       download_url='https://github.com/zericardo182/sci-corpus',
-      
+      classifiers=classifiers, 
       packages=['sci_corpus',
                 'sci_corpus.ui'],
-      
-      package_data={'/Sci Corpus':['examples',
-                                   'docs']}, 
-      
-      scripts=['sci_corpus/scripts/sci_corpus.py'])
+      #data_files=[(workspace,['README.rst'])], 
+      scripts=['scicorpus'])

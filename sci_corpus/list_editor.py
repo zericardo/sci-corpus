@@ -7,8 +7,7 @@
 
 from PySide.QtGui import *
 from PySide.QtCore import *
-from . import sci_corpus.ui.list_editor_dlg as listEditor
-from . import sci_corpus.icons.sci_corpus_rc
+from sci_corpus.ui import listEditor
 
 
 class ListEditor(QDialog):

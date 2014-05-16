@@ -339,7 +339,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -349,7 +349,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>Displayed: </string>
+          <string>Sub category: </string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -362,7 +362,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -385,7 +385,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -511,7 +511,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -521,7 +521,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>Displayed:</string>
+          <string>Sub category:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -534,7 +534,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -686,7 +686,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -696,7 +696,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>Displayed: </string>
+          <string>Sub category:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -709,7 +709,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -732,7 +732,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -852,7 +852,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -875,7 +875,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -898,7 +898,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>#</string>
+          <string>0</string>
          </property>
         </widget>
        </item>

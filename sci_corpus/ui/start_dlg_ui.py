@@ -112,5 +112,3 @@ class Ui_Dialog(object):
                 "<html><head/><body><p><span style=\" font-size:8pt;\">v.0.0.0 </span></p></body></html>",
                 None,
                 QtGui.QApplication.UnicodeUTF8))
-
-import ui.sci_corpus_resource_rc

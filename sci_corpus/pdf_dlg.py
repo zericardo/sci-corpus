@@ -15,7 +15,7 @@ This script provides a graphical interface for PDF setup.
 """
 
 import os
-import ui.pdf_dlg_ui
+from sci_corpus.ui import pdf_dlg_ui
 from PySide.QtGui import QDialog, QFileDialog
 
 class PDFDialog(QDialog):
@@ -26,7 +26,7 @@ class PDFDialog(QDialog):
         """Contructor."""
 
         super(PDFDialog, self).__init__(parent)
-        self.ui = ui.preferences_dlg_ui.Ui_Preferences()
+        self.ui = pdf_dlg_ui.Ui_Preferences()
         self.ui.setupUi(self)
         self.preferences = preferences
 

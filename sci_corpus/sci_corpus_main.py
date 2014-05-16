@@ -19,22 +19,25 @@ from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
 from PySide.QtGui import QBrush, QColor
 from PySide.QtCore import QSettings, Signal, Qt
-from time import gmtime, strftime
-from ui import main_window_ui
-from reportlab.platypus.doctemplate import BaseDocTemplate
 
-import container
-import pdf_writer
+from sci_corpus import pdf_writer
+from sci_corpus import start_dlg
+from sci_corpus import preferences_dlg
+from sci_corpus import container
+from sci_corpus.ui import main_window_ui
+
 import re
 import os
+import sys
 import json
 import codecs
-import start_dlg
-import preferences_dlg
 import platform
 
+from time import gmtime, strftime
+from reportlab.platypus.doctemplate import BaseDocTemplate
+
 __version__ = 'v.0.8.0'
-__pname__ = 'Sci Corpus'
+__name__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
 
@@ -59,6 +62,8 @@ class MainWindow(QMainWindow):
         self.ui = main_window_ui.Ui_MainWindow()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowTitle(__name__+ " "+ __version__)
+
         self.firstTimeOpened = True
         self.workspace = os.path.abspath(os.path.expanduser('~'))
         self.defaultPref = {
@@ -823,12 +828,7 @@ in an article.'),
             except Exception:
                 self.closeFile()
             else:
-                self.setWindowTitle(
-                    __pname__+
-                    " "+
-                    __version__ +
-                    " : " +
-                    self.container.path)
+                self.setWindowTitle(__name__+" "+__version__+" - "+str(self.container.path))
                 self.preferences['last_path'] = path
                 self.updateSelectedNumbers()
                 self.updateTotalNumbers()
@@ -874,7 +874,7 @@ in an article.'),
                 self.saveFile()
 
         self.container.close_()
-        self.setWindowTitle(__pname__ + " " + __version__)
+        self.setWindowTitle(__name__ + " " + __version__)
         self.clearAll()
         self.updateSelectedNumbers()
         self.updateTotalNumbers()
@@ -1101,23 +1101,25 @@ in an article.'),
     def about(self):
         """About shows the main information about the application."""
         QMessageBox.about(self,
-                          self.tr('About {}'.format(__pname__)),
+                          self.tr('About {}'.format(__name__)),
                           self.tr('This software is a corpus manager, that allows you to trainer.\
 \n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
 \n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
 \n\n{}'.format(__version__)))
 
+def main():
 
-if __name__ == '__main__':
-    app = QApplication(__pname__)
+    argv = sys.argv
+    app = QApplication(argv)
     main_window = MainWindow()
+    
     style_sheet = ''
     style_path = ''
 
     if main_window.preferences['theme'] == 'Black':
-        style_path = 'ui/black_theme.sty'
+        style_path = 'sci_corpus/ui/black_theme.sty'
     else:
-        style_path = 'ui/white_theme.sty'
+        style_path = 'sci_corpus/ui/white_theme.sty'
 
     try:
         with open(os.path.abspath(style_path), 'rb') as style_file:
@@ -1128,6 +1130,5 @@ if __name__ == '__main__':
         print 'Error in style sheet: ', e
         pass
 
-    main_window.setWindowTitle(__pname__+ " "+ __version__)
     main_window.showMaximized()
     app.exec_()
