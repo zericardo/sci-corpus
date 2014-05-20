@@ -25,9 +25,7 @@ from sci_corpus import start_dlg
 from sci_corpus import preferences_dlg
 from sci_corpus import container
 from sci_corpus.ui import main_window_ui
-from sci_corpus import pdf_dlg
 
-import re
 import os
 import sys
 import json
@@ -726,7 +724,7 @@ in an article.'),
                         marker_end = marker[len(marker) / 2:]
                         sent_item.setText(
                             str(
-                                self.container.adjustentence(
+                                self.container.adjustSentence(
                                     sentv,
                                     marker_beg,
                                     marker_end,
@@ -806,9 +804,12 @@ in an article.'),
 
     def printFile(self):
         """Generates a PDF file with all sentences included in database."""
-        pdfdlg = pdf_dlg.PDFDialog(self.preferences,  self.workspace)
-        if pdfdlg.exec_():
-            self.pdfwriter.exportToPDF(self.preferences['pdf']['path'])
+        path = QFileDialog.getSaveFileName(self,
+                                           self.tr('Save As'),
+                                           self.tr(str(self.workspace)),
+                                           self.tr('(*.pdf)'))[0]
+        if path != '':
+            self.pdfwriter.exportToPDF(path)
 
     def closeFile(self):
         """Closes current file."""
