@@ -25,6 +25,7 @@ from sci_corpus import start_dlg
 from sci_corpus import preferences_dlg
 from sci_corpus import container
 from sci_corpus.ui import main_window_ui
+from sci_corpus import pdf_dlg
 
 import os
 import sys
@@ -804,12 +805,23 @@ in an article.'),
 
     def printFile(self):
         """Generates a PDF file with all sentences included in database."""
-        path = QFileDialog.getSaveFileName(self,
-                                           self.tr('Save As'),
-                                           self.tr(str(self.workspace)),
-                                           self.tr('(*.pdf)'))[0]
-        if path != '':
-            self.pdfwriter.exportToPDF(path)
+        pdfdlg = pdf_dlg.PDFDialog(self.preferences,  self.workspace)
+        if pdfdlg.exec_():
+            print self.preferences['title'], self.preferences['author'], self.preferences['description']
+            self.pdfwriter.exportToPDF(self.preferences['pdf']['path'], 
+                                       self.preferences['title'], 
+                                       self.preferences['author'], 
+                                       str(self.preferences['description']))
+#                                       self.preferences['pdf']['margin_top'],
+#                                       self.preferences['pdf']['margin_bottom'],
+#                                       self.preferences['pdf']['margin_left'],
+#                                       self.preferences['pdf']['margin_right'], 
+#                                       self.preferences['pdf']['font'], 
+#                                       self.preferences['pdf']['size'], 
+#                                       self.preferences['pdf']['date'], 
+#                                       True, 
+#                                       self.preferences['pdf']['replace'],
+#                                       self.preferences['pdf']['dim'])
 
     def closeFile(self):
         """Closes current file."""

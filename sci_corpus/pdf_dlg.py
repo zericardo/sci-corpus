@@ -48,6 +48,10 @@ class PDFDialog(QDialog):
             self.ui.radioButtonReplace.setChecked(self.preferences['pdf']['replace'])
             self.ui.spinBoxSize.setValue(self.preferences['pdf']['size'])
             self.ui.checkBoxDate.setChecked(self.preferences['pdf']['date'])
+            self.ui.doubleSpinBoxLeft.setValue(self.preferences['pdf']['margin_left'])
+            self.ui.doubleSpinBoxRight.setValue(self.preferences['pdf']['margin_right'])
+            self.ui.doubleSpinBoxTop.setValue(self.preferences['pdf']['margin_top'])
+            self.ui.doubleSpinBoxBottom.setValue(self.preferences['pdf']['margin_bottom'])
         except Exception:
             pass
 
@@ -78,6 +82,11 @@ class PDFDialog(QDialog):
         
         self.preferences['pdf']['dim'] = self.ui.radioButtonDim.isChecked()
         self.preferences['pdf']['replace'] = self.ui.radioButtonReplace.isChecked()
+        
+        self.preferences['pdf']['margin_left'] = self.ui.doubleSpinBoxLeft.value()
+        self.preferences['pdf']['margin_right'] = self.ui.doubleSpinBoxRight.value()
+        self.preferences['pdf']['margin_top'] = self.ui.doubleSpinBoxTop.value()
+        self.preferences['pdf']['margin_bottom'] = self.ui.doubleSpinBoxBottom.value()
         
         self.preferences['pdf']['font'] = self.ui.comboBoxFont.currentText()
         self.preferences['pdf']['size'] = self.ui.spinBoxSize.value()

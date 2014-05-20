@@ -6,7 +6,6 @@ from reportlab.lib.units import mm, inch
 from reportlab.platypus.doctemplate import PageTemplate, BaseDocTemplate, NextPageTemplate
 from reportlab.platypus.tableofcontents import TableOfContents
 from reportlab.platypus.frames import Frame
-from reportlab.lib.units import cm, inch
 
 #from ContainerDB import listSections as LS
 #listSections, listSubSections, listSentences
@@ -17,20 +16,21 @@ class MyDocTemplate(BaseDocTemplate):
         
     def __init__(self, filepath, **kw):
     
-        self.title = 'SciCorpus'
-        self.author = 'SciCorpus Team'
-        self.description = 'This is a scientific CORPUS'
+        self.title = 'Title: SciCorpus'
+        self.author = 'Author: SciCorpus Team'
+        self.description = 'Description: This is a scientific CORPUS'
         
         for key, value in kw.items():
             if key == 'container':
                 self.__container = kw['container']
         
         self.allowSplitting = 0
-        apply(BaseDocTemplate.__init__, (self, filepath), kw)  
+        apply(BaseDocTemplate.__init__, (self, filepath), kw)
         self.addPageTemplates([PageTemplate('first', [Frame(0, 0, 8.27*inch, 11.69*inch, id='F1')],
-                               onPage=self.myFirstPage),
-                               PageTemplate('laters', [Frame(0, 0, 8.27*inch, 11.69*inch, id='F2')], 
-                               onPage=self.myLaterPages)])
+                              onPage=self.myFirstPage),
+                              PageTemplate('laters', [Frame(0, 0, 8.27*inch, 11.69*inch, id='F2')], 
+                              onPage=self.myLaterPages)])
+
     @property
     def container(self):
         return self.__container
@@ -56,44 +56,54 @@ class MyDocTemplate(BaseDocTemplate):
     
         canvas.saveState()
         canvas.setFont('Helvetica-Bold',26)
-        canvas.drawString(8.27*inch/2.0, 11.69*inch-108, 'SciCorpus')
+        canvas.drawString(8.27*inch/2.0, 11.69*inch-108, str(self.title))
         canvas.setFont('Helvetica',16)
-        canvas.drawString(8.27*inch/2.0, 11.69*inch-208, 'SciCorpus Team')
+        canvas.drawString(8.27*inch/2.0, 11.69*inch-208, str(self.author))
         canvas.setFont('Helvetica',14)
-        canvas.drawString(8.27*inch/2.0, 11.69*inch-308, 'This is a scientific CORPUS')
+        canvas.drawString(8.27*inch/2.0, 11.69*inch-308, str(self.description))
         canvas.line(50,50,8.27*inch-50,50)
-        canvas.setFont('Times-Roman',9)
-        canvas.drawString(55, 40, "Created by SciCorpus")
+        canvas.setFont('Helvetica',12)
+        canvas.drawString(55, 40, "Created by Sci Corpus")
         canvas.restoreState()        
          
     def myLaterPages(self, canvas, doc):
         
         canvas.saveState()
-        canvas.setFont('Times-Roman',9)
-        canvas.drawString(inch, 0.75 * inch, "Page %d" % doc.page)
+        canvas.setFont('Helvetica',12)
+        canvas.drawString(inch, 0.5*inch, "Created by Sci Corpus %d" % doc.page)
         canvas.restoreState()
 
 
-    def exportToPDF(self, path,
+    def exportToPDF(self, path, title,  author,  description, 
                    tmargin=30, bmargin=20, lmargin=30, rmargin=20,
                    font='Helvetica', size=12,
                    date=True, npages=True,
                    replaceText=False, dimText=False):
+                       
+        self.title=title
+        self.author=author
+        self.description=description
 
 
+                               
         styles=getSampleStyleSheet()
-        doc = MyDocTemplate(path,pagesize=A4,
-                                rightMargin=rmargin*mm,leftMargin=lmargin*mm,
-                                topMargin=tmargin*mm,bottomMargin=bmargin*mm)
+        
+        doc = MyDocTemplate(path,
+                            pagesize=A4,
+                            rightMargin=rmargin*mm, 
+                            leftMargin=lmargin*mm,
+                            topMargin=tmargin*mm,
+                            bottomMargin=bmargin*mm)
                                 
         #doc = SimpleDocTemplate(path,pagesize=A4,
         #                        rightMargin=rmargin*mm,leftMargin=lmargin*mm,
         #                        topMargin=tmargin*mm,bottomMargin=bmargin*mm)
         Story = []
+        Story.append(NextPageTemplate('first'))
+        Story.append(PageBreak())
         Story.append(NextPageTemplate('laters'))
         Story.append(PageBreak())
         
-      
         #fontBold = font+'-Bold'
         #styles.add(ParagraphStyle(name='Justify', alignment=4, fontName='Helvetica', fontSize=10, firstLineIndent=24,leftIndent=20))
         #styles.add(ParagraphStyle(name='Section', alignment=0, fontName='Helvetica-Bold', fontSize=16, firstLineIndent=12))
