@@ -371,6 +371,55 @@ class ContainerDB():
 
            cursor.execute(query)
            return [a for (a,) in cursor.fetchall()]
+
+    def adjustSentence(
+            self,
+            sent="",
+            begin="{",
+            end="}",
+            replace_where='Inside markers',
+            replace_by="..."):
+        """Adjusts sentences to be displayed on the screen."""
+        b = [match.start() for match in re.finditer(re.escape(begin), sent)]
+        e = [match.end() for match in re.finditer(re.escape(end), sent)]
+
+        # exception here b and e must have the same size!
+        if(len(b) == len(e)):
+            for i in range(0, len(b)):
+                if(b[i] >= e[i]):
+                    raise AssertionError(
+                        "Delimiters aren't being used correctly!")
+
+            r = []
+
+            for i in range(0, len(b)):
+                r.append(sent[b[i]:e[i]])
+
+            if replace_where == 'Inside markers':
+                for substring in r:
+                    sent = sent.replace(substring, replace_by)
+            else:
+                if(r != []):
+                    # @TODO: talvez colocar um erro em um else para este if!
+                    aux = ''
+
+                    if 0 not in b:
+                        aux += replace_by + " "
+
+                    for i in range(0, len(b) - 1):
+                        aux += sent[b[i]:e[i]] + " " + replace_by + " "
+
+                    if(e[len(b) - 1] == len(sent) - 1):
+                        aux += sent[b[len(b) - 1]:e[len(e) - 1]]
+                    else:
+                        aux += sent[b[len(b) - 1]:e[len(e) - 1]
+                                    ] + " " + replace_by + " "
+
+                    sent = aux.replace(begin, "").replace(end, "")
+        else:
+            raise AssertionError("Delimiter number doesnt match!")
+
+        return sent
         
 
     def listSentences(self, section=[], subsection=[], function=[]):
