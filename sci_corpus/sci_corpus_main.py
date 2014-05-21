@@ -110,7 +110,6 @@ class MainWindow(QMainWindow):
 
         start.updateProgress(50)
         start.informationProgress('Loading pdfwriter')
-        self.pdfwriter = pdf_writer.MyDocTemplate(BaseDocTemplate,container=self.container) 
 
         start.updateProgress(60)
         start.informationProgress('Setting environment')
@@ -806,22 +805,23 @@ in an article.'),
     def printFile(self):
         """Generates a PDF file with all sentences included in database."""
         pdfdlg = pdf_dlg.PDFDialog(self.preferences,  self.workspace)
+
         if pdfdlg.exec_():
-            print self.preferences['title'], self.preferences['author'], self.preferences['description']
-            self.pdfwriter.exportToPDF(self.preferences['pdf']['path'], 
-                                       self.preferences['title'], 
-                                       self.preferences['author'], 
-                                       str(self.preferences['description']))
-#                                       self.preferences['pdf']['margin_top'],
-#                                       self.preferences['pdf']['margin_bottom'],
-#                                       self.preferences['pdf']['margin_left'],
-#                                       self.preferences['pdf']['margin_right'], 
-#                                       self.preferences['pdf']['font'], 
-#                                       self.preferences['pdf']['size'], 
-#                                       self.preferences['pdf']['date'], 
-#                                       True, 
-#                                       self.preferences['pdf']['replace'],
-#                                       self.preferences['pdf']['dim'])
+            pdf_writer.exportToPDF(self.preferences['pdf']['path'],
+                                    self.preferences['title'], 
+                                    self.preferences['author'], 
+                                    self.preferences['description'],
+                                    self.container, 
+                                    self.preferences['pdf']['margin_top'],
+                                    self.preferences['pdf']['margin_bottom'],
+                                    self.preferences['pdf']['margin_left'],
+                                    self.preferences['pdf']['margin_right'], 
+                                    'Helvetica', 
+                                    self.preferences['pdf']['size'], 
+                                    self.preferences['pdf']['date'], 
+                                    True, 
+                                    self.preferences['pdf']['replace'],
+                                    self.preferences['pdf']['dim'])
 
     def closeFile(self):
         """Closes current file."""
