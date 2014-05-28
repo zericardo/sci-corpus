@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="File">
+    <file>document-print.png</file>
     <file>configure-5.png</file>
     <file>db_add.png</file>
     <file>db_comit.png</file>
@@ -21,6 +22,7 @@
     <file>document-save-3.png</file>
     <file>document-save-4.png</file>
     <file>document-save-as-2.png</file>
+    <file>document-print-5.png</file>
     <file>document-save-as-3.png</file>
     <file>document-save-as-4.png</file>
     <file>sci_corpus_resource.qrc</file>

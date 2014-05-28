@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1020</width>
+    <width>1026</width>
     <height>867</height>
    </rect>
   </property>
@@ -122,7 +122,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1020</width>
+     <width>1026</width>
      <height>25</height>
     </rect>
    </property>
@@ -156,39 +156,27 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Section</string>
     </property>
-    <addaction name="actionAddSection"/>
-    <addaction name="actionRemoveSection"/>
-    <addaction name="actionUpdateSection"/>
     <addaction name="separator"/>
     <addaction name="actionTipsSection"/>
    </widget>
-   <widget class="QMenu" name="menuSubSection">
+   <widget class="QMenu" name="menuComponent">
     <property name="title">
-     <string>Sub Section</string>
+     <string>Component</string>
     </property>
-    <addaction name="actionAddSubSection"/>
-    <addaction name="actionRemoveSubSection"/>
-    <addaction name="actionUpdateSubSection"/>
     <addaction name="separator"/>
-    <addaction name="actionTipsSubSection"/>
+    <addaction name="actionTipsComponent"/>
    </widget>
-   <widget class="QMenu" name="menuFunction">
+   <widget class="QMenu" name="menuStrategy">
     <property name="title">
-     <string>Function</string>
+     <string>Strategy</string>
     </property>
-    <addaction name="actionAddFunction"/>
-    <addaction name="actionRemoveFunction"/>
-    <addaction name="actionUpdateFunction"/>
     <addaction name="separator"/>
-    <addaction name="actionTipsFunction"/>
+    <addaction name="actionTipsStrategy"/>
    </widget>
    <widget class="QMenu" name="menuSentence">
     <property name="title">
      <string>Sentence</string>
     </property>
-    <addaction name="actionAddSentence"/>
-    <addaction name="actionRemoveSentence"/>
-    <addaction name="actionUpdateSentence"/>
     <addaction name="separator"/>
     <addaction name="actionTipsSentence"/>
    </widget>
@@ -200,8 +188,8 @@ p, li { white-space: pre-wrap; }
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSection"/>
-   <addaction name="menuSubSection"/>
-   <addaction name="menuFunction"/>
+   <addaction name="menuComponent"/>
+   <addaction name="menuStrategy"/>
    <addaction name="menuSentence"/>
    <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
@@ -248,7 +236,7 @@ p, li { white-space: pre-wrap; }
         <string>Add a new  section</string>
        </property>
        <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This function add a new section when you write it in line edit field and than press add button.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This Strategy add a new section when you write it in line edit field and than press add button.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>+</string>
@@ -349,7 +337,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>Sub category: </string>
+          <string>Highlighted:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -357,7 +345,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelDisplayedSection">
+        <widget class="QLabel" name="labelHighlightedSection">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -401,20 +389,20 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetSubSection">
+  <widget class="QDockWidget" name="dockWidgetComponent">
    <property name="windowTitle">
-    <string>  Sub Section</string>
+    <string>  Component</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContentsSubSection">
+   <widget class="QWidget" name="dockWidgetContentsComponent">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
-      <widget class="QLineEdit" name="lineEditSubSection"/>
+      <widget class="QLineEdit" name="lineEditComponent"/>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="pushButtonSubSectionAdd">
+      <widget class="QPushButton" name="pushButtonComponentAdd">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -427,7 +415,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="pushButtonSubSectionRemove">
+      <widget class="QPushButton" name="pushButtonComponentRemove">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -440,14 +428,14 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QPushButton" name="pushButtonSubSectionUpdate">
+      <widget class="QPushButton" name="pushButtonComponentUpdate">
        <property name="text">
         <string>Update</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0" colspan="4">
-      <widget class="QListWidget" name="listWidgetSubSection">
+      <widget class="QListWidget" name="listWidgetComponent">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -506,7 +494,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelSelectedSubSection">
+        <widget class="QLabel" name="labelSelectedComponent">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -521,7 +509,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>Sub category:</string>
+          <string>Highlighted:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -529,7 +517,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelDisplayedSubSection">
+        <widget class="QLabel" name="labelHighlightedComponent">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -552,7 +540,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelTotalSubSection">
+        <widget class="QLabel" name="labelTotalComponent">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -573,7 +561,7 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetFunction">
+  <widget class="QDockWidget" name="dockWidgetStrategy">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
@@ -581,18 +569,18 @@ p, li { white-space: pre-wrap; }
     </sizepolicy>
    </property>
    <property name="windowTitle">
-    <string>  Function</string>
+    <string>  Strategy</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContentsFunction">
+   <widget class="QWidget" name="dockWidgetContentsStrategy">
     <layout class="QGridLayout" name="gridLayout_4">
      <item row="0" column="0">
-      <widget class="QLineEdit" name="lineEditFunction"/>
+      <widget class="QLineEdit" name="lineEditStrategy"/>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="pushButtonFunctionAdd">
+      <widget class="QPushButton" name="pushButtonStrategyAdd">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -605,7 +593,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="pushButtonFunctionRemove">
+      <widget class="QPushButton" name="pushButtonStrategyRemove">
        <property name="maximumSize">
         <size>
          <width>30</width>
@@ -618,14 +606,14 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QPushButton" name="pushButtonFunctionUpdate">
+      <widget class="QPushButton" name="pushButtonStrategyUpdate">
        <property name="text">
         <string>Update</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0" colspan="4">
-      <widget class="QListWidget" name="listWidgetFunction">
+      <widget class="QListWidget" name="listWidgetStrategy">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -681,7 +669,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelSelectedFunction">
+        <widget class="QLabel" name="labelSelectedStrategy">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -696,7 +684,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>Sub category:</string>
+          <string>Highlighted:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -704,7 +692,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelDisplayedFunction">
+        <widget class="QLabel" name="labelHighlightedStrategy">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -727,7 +715,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelTotalFunction">
+        <widget class="QLabel" name="labelTotalStrategy">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -801,16 +789,16 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QCheckBox" name="checkBoxFunction">
+      <widget class="QCheckBox" name="checkBoxStrategy">
        <property name="text">
-        <string>Function</string>
+        <string>Strategy</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QCheckBox" name="checkBoxSubSection">
+      <widget class="QCheckBox" name="checkBoxComponent">
        <property name="text">
-        <string>Sub Section</string>
+        <string>Component</string>
        </property>
       </widget>
      </item>
@@ -862,7 +850,7 @@ p, li { white-space: pre-wrap; }
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
          <property name="text">
-          <string>Displayed: </string>
+          <string>Highlighted:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -870,7 +858,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelDisplayedSentence">
+        <widget class="QLabel" name="labelHighlightedSentence">
          <property name="styleSheet">
           <string notr="true">color: rgb(111, 111, 111);</string>
          </property>
@@ -962,7 +950,12 @@ p, li { white-space: pre-wrap; }
    </attribute>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
-   <addaction name="actionSaveAs"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrint"/>
+   <addaction name="separator"/>
+   <addaction name="actionImport"/>
+   <addaction name="actionExport"/>
+   <addaction name="separator"/>
    <addaction name="actionClose"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetLogView">
@@ -1038,6 +1031,10 @@ background-color: rgb(0, 0, 0);</string>
    </property>
   </action>
   <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/File/document-print-5.png</normaloff>:/File/document-print-5.png</iconset>
+   </property>
    <property name="text">
     <string>Print to PDF</string>
    </property>
@@ -1081,32 +1078,32 @@ background-color: rgb(0, 0, 0);</string>
     <string>Update</string>
    </property>
   </action>
-  <action name="actionAddSubSection">
+  <action name="actionAddComponent">
    <property name="text">
     <string>Add</string>
    </property>
   </action>
-  <action name="actionRemoveSubSection">
+  <action name="actionRemoveComponent">
    <property name="text">
     <string>Remove</string>
    </property>
   </action>
-  <action name="actionUpdateSubSection">
+  <action name="actionUpdateComponent">
    <property name="text">
     <string>Update</string>
    </property>
   </action>
-  <action name="actionAddFunction">
+  <action name="actionAddStrategy">
    <property name="text">
     <string>Add</string>
    </property>
   </action>
-  <action name="actionRemoveFunction">
+  <action name="actionRemoveStrategy">
    <property name="text">
     <string>Remove</string>
    </property>
   </action>
-  <action name="actionUpdateFunction">
+  <action name="actionUpdateStrategy">
    <property name="text">
     <string>Update</string>
    </property>
@@ -1149,12 +1146,12 @@ background-color: rgb(0, 0, 0);</string>
     <string>Tips</string>
    </property>
   </action>
-  <action name="actionTipsSubSection">
+  <action name="actionTipsComponent">
    <property name="text">
     <string>Tips</string>
    </property>
   </action>
-  <action name="actionTipsFunction">
+  <action name="actionTipsStrategy">
    <property name="text">
     <string>Tips</string>
    </property>

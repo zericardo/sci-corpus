@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'pdf_dlg.ui'
 #
-# Created: Wed May 21 10:59:26 2014
-#      by: pyside-uic 0.2.15 running on PySide 1.2.2
+# Created: Wed May 28 16:05:28 2014
+#      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(714, 424)
+        Dialog.resize(911, 334)
         self.gridLayout = QtGui.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout = QtGui.QHBoxLayout()
@@ -27,7 +27,7 @@ class Ui_Dialog(object):
         self.pushButtonOk.setMaximumSize(QtCore.QSize(80, 16777215))
         self.pushButtonOk.setObjectName("pushButtonOk")
         self.horizontalLayout.addWidget(self.pushButtonOk)
-        self.gridLayout.addLayout(self.horizontalLayout, 6, 0, 1, 4)
+        self.gridLayout.addLayout(self.horizontalLayout, 9, 0, 1, 4)
         self.label_10 = QtGui.QLabel(Dialog)
         self.label_10.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_10.setObjectName("label_10")
@@ -53,6 +53,15 @@ class Ui_Dialog(object):
         self.textEditDescription = QtGui.QTextEdit(Dialog)
         self.textEditDescription.setObjectName("textEditDescription")
         self.gridLayout.addWidget(self.textEditDescription, 2, 1, 1, 3)
+        self.lineEditPath = QtGui.QLineEdit(Dialog)
+        self.lineEditPath.setObjectName("lineEditPath")
+        self.gridLayout.addWidget(self.lineEditPath, 3, 1, 1, 2)
+        self.pushButtonPath = QtGui.QPushButton(Dialog)
+        self.pushButtonPath.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.pushButtonPath.setObjectName("pushButtonPath")
+        self.gridLayout.addWidget(self.pushButtonPath, 3, 3, 1, 1)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.groupBoxMargins = QtGui.QGroupBox(Dialog)
         self.groupBoxMargins.setObjectName("groupBoxMargins")
         self.gridLayout_3 = QtGui.QGridLayout(self.groupBoxMargins)
@@ -97,7 +106,7 @@ class Ui_Dialog(object):
         self.doubleSpinBoxRight.setProperty("value", 20.0)
         self.doubleSpinBoxRight.setObjectName("doubleSpinBoxRight")
         self.gridLayout_3.addWidget(self.doubleSpinBoxRight, 1, 3, 1, 1)
-        self.gridLayout.addWidget(self.groupBoxMargins, 4, 1, 1, 1)
+        self.horizontalLayout_2.addWidget(self.groupBoxMargins)
         self.groupBoxText = QtGui.QGroupBox(Dialog)
         self.groupBoxText.setObjectName("groupBoxText")
         self.gridLayout_5 = QtGui.QGridLayout(self.groupBoxText)
@@ -106,7 +115,8 @@ class Ui_Dialog(object):
         self.label_9.setObjectName("label_9")
         self.gridLayout_5.addWidget(self.label_9, 1, 0, 1, 1)
         self.comboBoxFont = QtGui.QFontComboBox(self.groupBoxText)
-        self.comboBoxFont.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContents)
+        self.comboBoxFont.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.comboBoxFont.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
         self.comboBoxFont.setObjectName("comboBoxFont")
         self.gridLayout_5.addWidget(self.comboBoxFont, 0, 1, 1, 1)
         self.spinBoxSize = QtGui.QSpinBox(self.groupBoxText)
@@ -115,7 +125,7 @@ class Ui_Dialog(object):
         self.label_8 = QtGui.QLabel(self.groupBoxText)
         self.label_8.setObjectName("label_8")
         self.gridLayout_5.addWidget(self.label_8, 0, 0, 1, 1)
-        self.gridLayout.addWidget(self.groupBoxText, 4, 2, 1, 2)
+        self.horizontalLayout_2.addWidget(self.groupBoxText)
         self.groupBoxSentence = QtGui.QGroupBox(Dialog)
         self.groupBoxSentence.setObjectName("groupBoxSentence")
         self.gridLayout_6 = QtGui.QGridLayout(self.groupBoxSentence)
@@ -126,34 +136,21 @@ class Ui_Dialog(object):
         self.radioButtonDim = QtGui.QRadioButton(self.groupBoxSentence)
         self.radioButtonDim.setObjectName("radioButtonDim")
         self.gridLayout_6.addWidget(self.radioButtonDim, 1, 0, 1, 1)
-        self.gridLayout.addWidget(self.groupBoxSentence, 5, 2, 1, 2)
-        self.groupBoxOptions = QtGui.QGroupBox(Dialog)
-        self.groupBoxOptions.setObjectName("groupBoxOptions")
-        self.gridLayout_2 = QtGui.QGridLayout(self.groupBoxOptions)
-        self.gridLayout_2.setObjectName("gridLayout_2")
-        self.checkBoxDate = QtGui.QCheckBox(self.groupBoxOptions)
-        self.checkBoxDate.setObjectName("checkBoxDate")
-        self.gridLayout_2.addWidget(self.checkBoxDate, 0, 0, 1, 1)
-        self.gridLayout.addWidget(self.groupBoxOptions, 5, 1, 1, 1)
-        self.lineEditPath = QtGui.QLineEdit(Dialog)
-        self.lineEditPath.setObjectName("lineEditPath")
-        self.gridLayout.addWidget(self.lineEditPath, 3, 1, 1, 2)
-        self.pushButtonPath = QtGui.QPushButton(Dialog)
-        self.pushButtonPath.setMaximumSize(QtCore.QSize(30, 16777215))
-        self.pushButtonPath.setObjectName("pushButtonPath")
-        self.gridLayout.addWidget(self.pushButtonPath, 3, 3, 1, 1)
+        self.horizontalLayout_2.addWidget(self.groupBoxSentence)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 6, 1, 1, 3)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Print to PDF", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonCancel.setText(QtGui.QApplication.translate("Dialog", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonOk.setText(QtGui.QApplication.translate("Dialog", "Ok", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("Dialog", "File name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Dialog", "Author:", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Dialog", "Title:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("Dialog", "Description:", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButtonPath.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBoxMargins.setTitle(QtGui.QApplication.translate("Dialog", "Margins", None, QtGui.QApplication.UnicodeUTF8))
         self.doubleSpinBoxTop.setSuffix(QtGui.QApplication.translate("Dialog", "mm", None, QtGui.QApplication.UnicodeUTF8))
         self.doubleSpinBoxBottom.setSuffix(QtGui.QApplication.translate("Dialog", "mm", None, QtGui.QApplication.UnicodeUTF8))
@@ -170,7 +167,4 @@ class Ui_Dialog(object):
         self.groupBoxSentence.setTitle(QtGui.QApplication.translate("Dialog", "Sentence", None, QtGui.QApplication.UnicodeUTF8))
         self.radioButtonReplace.setText(QtGui.QApplication.translate("Dialog", "Replace marked/unmarked text", None, QtGui.QApplication.UnicodeUTF8))
         self.radioButtonDim.setText(QtGui.QApplication.translate("Dialog", "Dim marked/unmarked text", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBoxOptions.setTitle(QtGui.QApplication.translate("Dialog", "Options", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBoxDate.setText(QtGui.QApplication.translate("Dialog", "Date", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonPath.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
 

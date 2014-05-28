@@ -16,7 +16,7 @@ This script provides a graphical interface for preferences setup.
 
 import os
 import platform
-import sci_corpus.ui as preferences_dlg_ui
+from sci_corpus.ui import preferences_dlg_ui
 
 from PySide.QtGui import QDialog, QFileDialog
 

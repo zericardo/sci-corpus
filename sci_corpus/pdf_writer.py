@@ -1,6 +1,6 @@
 from reportlab.lib.pagesizes import A4
 from reportlab.rl_config import defaultPageSize #defaultPage is A4, just as we need
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
+from reportlab.platypus import Paragraph, Spacer, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm, inch
 from reportlab.platypus.doctemplate import PageTemplate, BaseDocTemplate, NextPageTemplate
@@ -105,11 +105,11 @@ def exportToPDF(path, title, author, description, container,
         if sec != 'Not Classified':
             Story.append(Paragraph(str(snum)+'.  '+sec,styles["Heading1"]))
             Story.append(Spacer(1, 12))
-            for ssnum, subs in enumerate(container.listSubSections(qsections=[sec])):
+            for ssnum, subs in enumerate(container.listComponents(qsections=[sec])):
                 if subs != 'Not Classified':
                     Story.append(Paragraph(str(snum)+'.'+str(ssnum+1)+'.  '+subs,styles["Heading2"]))
                     Story.append(Spacer(1, 12))
-                    for fnum, func in enumerate(container.listFunctions(qsections=[sec],qsubsections=[subs])):
+                    for fnum, func in enumerate(container.listStrategies(qsections=[sec],qsubsections=[subs])):
                         if func != 'Not Classified':
                             Story.append(Paragraph(str(snum)+'.'+str(ssnum+1)+'.'+str(fnum+1)+'.  '+func,styles["Heading3"]))
                             Story.append(Spacer(1, 12))

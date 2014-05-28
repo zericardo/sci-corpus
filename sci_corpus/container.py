@@ -328,7 +328,7 @@ class ContainerDB():
         return [a for (a,) in cursor.fetchall()]
 
 
-    def listSubSections(self,qsections=[]):
+    def listComponents(self,qsections=[]):
             cursor = self.__dbmem.cursor()
             query=''
             if(qsections!=[]):
@@ -341,7 +341,7 @@ class ContainerDB():
             return [a for (a,) in cursor.fetchall()]
 
             
-    def listFunctions(self, qsections=[], qsubsections=[]):
+    def listStrategies(self, qsections=[], qsubsections=[]):
            '''
            Coisa
            '''
@@ -812,14 +812,23 @@ class ContainerDB():
                     for w in root.findall('INFOPIECE'):
                         sec = w.find('SECTION').text
                         sec = sec.strip()
+                        
                         if sec is None:
                             sec = 'Not Classified'
-                        subs = w.find('SUBSECTION').text
+                            
+                        try:
+                            subs = w.find('SUBSECTION').text
+                        except Exception:
+                            subs = w.find('COMPONENT').text
                         subs = subs.strip()
                         if subs is None:
                             subs = 'Not Classified'
-                        func = w.find('FUNCTION').text
+                        try:
+                            func = w.find('FUNCTION').text
+                        except Exception:
+                            func = w.find('STRATEGY').text
                         func = func.strip()
+                        
                         if func is None:
                             func = 'Not Classified'
                         sent = w.find('PHRASE').text
@@ -917,9 +926,9 @@ class ContainerDB():
                         infopiece = ET.SubElement(root, 'INFOPIECE')
                         sec = ET.SubElement(infopiece, 'SECTION')
                         sec.text = secv
-                        subs = ET.SubElement(infopiece, 'SUBSECTION')
+                        subs = ET.SubElement(infopiece, 'COMPONENT')
                         subs.text = subsv
-                        func = ET.SubElement(infopiece, 'FUNCTION')
+                        func = ET.SubElement(infopiece, 'STRATEGY')
                         func.text = funcv
                         sent = ET.SubElement(infopiece, 'PHRASE')
                         sent.text = sentv
@@ -942,7 +951,7 @@ class ContainerDB():
                         quotechar='"',
                         quoting=csv.QUOTE_ALL)
                     csv_fields.writerow(
-                        ["SECTION", "SUB SECTION", "FUNCTION", "SENTENCE", "REFERENCE"])
+                        ["SECTION", "COMPONENT", "STRATEGY", "SENTENCE", "REFERENCE"])
                     for (secv, subsv, funcv, sentv, refv) in info:
                         if sentv == 'NULL':
                             sentv = ""
