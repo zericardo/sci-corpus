@@ -35,7 +35,7 @@ import platform
 
 from time import gmtime, strftime
 
-__version__ = 'v.0.11.0'
+__version__ = 'v.0.12.0'
 __name__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -805,19 +805,24 @@ in an article.'),
         """Generates a PDF file with all sentences included in database."""
         pdfdlg = pdf_dlg.PDFDialog(self.preferences,  self.workspace)
         if pdfdlg.exec_():
+            marker = self.preferences['marker']
+            marker_beg = marker[:len(marker) / 2]
+            marker_end = marker[len(marker) / 2:]
+
             pdf_writer.exportToPDF(self.preferences['pdf']['path'],
                                     self.preferences['title'], 
                                     self.preferences['author'], 
                                     self.preferences['description'],
-                                    self.container, 
+                                    self.container,
+                                    marker_beg, marker_end,
+                                    self.preferences['replace_where'],
+                                    self.preferences['replace_by'],
                                     self.preferences['pdf']['margin_top'],
                                     self.preferences['pdf']['margin_bottom'],
                                     self.preferences['pdf']['margin_left'],
                                     self.preferences['pdf']['margin_right'], 
                                     'Helvetica', 
                                     self.preferences['pdf']['size'], 
-                                    False, 
-                                    True, 
                                     self.preferences['pdf']['replace'],
                                     self.preferences['pdf']['dim'])
 

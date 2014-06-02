@@ -399,6 +399,11 @@ class ContainerDB():
             if replace_where == 'Inside markers':
                 for substring in r:
                     sent = sent.replace(substring, replace_by)
+                    
+            elif replace_where == 'dim':
+                sent = sent.replace(begin,"<font color='red'><b>")
+                sent = sent.replace(end,"</b></font>")
+                
             else:
                 if(r != []):
                     # @TODO: talvez colocar um erro em um else para este if!
