@@ -17,8 +17,8 @@ This script provides a graphical interface for sci-corpus program standalone.
 
 from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
-from PySide.QtGui import QBrush, QColor
-from PySide.QtCore import QSettings, Signal, Qt
+from PySide.QtGui import QBrush, QColor,  QDesktopServices
+from PySide.QtCore import QSettings, Signal, Qt,  QUrl
 
 from sci_corpus import pdf_writer
 from sci_corpus import start_dlg
@@ -827,6 +827,12 @@ in an article.'),
                                     self.preferences['pdf']['size'], 
                                     self.preferences['pdf']['replace'],
                                     self.preferences['pdf']['dim'])
+            try:
+                if self.preferences['pdf']['auto_open']:
+                    QDesktopServices.openUrl(QUrl("file:///"+\
+                    self.preferences['pdf']['path'], QUrl.TolerantMode));
+            except:
+                pass
 
     def closeFile(self):
         """Closes current file."""

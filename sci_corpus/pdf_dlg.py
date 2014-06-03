@@ -45,6 +45,8 @@ class PDFDialog(QDialog):
             self.ui.lineEditAuthor.setText(self.preferences['author'])
             self.ui.textEditDescription.setText(self.preferences['description'])
             
+            self.ui.checkBoxAutoOpen.setChecked(self.preferences['pdf']['auto_open'])  
+            
             self.ui.radioButtonDim.setChecked(self.preferences['pdf']['dim'])
             self.ui.radioButtonReplace.setChecked(self.preferences['pdf']['replace'])
             
@@ -84,6 +86,7 @@ class PDFDialog(QDialog):
         
         self.preferences['pdf'] = {}
         self.preferences['pdf']['path'] = str(self.ui.lineEditPath.text())
+        self.preferences['pdf']['auto_open'] = self.ui.checkBoxAutoOpen.isChecked()
         
         self.preferences['pdf']['dim'] = self.ui.radioButtonDim.isChecked()
         self.preferences['pdf']['replace'] = self.ui.radioButtonReplace.isChecked()
