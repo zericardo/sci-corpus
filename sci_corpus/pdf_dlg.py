@@ -44,13 +44,19 @@ class PDFDialog(QDialog):
             self.ui.lineEditTitle.setText(self.preferences['title'])
             self.ui.lineEditAuthor.setText(self.preferences['author'])
             self.ui.textEditDescription.setText(self.preferences['description'])
+            
             self.ui.radioButtonDim.setChecked(self.preferences['pdf']['dim'])
             self.ui.radioButtonReplace.setChecked(self.preferences['pdf']['replace'])
-            self.ui.spinBoxSize.setValue(self.preferences['pdf']['size'])
+            
+            self.ui.spinBoxSize.setValue(int(self.preferences['pdf']['size']))
+            index = self.ui.comboBoxFont.findText(self.preferences['pdf']['font'])
+            self.ui.comboBoxFont.setCurrentIndex(index)
+            
             self.ui.doubleSpinBoxLeft.setValue(self.preferences['pdf']['margin_left'])
             self.ui.doubleSpinBoxRight.setValue(self.preferences['pdf']['margin_right'])
             self.ui.doubleSpinBoxTop.setValue(self.preferences['pdf']['margin_top'])
             self.ui.doubleSpinBoxBottom.setValue(self.preferences['pdf']['margin_bottom'])
+            
         except Exception:
             pass
 

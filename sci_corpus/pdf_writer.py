@@ -269,7 +269,6 @@ def exportToPDF(path, title, author, description, container,
                         Story.append(Paragraph(ptext,styles["Bullet"]))
                         Story.append(Spacer(1, 12))
 
-    print "Exporting PDF ..."
     doc.multiBuild(Story)
     
     #fontBold = font+'-Bold'

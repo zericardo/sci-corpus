@@ -805,6 +805,8 @@ in an article.'),
         """Generates a PDF file with all sentences included in database."""
         pdfdlg = pdf_dlg.PDFDialog(self.preferences,  self.workspace)
         if pdfdlg.exec_():
+            # We need to change this, pass the marker
+            # inside of the function you divide it - pattern!
             marker = self.preferences['marker']
             marker_beg = marker[:len(marker) / 2]
             marker_end = marker[len(marker) / 2:]
@@ -821,7 +823,7 @@ in an article.'),
                                     self.preferences['pdf']['margin_bottom'],
                                     self.preferences['pdf']['margin_left'],
                                     self.preferences['pdf']['margin_right'], 
-                                    'Helvetica', 
+                                    self.preferences['pdf']['font'], 
                                     self.preferences['pdf']['size'], 
                                     self.preferences['pdf']['replace'],
                                     self.preferences['pdf']['dim'])

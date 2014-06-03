@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'pdf_dlg.ui'
 #
-# Created: Wed May 28 16:05:28 2014
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Tue Jun  3 14:26:25 2014
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -114,17 +114,19 @@ class Ui_Dialog(object):
         self.label_9 = QtGui.QLabel(self.groupBoxText)
         self.label_9.setObjectName("label_9")
         self.gridLayout_5.addWidget(self.label_9, 1, 0, 1, 1)
-        self.comboBoxFont = QtGui.QFontComboBox(self.groupBoxText)
-        self.comboBoxFont.setMaximumSize(QtCore.QSize(150, 16777215))
-        self.comboBoxFont.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
-        self.comboBoxFont.setObjectName("comboBoxFont")
-        self.gridLayout_5.addWidget(self.comboBoxFont, 0, 1, 1, 1)
         self.spinBoxSize = QtGui.QSpinBox(self.groupBoxText)
+        self.spinBoxSize.setProperty("value", 12)
         self.spinBoxSize.setObjectName("spinBoxSize")
         self.gridLayout_5.addWidget(self.spinBoxSize, 1, 1, 1, 1)
         self.label_8 = QtGui.QLabel(self.groupBoxText)
         self.label_8.setObjectName("label_8")
         self.gridLayout_5.addWidget(self.label_8, 0, 0, 1, 1)
+        self.comboBoxFont = QtGui.QComboBox(self.groupBoxText)
+        self.comboBoxFont.setObjectName("comboBoxFont")
+        self.comboBoxFont.addItem("")
+        self.comboBoxFont.addItem("")
+        self.comboBoxFont.addItem("")
+        self.gridLayout_5.addWidget(self.comboBoxFont, 0, 1, 1, 1)
         self.horizontalLayout_2.addWidget(self.groupBoxText)
         self.groupBoxSentence = QtGui.QGroupBox(Dialog)
         self.groupBoxSentence.setObjectName("groupBoxSentence")
@@ -134,12 +136,14 @@ class Ui_Dialog(object):
         self.radioButtonReplace.setObjectName("radioButtonReplace")
         self.gridLayout_6.addWidget(self.radioButtonReplace, 0, 0, 1, 1)
         self.radioButtonDim = QtGui.QRadioButton(self.groupBoxSentence)
+        self.radioButtonDim.setChecked(True)
         self.radioButtonDim.setObjectName("radioButtonDim")
         self.gridLayout_6.addWidget(self.radioButtonDim, 1, 0, 1, 1)
         self.horizontalLayout_2.addWidget(self.groupBoxSentence)
         self.gridLayout.addLayout(self.horizontalLayout_2, 6, 1, 1, 3)
 
         self.retranslateUi(Dialog)
+        self.comboBoxFont.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -164,6 +168,9 @@ class Ui_Dialog(object):
         self.label_9.setText(QtGui.QApplication.translate("Dialog", "Size:", None, QtGui.QApplication.UnicodeUTF8))
         self.spinBoxSize.setSuffix(QtGui.QApplication.translate("Dialog", "pt", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("Dialog", "Font:", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxFont.setItemText(0, QtGui.QApplication.translate("Dialog", "Courier", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxFont.setItemText(1, QtGui.QApplication.translate("Dialog", "Helvetica", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxFont.setItemText(2, QtGui.QApplication.translate("Dialog", "Times-Roman", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBoxSentence.setTitle(QtGui.QApplication.translate("Dialog", "Sentence", None, QtGui.QApplication.UnicodeUTF8))
         self.radioButtonReplace.setText(QtGui.QApplication.translate("Dialog", "Replace marked/unmarked text", None, QtGui.QApplication.UnicodeUTF8))
         self.radioButtonDim.setText(QtGui.QApplication.translate("Dialog", "Dim marked/unmarked text", None, QtGui.QApplication.UnicodeUTF8))
