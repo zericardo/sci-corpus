@@ -14,10 +14,12 @@ This script install sci corpus in your computer.
 
 """
 
-from distutils.core import setup
+from ez_setup import use_setuptools
+use_setuptools()
+
+from setuptools import setup, find_packages
 import os
 import sys
-from sci_corpus import sci_corpus_main
 
 def dependancyChecks():
     """
@@ -76,11 +78,11 @@ def dependancyChecks():
     else:
         print "ReportLab Ok"
 
-	if errors != []:
-		print "Please correct the errors shown and try again."
-		exit(1)
-	else:
-		print "Dependancy checker was complete without errors."
+        if errors != []:
+            print "Please correct the errors shown and try again."
+            #exit(1)
+        else:
+            print "Dependancy checker was complete without errors."
 
 print '\nPreparing to install Sci Corpus ...'
 
@@ -97,19 +99,19 @@ classifiers=[
     'Operating System :: POSIX',
     'Programming Language :: Python',
     'Topic :: Office/Business']
-    
+
 workspace = os.path.abspath(os.path.join(os.path.expanduser('~'),'Sci Corpus'))
 
-#print 'Workspace: ', workspace
-
-setup(name=sci_corpus_main.__name__,
-      version=sci_corpus_main.__version__,
-      description=sci_corpus_main.__ext_name__,
+setup(name='Sci Corpus',
+      version='v.0.12.0',
+      description='Scientific Corpus Manager',
       author='Daniel Cosmo Pizetta, Jose Ricardo Furlan Ronqui, Tiago de Campos',
       author_email='daniel.pizetta@usp.br, jose.ronqui@usp.br, tiago.campos@usp.br',
       download_url='https://github.com/zericardo182/sci-corpus',
       classifiers=classifiers, 
-      packages=['sci_corpus',
-                'sci_corpus.ui'],
-      #data_files=[(workspace,['README.rst'])], 
-      scripts=['scicorpus'])
+      dependency_links=['http://pypi.python.org/pypi/reportlab', 'http://pypi.python.org/pypi/PySide','http://pypi.python.org/pypi/lxml'],
+      packages=['sci_corpus','sci_corpus.ui'],
+      install_requires=['reportlab>=3.0', 'lxml>=3.0', 'PySide>=1.2'],
+      scripts=['scicorpus.py'])
+
+
