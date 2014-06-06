@@ -70,11 +70,11 @@ class MyDocTemplate(BaseDocTemplate):
         if flowable.__class__.__name__ == 'Paragraph':
             text = flowable.getPlainText()
             style = flowable.style.name
-            if style == 'Heading1':
+            if style == 'heading_1':
                 self.notify('TOCEntry', (0, text, self.page))
-            if style == 'Heading2':
+            if style == 'heading_2':
                 self.notify('TOCEntry', (1, text, self.page))
-            if style == 'Heading3':
+            if style == 'heading_3':
                 self.notify('TOCEntry', (2, text, self.page))
         
 def myFirstPage(canvas, doc):
@@ -204,7 +204,21 @@ def exportToPDF(path, title, author, description, container,
     other pages
     
     """               
-                           
+    
+    if font == 'Times-Roman':
+		fontbold = 'Times-Bold'
+    if font == 'Courier':
+		fontbold = 'Courier-Bold'
+    if font == 'Helvetica':
+		fontbold = 'Helvetica-Bold'
+
+
+    styles.add(ParagraphStyle(name='phrase_base', fontName=font, fontSize=size))
+    styles.add(ParagraphStyle(name='heading_1', fontName=fontbold, fontSize=size+6, leading=22, spaceAfter=6))
+    styles.add(ParagraphStyle(name='heading_2', fontName=fontbold, fontSize=size+4, leading=18, spaceBefore=12, spaceAfter=6))
+    styles.add(ParagraphStyle(name='heading_3', fontName=font, fontSize=size+2, leading=14, spaceBefore=12, spaceAfter=6))
+  
+    
     doc = MyDocTemplate(path, 
                           pagesize=A4,
                           rightMargin=rmargin*mm, 
@@ -228,7 +242,7 @@ def exportToPDF(path, title, author, description, container,
     centered = ParagraphStyle(name='centered', fontSize=18, leading=26, alignment=1, spaceAfter=26) 
     Story.append(Paragraph('<b>Table of contents<\b>', centered))  
     toc = TableOfContents()
-    toc.levelStyles = [styles["Heading1"], styles["Heading2"], styles["Heading3"]]
+    toc.levelStyles = [styles["heading_1"], styles["heading_2"], styles["heading_3"]]
     Story.append(toc)
     
     Story.append(NextPageTemplate('laters'))
@@ -240,7 +254,7 @@ def exportToPDF(path, title, author, description, container,
         sections.remove("Not Classified")
     
     for snum, sec in enumerate(sections):
-        Story.append(Paragraph(str(snum+1)+'.  '+sec,styles["Heading1"]))
+        Story.append(Paragraph(str(snum+1)+'.  '+sec,styles["heading_1"]))
         Story.append(Spacer(1, 12))
         
         components = container.listComponents(qsections=[sec])
@@ -248,7 +262,7 @@ def exportToPDF(path, title, author, description, container,
             components.remove("Not Classified")
             
         for compnum, comp in enumerate(components):
-            Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.  '+comp,styles["Heading2"]))
+            Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.  '+comp,styles["heading_2"]))
             Story.append(Spacer(1, 12))
             
             strategies = container.listStrategies(qsections=[sec],qsubsections=[comp])
@@ -256,7 +270,7 @@ def exportToPDF(path, title, author, description, container,
                 strategies.remove("Not Classified")
             
             for stranum, stra in enumerate(strategies):
-                Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.'+str(stranum+1)+'.  '+stra,styles["Heading3"]))
+                Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.'+str(stranum+1)+'.  '+stra,styles["heading_3"]))
                 Story.append(Spacer(1, 12))
                 for idv, secv, subsv, funcv, sentv, refv in container.listSentences(section=[sec],subsection=[comp],function=[stra]):
                     if sentv != 'NULL':
@@ -266,17 +280,7 @@ def exportToPDF(path, title, author, description, container,
                             sentv = container.adjustSentence(sentv, marker_beg, marker_end, "dim", replace_by)
                             
                         ptext = sentv + ' Reference: ' + refv
-                        Story.append(Paragraph(ptext,styles["Bullet"]))
+                        Story.append(Paragraph(ptext,styles["phrase_base"]))
                         Story.append(Spacer(1, 12))
 
     doc.multiBuild(Story)
-    
-    #fontBold = font+'-Bold'
-    #styles.add(ParagraphStyle(name='Justify', alignment=4, fontName='Helvetica', fontSize=10, firstLineIndent=24,leftIndent=20))
-    #styles.add(ParagraphStyle(name='Section', alignment=0, fontName='Helvetica-Bold', fontSize=16, firstLineIndent=12))
-    #styles.add(ParagraphStyle(name='Subsection', alignment=0, fontName='Helvetica-Bold', fontSize=14, firstLineIndent=16))
-    #styles.add(ParagraphStyle(name='Function', alignment=0, fontName='Helvetica-Bold', fontSize=12, firstLineIndent=20))
-    #toc.levelStyles = [  
-    #    ParagraphStyle(fontName='Times-Bold', fontSize=20, name='TOCHeading1', leftIndent=20, firstLineIndent=-20, spaceBefore=10, leading=16),  
-    #    ParagraphStyle(fontSize=18, name='TOCHeading2', leftIndent=40, firstLineIndent=-20, spaceBefore=5, leading=12),  
-    #]  
