@@ -401,8 +401,8 @@ class ContainerDB():
                     sent = sent.replace(substring, replace_by)
                     
             elif replace_where == 'dim':
-                sent = sent.replace(begin,"<font color='red'><b>")
-                sent = sent.replace(end,"</b></font>")
+                sent = sent.replace(begin,"<b>")
+                sent = sent.replace(end,"</b>")
                 
             else:
                 if(r != []):
