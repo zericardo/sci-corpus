@@ -749,8 +749,9 @@ class ContainerDB():
         if path == '':
             path = self.path
             try:
-				self.__defaultpath = workspace + '/backup.db'
-				copy2(path, os.path.abspath(self.__defaultpath))
+				self.__defaultpath = os.path.join(workspace,'backup.db')
+				if os.path.abspath(self.path) != os.path.abspath(self.__defaultpath):
+					copy2(path, os.path.abspath(self.__defaultpath))
 				os.remove(path)
             except OSError as e:
                 print ("Error: %s - %s." % (e.filename, e.strerror))
