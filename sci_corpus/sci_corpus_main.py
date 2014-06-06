@@ -790,7 +790,7 @@ in an article.'),
         if self.container.path == '':
             self.saveFileAs()
         else:
-            self.container.write_()
+            self.container.write_(workspace = str(self.workspace))
 
     def saveFileAs(self):
         """" Saves a new file."""
@@ -799,7 +799,7 @@ in an article.'),
                                            self.tr(str(self.workspace)),
                                            self.tr('(*.db)'))[0]
         if path != '':
-            self.container.write_(path)
+            self.container.write_(path = path)
 
     def printFile(self):
         """Generates a PDF file with all sentences included in database."""

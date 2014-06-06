@@ -15,7 +15,7 @@ class ContainerDB():
 
     def __init__(self):
         self.__path = ''
-        self.__defaultpath = '../examples/backup.db'
+        self.__defaultpath = ''
         self.__isModified = False
         self.createNconnectDB(flag=True)
         
@@ -741,7 +741,7 @@ class ContainerDB():
     def isModified(self, state):
         self.__isModified = state
 
-    def write_(self, path=''):
+    def write_(self, path='',workspace=''):
         """Writes file in path or in self.path if not passed."""
 
         self.__dbmem.commit()
@@ -749,8 +749,9 @@ class ContainerDB():
         if path == '':
             path = self.path
             try:
-                copy2(path, os.path.abspath(self.__defaultpath))
-                os.remove(path)
+				self.__defaultpath = workspace + '/backup.db'
+				copy2(path, os.path.abspath(self.__defaultpath))
+				os.remove(path)
             except OSError as e:
                 print ("Error: %s - %s." % (e.filename, e.strerror))
             else:
