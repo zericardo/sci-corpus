@@ -1085,6 +1085,7 @@ def main():
 
     argv = sys.argv
     app = QApplication(argv)
+    app.setStyle('cleanlooks')
     main_window = MainWindow()
     
     style_sheet = ''
