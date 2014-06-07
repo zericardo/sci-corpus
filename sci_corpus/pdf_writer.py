@@ -212,12 +212,12 @@ def exportToPDF(path, title, author, description, container,
     if font == 'Helvetica':
 		fontbold = 'Helvetica-Bold'
 
+    phrase_base = ParagraphStyle(name='phrase_base', fontName=font, fontSize=size)
+    heading_1 = ParagraphStyle(name='heading_1', fontName=fontbold, fontSize=size+6, leading=22, spaceAfter=6)
+    heading_2 = ParagraphStyle(name='heading_2', fontName=fontbold, fontSize=size+4, leading=18, spaceBefore=12, spaceAfter=6)
+    heading_3 = ParagraphStyle(name='heading_3', fontName=font, fontSize=size+2, leading=14, spaceBefore=12, spaceAfter=6)
 
-    styles.add(ParagraphStyle(name='phrase_base', fontName=font, fontSize=size))
-    styles.add(ParagraphStyle(name='heading_1', fontName=fontbold, fontSize=size+6, leading=22, spaceAfter=6))
-    styles.add(ParagraphStyle(name='heading_2', fontName=fontbold, fontSize=size+4, leading=18, spaceBefore=12, spaceAfter=6))
-    styles.add(ParagraphStyle(name='heading_3', fontName=font, fontSize=size+2, leading=14, spaceBefore=12, spaceAfter=6))
-  
+    
     
     doc = MyDocTemplate(path, 
                           pagesize=A4,
@@ -242,7 +242,7 @@ def exportToPDF(path, title, author, description, container,
     centered = ParagraphStyle(name='centered', fontSize=18, leading=26, alignment=1, spaceAfter=26) 
     Story.append(Paragraph('<b>Table of contents<\b>', centered))  
     toc = TableOfContents()
-    toc.levelStyles = [styles["heading_1"], styles["heading_2"], styles["heading_3"]]
+    toc.levelStyles = [heading_1, heading_2, heading_3]
     Story.append(toc)
     
     Story.append(NextPageTemplate('laters'))
@@ -254,7 +254,7 @@ def exportToPDF(path, title, author, description, container,
         sections.remove("Not Classified")
     
     for snum, sec in enumerate(sections):
-        Story.append(Paragraph(str(snum+1)+'.  '+sec,styles["heading_1"]))
+        Story.append(Paragraph(str(snum+1)+'.  '+sec,heading_1))
         Story.append(Spacer(1, 12))
         
         components = container.listComponents(qsections=[sec])
@@ -262,7 +262,7 @@ def exportToPDF(path, title, author, description, container,
             components.remove("Not Classified")
             
         for compnum, comp in enumerate(components):
-            Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.  '+comp,styles["heading_2"]))
+            Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.  '+comp,heading_2))
             Story.append(Spacer(1, 12))
             
             strategies = container.listStrategies(qsections=[sec],qsubsections=[comp])
@@ -270,7 +270,7 @@ def exportToPDF(path, title, author, description, container,
                 strategies.remove("Not Classified")
             
             for stranum, stra in enumerate(strategies):
-                Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.'+str(stranum+1)+'.  '+stra,styles["heading_3"]))
+                Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.'+str(stranum+1)+'.  '+stra,heading_3))
                 Story.append(Spacer(1, 12))
                 for idv, secv, subsv, funcv, sentv, refv in container.listSentences(section=[sec],subsection=[comp],function=[stra]):
                     if sentv != 'NULL':
@@ -280,7 +280,7 @@ def exportToPDF(path, title, author, description, container,
                             sentv = container.adjustSentence(sentv, marker_beg, marker_end, "dim", replace_by)
                             
                         ptext = sentv + ' Reference: ' + refv
-                        Story.append(Paragraph(ptext,styles["phrase_base"]))
+                        Story.append(Paragraph(ptext,phrase_base))
                         Story.append(Spacer(1, 12))
 
     doc.multiBuild(Story)
