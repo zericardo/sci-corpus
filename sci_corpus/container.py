@@ -505,8 +505,8 @@ class ContainerDB():
 
     def update(
         self, section=[
-            ('NULL', 'NULL')], subsection=[
-            ('NULL', 'NULL')], function=[
+            ('NULL', 'NULL')], component=[
+            ('NULL', 'NULL')], strategy=[
                 ('NULL', 'NULL')], phrase=[
                     ('NULL', 'NULL')], ref=[
                         ('NULL', 'NULL')]):
@@ -549,23 +549,23 @@ class ContainerDB():
         cursor = self.__dbmem.cursor()
 
         try:
-            if section != [('NULL', 'NULL')] and subsection == [('NULL', 'NULL')] and function == [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
+            if section != [('NULL', 'NULL')] and component == [('NULL', 'NULL')] and strategy == [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
                 cursor.execute('''UPDATE corpus
                               SET sec=? WHERE sec=?''', section[0])
 
-            if section == [('NULL', 'NULL')] and subsection != [('NULL', 'NULL')] and function == [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
+            if section == [('NULL', 'NULL')] and component != [('NULL', 'NULL')] and strategy == [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
                 cursor.execute('''UPDATE corpus
-                              SET subsec=? WHERE subsec=?''', subsection[0])
+                              SET subsec=? WHERE subsec=?''', component[0])
 
-            if section == [('NULL', 'NULL')] and subsection == [('NULL', 'NULL')] and function != [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
+            if section == [('NULL', 'NULL')] and component == [('NULL', 'NULL')] and strategy != [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
                 cursor.execute('''UPDATE corpus
-                              SET func=? WHERE func=?''', function[0])
+                              SET func=? WHERE func=?''', strategy[0])
 
-            if section == [('NULL', 'NULL')] and subsection == [('NULL', 'NULL')] and function == [('NULL', 'NULL')] and phrase != [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
+            if section == [('NULL', 'NULL')] and component == [('NULL', 'NULL')] and strategy == [('NULL', 'NULL')] and phrase != [('NULL', 'NULL')] and ref == [('NULL', 'NULL')]:
                 cursor.execute('''UPDATE corpus
                               SET phrase=? WHERE phrase=?''', phrase[0])
 
-            if section == [('NULL', 'NULL')] and subsection == [('NULL', 'NULL')] and function == [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref != [('NULL', 'NULL')]:
+            if section == [('NULL', 'NULL')] and component == [('NULL', 'NULL')] and strategy == [('NULL', 'NULL')] and phrase == [('NULL', 'NULL')] and ref != [('NULL', 'NULL')]:
                 cursor.execute('''UPDATE corpus
                               SET ref=? WHERE ref=?''', ref[0])
 
