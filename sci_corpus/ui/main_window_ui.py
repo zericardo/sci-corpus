@@ -49,6 +49,12 @@ class Ui_MainWindow(object):
         self.label_5.setMaximumSize(QtCore.QSize(16777215, 17))
         self.label_5.setObjectName("label_5")
         self.gridLayout_2.addWidget(self.label_5, 0, 0, 1, 1)
+        
+        self.pushButtonSelectToMark = QtGui.QPushButton(self.widget)
+        self.pushButtonSelectToMark.setObjectName("pushButtonSelectToMark")
+        self.gridLayout_2.addWidget(self.pushButtonSelectToMark, 0, 1, 1, 1)
+        self.pushButtonSelectToMark.setMaximumSize(QtCore.QSize(30, 16777215))
+        
         self.textEditSentence = QtGui.QTextEdit(self.widget)
         self.textEditSentence.setMinimumSize(QtCore.QSize(0, 0))
         self.textEditSentence.setMaximumSize(QtCore.QSize(16777215, 100))
@@ -586,6 +592,9 @@ class Ui_MainWindow(object):
         self.checkBoxStrategy.setText(QtGui.QApplication.translate("MainWindow", "Strategy", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBoxComponent.setText(QtGui.QApplication.translate("MainWindow", "Component", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBoxSentence.setText(QtGui.QApplication.translate("MainWindow", "Sentence", None, QtGui.QApplication.UnicodeUTF8))
+
+        self.pushButtonSelectToMark.setText(QtGui.QApplication.translate("MainWindow", "Mark", None, QtGui.QApplication.UnicodeUTF8))
+        
         self.label_4.setText(QtGui.QApplication.translate("MainWindow", "Selected: ", None, QtGui.QApplication.UnicodeUTF8))
         self.labelSelectedSentence.setText(QtGui.QApplication.translate("MainWindow", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Highlighted:", None, QtGui.QApplication.UnicodeUTF8))
