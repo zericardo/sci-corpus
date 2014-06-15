@@ -103,7 +103,7 @@ classifiers=[
 workspace = os.path.abspath(os.path.join(os.path.expanduser('~'),'Sci Corpus'))
 
 setup(name='Sci Corpus',
-      version='v.0.12.0',
+      version='v.0.12.5',
       description='Scientific Corpus Manager',
       author='Daniel Cosmo Pizetta, Jose Ricardo Furlan Ronqui, Tiago de Campos',
       author_email='daniel.pizetta@usp.br, jose.ronqui@usp.br, tiago.campos@usp.br',
