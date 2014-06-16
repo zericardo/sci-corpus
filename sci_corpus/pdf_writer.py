@@ -99,7 +99,7 @@ def myFirstPage(canvas, doc):
     canvas.setCreator('Sci Corpus')
     canvas.line(50,50,8.27*inch-50,50)
     canvas.setFont('Helvetica',10)
-    canvas.drawString(55, 40, 'Created by Sci Corpus')
+    canvas.drawString(55, 40, 'Created by Sci Corpus - https://github.com/zericardo182/sci-corpus')
     canvas.restoreState()
  
 def myTOCPages(canvas, doc):
