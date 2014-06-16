@@ -36,7 +36,7 @@ import platform
 from time import gmtime, strftime
 
 
-__version__ = 'v.0.12.8'
+__version__ = 'v.0.12.9'
 __name__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -824,6 +824,9 @@ in an article.'),
                                            self.tr('(*.db)'))[0]
         if path != '':
             self.container.write_(path = path)
+            
+        self.closeFile()
+        self.openFile(path)
 
     def printFile(self):
         """Generates a PDF file with all sentences included in database."""
