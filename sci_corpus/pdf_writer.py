@@ -94,16 +94,9 @@ def myFirstPage(canvas, doc):
     """
     canvas.saveState()
     canvas.setTitle(doc.title)
-    canvas.setSubject(doc.description)
     canvas.setAuthor(doc.author)
     
     canvas.setCreator('Sci Corpus')
-    canvas.setFont('Helvetica-Bold',26)
-    canvas.drawString(8.27*inch/3.0, 11.69*inch-108, doc.title)
-    canvas.setFont('Helvetica',16)
-    canvas.drawString(8.27*inch/3.0, 11.69*inch-208, doc.author)
-    canvas.setFont('Helvetica',14)
-    canvas.drawString(8.27*inch/3.0, 11.69*inch-308, doc.description)
     canvas.line(50,50,8.27*inch-50,50)
     canvas.setFont('Helvetica',10)
     canvas.drawString(55, 40, 'Created by Sci Corpus')
@@ -216,8 +209,10 @@ def exportToPDF(path, title, author, description, container,
     heading_1 = ParagraphStyle(name='heading_1', fontName=fontbold, fontSize=size+6, leading=22, spaceAfter=6)
     heading_2 = ParagraphStyle(name='heading_2', fontName=fontbold, fontSize=size+4, leading=18, spaceBefore=12, spaceAfter=6)
     heading_3 = ParagraphStyle(name='heading_3', fontName=font, fontSize=size+2, leading=14, spaceBefore=12, spaceAfter=6)
-
-    
+    centered = ParagraphStyle(name='centered', fontName=font, fontSize=18, leading=26, alignment=1, spaceAfter=26) 
+    desc_style = ParagraphStyle(name='desc_style', fontName=font, fontSize=size+2)
+    title_style = ParagraphStyle(name='title_style', fontName=font, fontSize=size+12, alignment=1)
+    author_style = ParagraphStyle(name='author_style', fontName=font, fontSize=size+3, alignment=1)
     
     doc = MyDocTemplate(path, 
                           pagesize=A4,
@@ -231,15 +226,21 @@ def exportToPDF(path, title, author, description, container,
 
     frameT = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id='normal')
     
+    
     doc.addPageTemplates([PageTemplate('first', frames=frameT, onPage=myFirstPage),
                           PageTemplate('toc', frames=frameT, onPage=myTOCPages),
                           PageTemplate('laters', frames=frameT, onPage=myLaterPages)])
                           
     Story = []
+    Story.append(Spacer(1, 12))
+    Story.append(Paragraph(title, title_style))
+    Story.append(Spacer(1, 50))
+    Story.append(Paragraph(author, author_style))
+    Story.append(Spacer(1, 150))
+    Story.append(Paragraph(description, desc_style))
     Story.append(NextPageTemplate('toc'))
     Story.append(PageBreak())
     
-    centered = ParagraphStyle(name='centered', fontSize=18, leading=26, alignment=1, spaceAfter=26) 
     Story.append(Paragraph('<b>Table of contents<\b>', centered))  
     toc = TableOfContents()
     toc.levelStyles = [heading_1, heading_2, heading_3]

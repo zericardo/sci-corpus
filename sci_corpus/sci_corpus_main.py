@@ -35,7 +35,7 @@ import platform
 
 from time import gmtime, strftime
 
-__version__ = 'v.0.12.5'
+__version__ = 'v.0.12.6'
 __name__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
