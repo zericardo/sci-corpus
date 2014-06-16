@@ -852,7 +852,8 @@ in an article.'),
                                     self.preferences['pdf']['margin_right'], 
                                     self.preferences['pdf']['font'], 
                                     self.preferences['pdf']['size'], 
-                                    self.preferences['pdf']['replace'])
+                                    self.preferences['pdf']['replace'],
+                                    self.preferences['pdf']['dim'])
             try:
                 if self.preferences['pdf']['auto_open']:
                     QDesktopServices.openUrl(QUrl("file:///"+\
