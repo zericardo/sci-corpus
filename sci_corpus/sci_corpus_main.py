@@ -16,8 +16,8 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 
 from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
-from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
-from PySide.QtGui import QBrush, QColor,  QDesktopServices
+from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView, QAction
+from PySide.QtGui import QBrush, QColor,  QDesktopServices, QApplication, QTextCursor
 from PySide.QtCore import QSettings, Signal, Qt,  QUrl
 
 from sci_corpus import pdf_writer
@@ -35,7 +35,8 @@ import platform
 
 from time import gmtime, strftime
 
-__version__ = 'v.0.12.6'
+
+__version__ = 'v.0.12.8'
 __name__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -203,6 +204,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButtonStrategyRemove.clicked.connect(self.removeStrategy)
         self.ui.pushButtonStrategyUpdate.clicked.connect(self.updateStrategy)
         # Actions
+        
         self.ui.actionAddStrategy.triggered.connect(self.addStrategy)
         self.ui.actionRemoveStrategy.triggered.connect(self.removeStrategy)
         self.ui.actionUpdateStrategy.triggered.connect(self.updateStrategy)
@@ -228,6 +230,15 @@ class MainWindow(QMainWindow):
         self.ui.pushButtonSentenceRemove.clicked.connect(self.removeSentence)
         self.ui.pushButtonSentenceUpdate.clicked.connect(self.updateSentence)
         # Actions
+        # Needs changes here
+        self.ui.actionMark = QAction(self)
+        self.ui.actionMark.triggered.connect(self.markSentence)
+        self.ui.actionMark.setShortcut('Ctrl+M')
+        self.ui.pushButtonSelectToMark.clicked.connect(self.markSentence)
+        self.ui.pushButtonSelectToMark.setShortcut('Ctrl+M')
+        # Needs shortcut
+        self.ui.textEditSentence.zoomIn(3)
+        
         self.ui.actionAddSentence.triggered.connect(self.addSentence)
         self.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
         self.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
@@ -253,6 +264,8 @@ class MainWindow(QMainWindow):
         self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
         self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.getSentFromTableNDisplay)
         self.ui.tableWidgetSentence.cellClicked.connect(self.getSentFromTable)
+        #self.ui.textEditSentence.copyAvailable.connect(self.markSentence)
+        
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
         self.ui.checkBoxStrip.setChecked(True)
@@ -591,6 +604,16 @@ in an article.'),
     # Sentence methods
     # -----------------------------------------------------------------------
 
+    def markSentence(self):
+        """Mark sentence with marker if marker ir checked."""
+        cursor = QTextCursor(self.ui.textEditSentence.document())
+        begin = self.ui.textEditSentence.textCursor().selectionStart()
+        end = self.ui.textEditSentence.textCursor().selectionEnd()
+        marker = self.preferences['marker']
+        cursor.setPosition(begin, QTextCursor.MoveAnchor);
+        cursor.insertText(marker[0])
+        cursor.setPosition(end+1, QTextCursor.MoveAnchor);
+        cursor.insertText(marker[1])
 
     def addSentence(self):
         """Adds a new sentence."""
@@ -603,7 +626,8 @@ in an article.'),
         ref = str(self.ui.lineEditReference.text())
         # Cleaning
         self.ui.textEditSentence.clear()
-        self.ui.lineEditReference.clear()
+        # For now, I just disable the clear function on reference field
+        #self.ui.lineEditReference.clear()
 
         if sent != '':
             # Insertting in DB
@@ -825,8 +849,7 @@ in an article.'),
                                     self.preferences['pdf']['margin_right'], 
                                     self.preferences['pdf']['font'], 
                                     self.preferences['pdf']['size'], 
-                                    self.preferences['pdf']['replace'],
-                                    self.preferences['pdf']['dim'])
+                                    self.preferences['pdf']['replace'])
             try:
                 if self.preferences['pdf']['auto_open']:
                     QDesktopServices.openUrl(QUrl("file:///"+\
