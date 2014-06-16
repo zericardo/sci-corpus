@@ -824,6 +824,8 @@ in an article.'),
                                            self.tr('(*.db)'))[0]
         if path != '':
             self.container.write_(path = path)
+            self.setWindowTitle(__name__+" "+__version__+" - "+str(self.container.path))
+            self.preferences['last_path'] = path
             
         self.closeFile()
         self.openFile(path)
