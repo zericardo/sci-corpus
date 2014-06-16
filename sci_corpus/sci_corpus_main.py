@@ -235,6 +235,8 @@ class MainWindow(QMainWindow):
         self.ui.actionMark.setShortcut('Ctrl+M')
         self.ui.pushButtonSelectToMark.clicked.connect(self.markSentence)
         self.ui.pushButtonSelectToMark.setShortcut('Ctrl+M')
+        # Needs shortcut
+        self.ui.textEditSentence.zoomIn(3)
         
         self.ui.actionAddSentence.triggered.connect(self.addSentence)
         self.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
