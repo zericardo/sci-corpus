@@ -603,12 +603,9 @@ in an article.'),
 
     def markSentence(self):
         """Mark sentence with marker if marker ir checked."""
-        print 'Marking sentence'
         cursor = QTextCursor(self.ui.textEditSentence.document())
-        
         begin = self.ui.textEditSentence.textCursor().selectionStart()
         end = self.ui.textEditSentence.textCursor().selectionEnd()
-        
         marker = self.preferences['marker']
         cursor.setPosition(begin, QTextCursor.MoveAnchor);
         cursor.insertText(marker[0])
@@ -626,7 +623,8 @@ in an article.'),
         ref = str(self.ui.lineEditReference.text())
         # Cleaning
         self.ui.textEditSentence.clear()
-        self.ui.lineEditReference.clear()
+        # For now, I just disable the clear function on reference field
+        #self.ui.lineEditReference.clear()
 
         if sent != '':
             # Insertting in DB
