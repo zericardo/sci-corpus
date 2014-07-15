@@ -7,13 +7,15 @@ import csv
 from lxml import etree as ET
 import StringIO as strio
 from shutil import copy2
+from PySide.QtCore import Signal, QObject
 
-
-class ContainerDB():
+class ContainerDB(QObject):
 
     """Class container."""
+    sig_modified = Signal(bool)
 
     def __init__(self):
+        super(ContainerDB, self).__init__(parent=None)
         self.__path = ''
         self.__defaultpath = ''
         self.__isModified = False
@@ -754,6 +756,7 @@ class ContainerDB():
 
     @isModified.setter
     def isModified(self, state):
+        self.sig_modified.emit(state)
         self.__isModified = state
 
     def write_(self, path='',workspace=''):
