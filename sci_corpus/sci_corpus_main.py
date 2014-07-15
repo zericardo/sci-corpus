@@ -767,7 +767,7 @@ in an article.'),
                                         sentv,
                                         marker_beg,
                                         marker_end,
-                                        self.preferences['replace_where'],
+                                        self.preferences['where'],
                                         self.preferences['replace_by'],
                                         self.preferences['mode']))
                         sent_item.setText(new_sent)
