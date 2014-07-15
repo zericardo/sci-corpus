@@ -771,7 +771,9 @@ in an article.'),
                                         self.preferences['replace_by'],
                                         self.preferences['mode']))
                         sent_item.setText(new_sent)
-                    except Exception:
+                    except Exception,  e:
+                        # just for bebugging
+                        print e
                         sent_item.setText(str(sentv))
                         # Background red
                         sent_item.setBackground(QBrush(QColor(255, 0, 0, 127)))

@@ -387,24 +387,23 @@ class ContainerDB(QObject):
         b = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e = [match.end() for match in re.finditer(re.escape(end), sent)]
 
+        # Just for bebugging
+        print begin, end, replace_where, replace_by, mode
+        
         # exception here b and e must have the same size!
         if(len(b) == len(e)):
             for i in xrange(0, len(b)):
                 if(b[i] >= e[i]):
                     raise AssertionError(
                         "Delimiters aren't being used correctly!")
-
             r = []
 
             for i in xrange(0, len(b)):
                 r.append(sent[b[i]:e[i]])
 
-
             if(r != []):
                 if(replace_where == 'Inside markers'):
-
                     for i in xrange(0,len(r)):
-
                         if(mode == 'Bold'):
                             sent=sent.replace(r[i],r[i].replace(begin,"<b>").replace(end,"</b>"))
 
@@ -412,28 +411,21 @@ class ContainerDB(QObject):
                             sent=sent.replace(r[i],replace_by)
 
                 elif(replace_where == 'Outside markers'): 
-
                     aux  = ''
-
+                    
                     if(mode == 'Bold'):
-
                         aux += "<b>" 
-    
                         aux += sent.replace("{","</b>").replace("}","<b>")
-                            
                         aux += "</b>"
-
+                        
                     elif(mode == 'Replace'):
                         
                         if(b[0] != 0):
-                            
                             aux += "... "
-                            
                         for i in r:
                             aux += i.replace("{","").replace("}","")
                             if(i != r[-1]):
                                 aux += " ... "
-
                         if(e[-1] != len(sent)-1):
                             aux += " ..."
                             
