@@ -15,7 +15,7 @@ Date: 04/04/2014 #@TODO: how to put this?
 This script provides a graphical interface for sci-corpus program standalone.
 """
 
-from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
+from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem, QTextEdit
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView, QAction
 from PySide.QtGui import QBrush, QColor,  QDesktopServices, QApplication, QTextCursor
 from PySide.QtCore import QSettings, Signal, Qt,  QUrl
@@ -729,14 +729,15 @@ in an article.'),
                 sec_item = QTableWidgetItem(str(secv))
                 subs_item = QTableWidgetItem(str(subsv))
                 func_item = QTableWidgetItem(str(funcv))
-                sent_item = QTableWidgetItem(str(sentv))
+                sent_item = QTextEdit(str(sentv))
+                sent_item.setAcceptRichText(True)
                 ref_item = QTableWidgetItem(str(refv))
                 id_item = QTableWidgetItem(str(idv))
 
                 self.ui.tableWidgetSentence.setItem(row, 0, sec_item)
                 self.ui.tableWidgetSentence.setItem(row, 1, subs_item)
                 self.ui.tableWidgetSentence.setItem(row, 2, func_item)
-                self.ui.tableWidgetSentence.setItem(row, 3, sent_item)
+                self.ui.tableWidgetSentence.setCellWidget(row, 3, sent_item)
                 self.ui.tableWidgetSentence.setItem(row, 4, ref_item)
                 self.ui.tableWidgetSentence.setItem(row, 5, id_item)
 
