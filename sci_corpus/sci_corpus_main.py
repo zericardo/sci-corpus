@@ -141,6 +141,9 @@ class MainWindow(QMainWindow):
         self.ui.actionImport.triggered.connect(self.importFile)
         self.ui.actionExport.triggered.connect(self.exportFile)
         self.ui.actionClose.triggered.connect(self.closeFile)
+        
+        # Signals
+        self.container.sig_modified.connect(self.ui.actionSave.setEnabled)
 
         # Section -------------------------------------------------------------
         # Buttons
