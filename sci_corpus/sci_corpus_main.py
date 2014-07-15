@@ -15,9 +15,9 @@ Date: 04/04/2014 #@TODO: how to put this?
 This script provides a graphical interface for sci-corpus program standalone.
 """
 
-from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem, QTextEdit
+from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView, QAction
-from PySide.QtGui import QBrush, QColor,  QDesktopServices, QApplication, QTextCursor
+from PySide.QtGui import QBrush, QColor,  QDesktopServices, QTextCursor
 from PySide.QtCore import QSettings, Signal, Qt,  QUrl
 
 from sci_corpus import pdf_writer
@@ -72,11 +72,13 @@ class MainWindow(QMainWindow):
             'strategy': True,
             'sentence': True,
             'reference': False,
-            'strip': True,
+            'auto_clear_reference':False, 
+            'auto_clear_sentence':False, 
+            'mode': 'Bold',
             'theme': 'White',
             'marker': '{}',
             'replace_by': '...',
-            'replace_where': 'Outside Markers',
+            'where': 'Outside Markers',
             'win_workspace':'',
             'lin_workspace':'',
             'mac_workspace':'',
@@ -264,14 +266,15 @@ class MainWindow(QMainWindow):
                 4, not self.ui.checkBoxReference.isChecked()))
         self.ui.tableWidgetSentence.itemSelectionChanged.connect(
             self.updateSelectedNumbers)
-        self.ui.checkBoxStrip.clicked.connect(self.updateSentenceView)
+            
+        self.ui.comboBoxMode.currentIndexChanged.connect(self.updateSentenceView)
+        
         self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.getSentFromTableNDisplay)
         self.ui.tableWidgetSentence.cellClicked.connect(self.getSentFromTable)
         #self.ui.textEditSentence.copyAvailable.connect(self.markSentence)
         
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
-        self.ui.checkBoxStrip.setChecked(True)
 
         # Cleaning ----------------------------------------------------------
         self.clearAll()
@@ -628,9 +631,10 @@ in an article.'),
         sent = str(self.ui.textEditSentence.toPlainText())
         ref = str(self.ui.lineEditReference.text())
         # Cleaning
-        self.ui.textEditSentence.clear()
-        # For now, I just disable the clear function on reference field
-        #self.ui.lineEditReference.clear()
+        if self.ui.checkBoxAutoClearSentence.isChecked():
+            self.ui.textEditSentence.clear()
+        if self.ui.checkBoxAutoClearReference.isChecked():
+            self.ui.lineEditReference.clear()
 
         if sent != '':
             # Insertting in DB
@@ -654,6 +658,11 @@ in an article.'),
         
         sent = self.sent
         
+        if self.ui.checkBoxAutoClearSentence.isChecked():
+            self.ui.textEditSentence.clear()
+        if self.ui.checkBoxAutoClearReference.isChecked():
+            self.ui.lineEditReference.clear()
+        
         if sent != '':
             if self.removeQuestion("Sentence", [sent]) == QMessageBox.Yes:
                 print 'Removing sentences: ',  sent
@@ -671,6 +680,11 @@ in an article.'),
         
         sent = str(self.ui.textEditSentence.toPlainText())
         ref = str(self.ui.lineEditReference.text())
+        
+        if self.ui.checkBoxAutoClearSentence.isChecked():
+            self.ui.textEditSentence.clear()
+        if self.ui.checkBoxAutoClearReference.isChecked():
+            self.ui.lineEditReference.clear()
         
         if sent != '' and ref != '' and old_sent != '' and old_ref != '':
             if self.updateQuestion("Sentence", (old_sent, sent)) == QMessageBox.Yes:
@@ -719,9 +733,10 @@ in an article.'),
         self.ui.tableWidgetSentence.setColumnHidden(5, True)
 
         row = 0
-        strip = self.ui.checkBoxStrip.isChecked()
         self.ui.tableWidgetSentence.setRowCount(row)
-
+        
+        self.preferences['mode'] = self.ui.comboBoxMode.currentText()
+        
         for idv, secv, subsv, funcv, sentv, refv in sentences:
             if sentv != u'NULL':
                 # This must be provided by method of list sentences..not return NULL sentences.
@@ -732,32 +747,30 @@ in an article.'),
                 sec_item = QTableWidgetItem(str(secv))
                 subs_item = QTableWidgetItem(str(subsv))
                 func_item = QTableWidgetItem(str(funcv))
-                sent_item = QTextEdit(str(sentv))
-                sent_item.setAcceptRichText(True)
+                sent_item = QTableWidgetItem(str(sentv))
                 ref_item = QTableWidgetItem(str(refv))
                 id_item = QTableWidgetItem(str(idv))
 
                 self.ui.tableWidgetSentence.setItem(row, 0, sec_item)
                 self.ui.tableWidgetSentence.setItem(row, 1, subs_item)
                 self.ui.tableWidgetSentence.setItem(row, 2, func_item)
-                self.ui.tableWidgetSentence.setCellWidget(row, 3, sent_item)
+                self.ui.tableWidgetSentence.setItem(row, 3, sent_item)
                 self.ui.tableWidgetSentence.setItem(row, 4, ref_item)
                 self.ui.tableWidgetSentence.setItem(row, 5, id_item)
-
-                if strip:
+                
+                if self.preferences['mode']!='Raw':
                     try:
                         marker = self.preferences['marker']
                         marker_beg = marker[:len(marker) / 2]
                         marker_end = marker[len(marker) / 2:]
-                        sent_item.setText(
-                            str(
-                                self.container.adjustSentence(
-                                    sentv,
-                                    marker_beg,
-                                    marker_end,
-                                    self.preferences['replace_where'],
-                                    self.preferences['replace_by'],
-                                    mode="Replace"))) #Mode MUST BE "Bold" or "Replace"
+                        new_sent = str(self.container.adjustSentence(
+                                        sentv,
+                                        marker_beg,
+                                        marker_end,
+                                        self.preferences['where'],
+                                        self.preferences['replace_by'],
+                                        mode=self.preferences['mode']))
+                        sent_item.setText(new_sent)
                     except Exception:
                         sent_item.setText(str(sentv))
                         # Background red
@@ -851,7 +864,7 @@ in an article.'),
                                     self.preferences['description'],
                                     self.container,
                                     marker_beg, marker_end,
-                                    self.preferences['replace_where'],
+                                    self.preferences['where'],
                                     self.preferences['replace_by'],
                                     self.preferences['pdf']['margin_top'],
                                     self.preferences['pdf']['margin_bottom'],
@@ -859,8 +872,7 @@ in an article.'),
                                     self.preferences['pdf']['margin_right'], 
                                     self.preferences['pdf']['font'], 
                                     self.preferences['pdf']['size'], 
-                                    self.preferences['pdf']['replace'],
-                                    self.preferences['pdf']['dim'])
+                                    self.preferences['pdf']['mode'])
             try:
                 if self.preferences['pdf']['auto_open']:
                     QDesktopServices.openUrl(QUrl("file:///"+\
@@ -982,13 +994,20 @@ in an article.'),
             self.preferences = config
             self.logSig.emit("File scicorpus.ini was found.")
         finally:
-            self.setupWorkspace()
-            self.ui.checkBoxSection.setChecked(self.preferences['section'])
-            self.ui.checkBoxComponent.setChecked(self.preferences['component'])
-            self.ui.checkBoxStrategy.setChecked(self.preferences['strategy'])
-            self.ui.checkBoxSentence.setChecked(self.preferences['sentence'])
-            self.ui.checkBoxReference.setChecked(self.preferences['reference'])
-            self.ui.checkBoxStrip.setChecked(self.preferences['strip'])
+            try:
+                self.setupWorkspace()
+                self.ui.checkBoxSection.setChecked(self.preferences['section'])
+                self.ui.checkBoxComponent.setChecked(self.preferences['component'])
+                self.ui.checkBoxStrategy.setChecked(self.preferences['strategy'])
+                self.ui.checkBoxSentence.setChecked(self.preferences['sentence'])
+                self.ui.checkBoxReference.setChecked(self.preferences['reference'])
+                index = self.ui.comboBoxMode.findText(self.preferences['mode'])
+                self.ui.comboBoxMode.setCurrentIndex(index)
+                self.ui.checkBoxAutoClearReference.setChecked(self.preferences['auto_clear_reference'])
+                self.ui.checkBoxAutoClearSentence.setChecked(self.preferences['auto_clear_sentence'])
+            except Exception:
+                pass
+            
 
     def writePreferences(self):
         """Writes preferences on file."""
@@ -1005,10 +1024,14 @@ in an article.'),
         self.preferences['strategy'] = self.ui.checkBoxStrategy.isChecked()
         self.preferences['sentence'] = self.ui.checkBoxSentence.isChecked()
         self.preferences['reference'] = self.ui.checkBoxReference.isChecked()
-        self.preferences['strip'] = self.ui.checkBoxStrip.isChecked()
+        self.preferences['auto_clear_reference'] = self.ui.checkBoxAutoClearReference.isChecked()
+        self.preferences['auto_clear_sentence'] = self.ui.checkBoxAutoClearSentence.isChecked()
+        self.preferences['mode'] = self.ui.comboBoxMode.currentText()
         
         with codecs.open(filepath, 'wb', 'utf-8') as pref_file:
             json.dump(self.preferences, pref_file, indent=4, sort_keys=True)
+            
+        self.updateSentenceView()
 
 
     def writeSettings(self):

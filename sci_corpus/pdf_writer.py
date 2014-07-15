@@ -154,7 +154,7 @@ def exportToPDF(path, title, author, description, container,
                marker_beg, marker_end, replace_where, replace_by,
                tmargin=30, bmargin=20, lmargin=30, rmargin=20,
                font='Helvetica', size=12,
-               replaceText=False, dimText=False):
+               mode='Bold'):
     """
     This function produce the pdf itself with all the preferences 
     
@@ -184,11 +184,8 @@ def exportToPDF(path, title, author, description, container,
     integer: size
         Basic size of the text.
         
-    boolean: replaceText
-        If true, replace the marker if ...
-        
-    boolean: dimTex
-        If true, change text color inside the markers
+    string: mode
+        Modes: Bold, Replace, Raw
         
     string: marker_beg, marker_end, replace_where, replace_by
         Strip sentence variables
@@ -288,10 +285,8 @@ def exportToPDF(path, title, author, description, container,
                     if lista != []:
                         idv, secv, subsv, funcv, sentv, refv = lista
                         if sentv != 'NULL':
-                            if replaceText:
-                                sentv = container.adjustSentence(sentv, marker_beg, marker_end, replace_where, replace_by)
-                            if dimText:
-                                sentv = container.adjustSentence(sentv, marker_beg, marker_end, "dim", replace_by)
+                            if mode!='Raw':
+                                sentv = container.adjustSentence(sentv, marker_beg, marker_end, replace_where, replace_by,  mode)                                
                             if refv == 'NULL':
                                 refv = 'None'
                             ptext = sentv + ' Reference: ' + refv

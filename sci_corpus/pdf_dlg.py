@@ -47,8 +47,8 @@ class PDFDialog(QDialog):
             
             self.ui.checkBoxAutoOpen.setChecked(self.preferences['pdf']['auto_open'])  
             
-            self.ui.radioButtonDim.setChecked(self.preferences['pdf']['dim'])
-            self.ui.radioButtonReplace.setChecked(self.preferences['pdf']['replace'])
+            index = self.ui.comboBoxMode.findText(self.preferences['pdf']['mode'])
+            self.ui.comboBoxMode.setCurrentIndex(index)
             
             self.ui.spinBoxSize.setValue(int(self.preferences['pdf']['size']))
             index = self.ui.comboBoxFont.findText(self.preferences['pdf']['font'])
@@ -88,8 +88,7 @@ class PDFDialog(QDialog):
         self.preferences['pdf']['path'] = str(self.ui.lineEditPath.text())
         self.preferences['pdf']['auto_open'] = self.ui.checkBoxAutoOpen.isChecked()
         
-        self.preferences['pdf']['dim'] = self.ui.radioButtonDim.isChecked()
-        self.preferences['pdf']['replace'] = self.ui.radioButtonReplace.isChecked()
+        self.preferences['pdf']['mode'] = self.ui.comboBoxMode.currentText()
         
         self.preferences['pdf']['margin_left'] = self.ui.doubleSpinBoxLeft.value()
         self.preferences['pdf']['margin_right'] = self.ui.doubleSpinBoxRight.value()

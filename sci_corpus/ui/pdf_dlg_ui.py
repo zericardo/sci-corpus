@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'pdf_dlg.ui'
 #
-# Created: Tue Jun  3 15:15:24 2014
-#      by: pyside-uic 0.2.15 running on PySide 1.2.1
+# Created: Tue Jul 15 15:36:27 2014
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -85,15 +85,19 @@ class Ui_Dialog(object):
         self.doubleSpinBoxBottom.setObjectName("doubleSpinBoxBottom")
         self.gridLayout_3.addWidget(self.doubleSpinBoxBottom, 1, 1, 1, 1)
         self.label_3 = QtGui.QLabel(self.groupBoxMargins)
+        self.label_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_3.setObjectName("label_3")
         self.gridLayout_3.addWidget(self.label_3, 0, 0, 1, 1)
         self.label_5 = QtGui.QLabel(self.groupBoxMargins)
+        self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_5.setObjectName("label_5")
         self.gridLayout_3.addWidget(self.label_5, 0, 2, 1, 1)
         self.label_4 = QtGui.QLabel(self.groupBoxMargins)
+        self.label_4.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_4.setObjectName("label_4")
         self.gridLayout_3.addWidget(self.label_4, 1, 0, 1, 1)
         self.label_6 = QtGui.QLabel(self.groupBoxMargins)
+        self.label_6.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_6.setObjectName("label_6")
         self.gridLayout_3.addWidget(self.label_6, 1, 2, 1, 1)
         self.doubleSpinBoxLeft = QtGui.QDoubleSpinBox(self.groupBoxMargins)
@@ -116,6 +120,7 @@ class Ui_Dialog(object):
         self.gridLayout_5 = QtGui.QGridLayout(self.groupBoxText)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.label_9 = QtGui.QLabel(self.groupBoxText)
+        self.label_9.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_9.setObjectName("label_9")
         self.gridLayout_5.addWidget(self.label_9, 1, 0, 1, 1)
         self.spinBoxSize = QtGui.QSpinBox(self.groupBoxText)
@@ -123,6 +128,7 @@ class Ui_Dialog(object):
         self.spinBoxSize.setObjectName("spinBoxSize")
         self.gridLayout_5.addWidget(self.spinBoxSize, 1, 1, 1, 1)
         self.label_8 = QtGui.QLabel(self.groupBoxText)
+        self.label_8.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_8.setObjectName("label_8")
         self.gridLayout_5.addWidget(self.label_8, 0, 0, 1, 1)
         self.comboBoxFont = QtGui.QComboBox(self.groupBoxText)
@@ -136,13 +142,18 @@ class Ui_Dialog(object):
         self.groupBoxSentence.setObjectName("groupBoxSentence")
         self.gridLayout_6 = QtGui.QGridLayout(self.groupBoxSentence)
         self.gridLayout_6.setObjectName("gridLayout_6")
-        self.radioButtonReplace = QtGui.QRadioButton(self.groupBoxSentence)
-        self.radioButtonReplace.setObjectName("radioButtonReplace")
-        self.gridLayout_6.addWidget(self.radioButtonReplace, 0, 0, 1, 1)
-        self.radioButtonDim = QtGui.QRadioButton(self.groupBoxSentence)
-        self.radioButtonDim.setChecked(True)
-        self.radioButtonDim.setObjectName("radioButtonDim")
-        self.gridLayout_6.addWidget(self.radioButtonDim, 1, 0, 1, 1)
+        self.label_11 = QtGui.QLabel(self.groupBoxSentence)
+        self.label_11.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_11.setObjectName("label_11")
+        self.gridLayout_6.addWidget(self.label_11, 0, 0, 1, 1)
+        self.comboBoxMode = QtGui.QComboBox(self.groupBoxSentence)
+        self.comboBoxMode.setObjectName("comboBoxMode")
+        self.comboBoxMode.addItem("")
+        self.comboBoxMode.addItem("")
+        self.comboBoxMode.addItem("")
+        self.gridLayout_6.addWidget(self.comboBoxMode, 0, 1, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout_6.addItem(spacerItem1, 1, 1, 1, 1)
         self.horizontalLayout_2.addWidget(self.groupBoxSentence)
         self.gridLayout.addLayout(self.horizontalLayout_2, 6, 1, 1, 4)
 
@@ -176,7 +187,9 @@ class Ui_Dialog(object):
         self.comboBoxFont.setItemText(0, QtGui.QApplication.translate("Dialog", "Courier", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxFont.setItemText(1, QtGui.QApplication.translate("Dialog", "Helvetica", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBoxFont.setItemText(2, QtGui.QApplication.translate("Dialog", "Times-Roman", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBoxSentence.setTitle(QtGui.QApplication.translate("Dialog", "Sentence", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButtonReplace.setText(QtGui.QApplication.translate("Dialog", "Replace marked/unmarked text", None, QtGui.QApplication.UnicodeUTF8))
-        self.radioButtonDim.setText(QtGui.QApplication.translate("Dialog", "Dim marked/unmarked text", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBoxSentence.setTitle(QtGui.QApplication.translate("Dialog", "Sentence Dialer", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_11.setText(QtGui.QApplication.translate("Dialog", "Mode:", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxMode.setItemText(0, QtGui.QApplication.translate("Dialog", "Bold", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxMode.setItemText(1, QtGui.QApplication.translate("Dialog", "Raw", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxMode.setItemText(2, QtGui.QApplication.translate("Dialog", "Replace", None, QtGui.QApplication.UnicodeUTF8))
 
