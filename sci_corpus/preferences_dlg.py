@@ -30,44 +30,54 @@ class PreferencesDialog(QDialog):
         self.ui = preferences_dlg_ui.Ui_Preferences()
         self.ui.setupUi(self)
         self.preferences = preferences
-        
-        # Signals
-        self.ui.pushButtonOk.clicked.connect(self.accept)
-        self.ui.pushButtonCancel.clicked.connect(self.reject)
-        self.ui.pushButtonWorkspace.clicked.connect(self.searchWorkspace)
-        
-        index = self.ui.comboBoxTheme.findText(self.preferences['theme'])
-        self.ui.comboBoxTheme.setCurrentIndex(index)
-
-        index = self.ui.comboBoxMarker.findText(self.preferences['marker'])
-        self.ui.comboBoxMarker.setCurrentIndex(index)
-
-        index = self.ui.comboBoxReplace.findText(self.preferences['replace_where'])
-        self.ui.comboBoxReplace.setCurrentIndex(index)
-
-        self.ui.lineEditReplaceBy.setText(str(self.preferences['replace_by']))
-
-        os_sys = platform.system()
-        if os_sys == 'Windows':
-            self.workspace = self.preferences['win_workspace']
-        if os_sys == 'Linux':
-            self.workspace = self.preferences['lin_workspace']
-        if os_sys == 'Mac':
-            self.workspace = self.preferences['mac_workspace']
+        self.ui.labelWorkspace.setHidden(True)
+        try:
+            # Signals
+            self.ui.pushButtonOk.clicked.connect(self.accept)
+            self.ui.pushButtonCancel.clicked.connect(self.reject)
+            self.ui.pushButtonWorkspace.clicked.connect(self.searchWorkspace)
             
-        if self.workspace == '':
-            self.workspace = os.path.abspath(os.path.expanduser('~'))
+            index = self.ui.comboBoxTheme.findText(self.preferences['theme'])
+            self.ui.comboBoxTheme.setCurrentIndex(index)
+
+            index = self.ui.comboBoxMarker.findText(self.preferences['marker'])
+            self.ui.comboBoxMarker.setCurrentIndex(index)
+            
+            index = self.ui.comboBoxMode.findText(self.preferences['mode'])
+            self.ui.comboBoxMode.setCurrentIndex(index)
+
+            index = self.ui.comboBoxWhere.findText(self.preferences['where'])
+            self.ui.comboBoxWhere.setCurrentIndex(index)
+
+            self.ui.lineEditReplaceBy.setText(str(self.preferences['replace_by']))
         
-        self.ui.lineEditWorkspace.setText(str(self.workspace))
-        self.ui.checkBoxOpenLast.setChecked(self.preferences['open_last'])
-        #self.ui.checkBoxCreateDir.setChecked(True)
-        self.ui.checkBoxCreateDir.clicked.connect(self.createDir)
+        except Exception:
+            pass
+        finally:
+            os_sys = platform.system()
+            if os_sys == 'Windows':
+                self.workspace = self.preferences['win_workspace']
+            if os_sys == 'Linux':
+                self.workspace = self.preferences['lin_workspace']
+            if os_sys == 'Mac':
+                self.workspace = self.preferences['mac_workspace']
+                
+            if self.workspace == '':
+                self.workspace = os.path.abspath(os.path.expanduser('~'))
+            
+            self.ui.lineEditWorkspace.setText(str(self.workspace))
+            self.ui.checkBoxOpenLast.setChecked(self.preferences['open_last'])
+            #self.ui.checkBoxCreateDir.setChecked(True)
+            self.ui.checkBoxCreateDir.clicked.connect(self.createDir)
+            
+
 
         if initial:
             # Put some message to choose the workspace
             # in initial dialog
             self.ui.groupBoxAppearance.setHidden(True)
-            self.ui.groupBoxSentenceStrip.setHidden(True)
+            self.ui.groupBoxSentence.setHidden(True)
+            self.ui.labelWorkspace.setHidden(False)
 
             
     def createDir(self):
@@ -97,7 +107,8 @@ class PreferencesDialog(QDialog):
         """Accept event."""
         self.preferences['theme'] = self.ui.comboBoxTheme.currentText()
         self.preferences['marker'] = str(self.ui.comboBoxMarker.currentText())
-        self.preferences['replace_where'] = str(self.ui.comboBoxReplace.currentText())
+        self.preferences['where'] = str(self.ui.comboBoxWhere.currentText())
+        self.preferences['mode'] = str(self.ui.comboBoxMode.currentText())
         self.preferences['replace_by'] = str(self.ui.lineEditReplaceBy.text())
         self.workspace = str(self.ui.lineEditWorkspace.text())
 

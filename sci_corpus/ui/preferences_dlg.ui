@@ -9,26 +9,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>380</height>
+    <width>600</width>
+    <height>410</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
-    <height>380</height>
+    <width>600</width>
+    <height>410</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>500</width>
-    <height>380</height>
+    <width>600</width>
+    <height>410</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -41,7 +35,7 @@
       <string>Workspace</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="label">
         <property name="minimumSize">
          <size>
@@ -57,24 +51,24 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="1" column="1">
        <widget class="QLineEdit" name="lineEditWorkspace"/>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QCheckBox" name="checkBoxCreateDir">
         <property name="text">
          <string>Create &quot;Sci Corpus&quot; directory</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QCheckBox" name="checkBoxOpenLast">
         <property name="text">
          <string>Open last opened DB when starts</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="1" column="2">
        <widget class="QPushButton" name="pushButtonWorkspace">
         <property name="maximumSize">
          <size>
@@ -84,6 +78,13 @@
         </property>
         <property name="text">
          <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelWorkspace">
+        <property name="text">
+         <string>Please, select a workspace.</string>
         </property>
        </widget>
       </item>
@@ -159,13 +160,13 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="3">
-    <widget class="QGroupBox" name="groupBoxSentenceStrip">
+    <widget class="QGroupBox" name="groupBoxSentence">
      <property name="title">
-      <string>Sentence Strip Dealer</string>
+      <string>Sentence Dealer</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="2" column="1">
-       <widget class="QComboBox" name="comboBoxReplace">
+      <item row="3" column="1">
+       <widget class="QComboBox" name="comboBoxWhere">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -210,12 +211,12 @@
         </property>
         <item>
          <property name="text">
-          <string>{{}}</string>
+          <string>{}</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>{}</string>
+          <string>{{}}</string>
          </property>
         </item>
         <item>
@@ -225,17 +226,17 @@
         </item>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="labelReplace">
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelWhere">
         <property name="text">
-         <string>Replace: </string>
+         <string>Where</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QLineEdit" name="lineEditReplaceBy">
         <property name="minimumSize">
          <size>
@@ -257,7 +258,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="labelReplaceBy">
         <property name="minimumSize">
          <size>
@@ -273,10 +274,45 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2" rowspan="3">
+      <item row="0" column="2" rowspan="4">
        <widget class="QLabel" name="labelImportant">
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important: this function not &lt;br&gt;change your DB, it just adjust &lt;br&gt;the sentence to you visualize.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="comboBoxMode">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <item>
+         <property name="text">
+          <string>Bold</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Raw</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Replace</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelMode">
+        <property name="text">
+         <string>Mode:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>

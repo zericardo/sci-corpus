@@ -21,8 +21,6 @@ class ContainerDB(QObject):
         self.__isModified = False
         self.createNconnectDB(flag=True)
         
-
-
     def createNconnectDB(self, path='', flag=False):
         """
         Create a connection to a sqlite3 database and and a table to store the
