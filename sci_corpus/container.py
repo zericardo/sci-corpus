@@ -382,7 +382,7 @@ class ContainerDB(QObject):
             end="}",
             replace_where='Inside markers',
             replace_by="...",
-            mode='Bold'):
+            mode='Replace'):
         """Adjusts sentences to be displayed on the screen."""
 
         b = [match.start() for match in re.finditer(re.escape(begin), sent)]
@@ -442,7 +442,7 @@ class ContainerDB(QObject):
         else:
             raise AssertionError("Number of delimeters does not match!")
 
-        return sent
+        return sent.replace("<b></b>","")
         
 
     def listSentences(self, section=[], subsection=[], function=[]):
