@@ -752,7 +752,8 @@ in an article.'),
                                     marker_beg,
                                     marker_end,
                                     self.preferences['replace_where'],
-                                    self.preferences['replace_by'])))
+                                    self.preferences['replace_by'],
+                                    mode="Replace"))) #Mode MUST BE "Bold" or "Replace"
                     except Exception:
                         sent_item.setText(str(sentv))
                         # Background red

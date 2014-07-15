@@ -379,51 +379,66 @@ class ContainerDB():
             begin="{",
             end="}",
             replace_where='Inside markers',
-            replace_by="..."):
+            replace_by="...",
+            mode='Bold'):
         """Adjusts sentences to be displayed on the screen."""
+
         b = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e = [match.end() for match in re.finditer(re.escape(end), sent)]
 
         # exception here b and e must have the same size!
         if(len(b) == len(e)):
-            for i in range(0, len(b)):
+            for i in xrange(0, len(b)):
                 if(b[i] >= e[i]):
                     raise AssertionError(
                         "Delimiters aren't being used correctly!")
 
             r = []
 
-            for i in range(0, len(b)):
+            for i in xrange(0, len(b)):
                 r.append(sent[b[i]:e[i]])
 
-            if replace_where == 'Inside markers':
-                for substring in r:
-                    sent = sent.replace(substring, replace_by)
+
+            if(r != []):
+                if(replace_where == 'Inside markers'):
+
+                    for i in xrange(0,len(r)):
+
+                        if(mode == 'Bold'):
+                            sent=sent.replace(r[i],r[i].replace(begin,"<b>").replace(end,"</b>"))
+
+                        elif(mode == 'Replace'):
+                            sent=sent.replace(r[i],replace_by)
+
+                elif(replace_where == 'Outside markers'): 
+
+                    aux  = ''
+
+                    if(mode == 'Bold'):
+
+                        aux += "<b>" 
                     
-            elif replace_where == 'dim':
-                sent = sent.replace(begin,"<b>")
-                sent = sent.replace(end,"</b>")
-                
-            else:
-                if(r != []):
-                    # @TODO: talvez colocar um erro em um else para este if!
-                    aux = ''
+                        aux += sent.replace("{","</b>").replace("}","<b>")
+                            
+                        aux += "</b>"
 
-                    if 0 not in b:
-                        aux += replace_by + " "
+                    elif(mode == 'Replace'):
+                        
+                        if(b[0] != 0):
+                            
+                            aux += "... "
+                            
+                        for i in r:
+                            aux += i.replace("{","").replace("}","")
+                            if(i != r[-1]):
+                                aux += " ... "
 
-                    for i in range(0, len(b) - 1):
-                        aux += sent[b[i]:e[i]] + " " + replace_by + " "
-
-                    if(e[len(b) - 1] == len(sent) - 1):
-                        aux += sent[b[len(b) - 1]:e[len(e) - 1]]
-                    else:
-                        aux += sent[b[len(b) - 1]:e[len(e) - 1]
-                                    ] + " " + replace_by + " "
-
-                    sent = aux.replace(begin, "").replace(end, "")
+                        if(e[-1] != len(sent)-1):
+                            aux += " ..."
+                            
+                        sent=aux
         else:
-            raise AssertionError("Delimiter number doesnt match!")
+            raise AssertionError("Number of delimeters does not match!")
 
         return sent
         
