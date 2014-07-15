@@ -16,6 +16,7 @@ from reportlab.lib.units import mm, inch
 from reportlab.platypus.doctemplate import PageTemplate, BaseDocTemplate, NextPageTemplate
 from reportlab.platypus.tableofcontents import TableOfContents
 from reportlab.platypus.frames import Frame
+from reportlab.lib.enums import TA_JUSTIFY
 
 PAGE_HEIGHT=defaultPageSize[1]
 PAGE_WIDTH=defaultPageSize[0]
@@ -205,14 +206,14 @@ def exportToPDF(path, title, author, description, container,
     if font == 'Helvetica':
 		fontbold = 'Helvetica-Bold'
 
-    phrase_base = ParagraphStyle(name='phrase_base', fontName=font, fontSize=size)
-    heading_1 = ParagraphStyle(name='heading_1', fontName=fontbold, fontSize=size+6, leading=22, spaceAfter=6)
-    heading_2 = ParagraphStyle(name='heading_2', fontName=fontbold, fontSize=size+4, leading=18, spaceBefore=12, spaceAfter=6)
-    heading_3 = ParagraphStyle(name='heading_3', fontName=font, fontSize=size+2, leading=14, spaceBefore=12, spaceAfter=6)
+    phrase_base = ParagraphStyle(name='phrase_base', fontName=font, fontSize=size, alignment=TA_JUSTIFY, leftIndent=0.5*inch)
+    heading_1 = ParagraphStyle(name='heading_1', fontName=fontbold, fontSize=size+4, leading=22, spaceBefore=12, spaceAfter=6)
+    heading_2 = ParagraphStyle(name='heading_2', fontName=fontbold, fontSize=size+2, leading=18, spaceBefore=6, spaceAfter=6)
+    heading_3 = ParagraphStyle(name='heading_3', fontName=font, fontSize=size+1, leading=14, spaceBefore=6, spaceAfter=6)
     centered = ParagraphStyle(name='centered', fontName=font, fontSize=18, leading=26, alignment=1, spaceAfter=26) 
     desc_style = ParagraphStyle(name='desc_style', fontName=font, fontSize=size+2)
-    title_style = ParagraphStyle(name='title_style', fontName=font, fontSize=size+12, alignment=1)
-    author_style = ParagraphStyle(name='author_style', fontName=font, fontSize=size+3, alignment=1)
+    title_style = ParagraphStyle(name='title_style', fontName=font, fontSize=size+12)
+    author_style = ParagraphStyle(name='author_style', fontName=font, fontSize=size+3)
     
     doc = MyDocTemplate(path, 
                           pagesize=A4,
@@ -269,19 +270,33 @@ def exportToPDF(path, title, author, description, container,
             strategies = container.listStrategies(qsections=[sec],qsubsections=[comp])
             if "Not Classified" in strategies:
                 strategies.remove("Not Classified")
+                
+            nummenos = 0
             
             for stranum, stra in enumerate(strategies):
-                Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.'+str(stranum+1)+'.  '+stra,heading_3))
+                
+                Story.append(Paragraph(str(snum+1)+'.'+str(compnum+1)+'.'+str(stranum-nummenos+1)+'.  '+stra,heading_3))
                 Story.append(Spacer(1, 12))
-                for idv, secv, subsv, funcv, sentv, refv in container.listSentences(section=[sec],subsection=[comp],function=[stra]):
-                    if sentv != 'NULL':
-                        if replaceText:
-                            sentv = container.adjustSentence(sentv, marker_beg, marker_end, replace_where, replace_by)
-                        if dimText:
-                            sentv = container.adjustSentence(sentv, marker_beg, marker_end, "dim", replace_by)
-                            
-                        ptext = sentv + ' Reference: ' + refv
-                        Story.append(Paragraph(ptext,phrase_base))
-                        Story.append(Spacer(1, 12))
+                lista = container.listSentences(section=[sec],subsection=[comp],function=[stra])
+
+                if lista == []:
+                    Story.pop()
+                    Story.pop()
+                    nummenos+=1
+                
+                for lista in container.listSentences(section=[sec],subsection=[comp],function=[stra]):
+                    if lista != []:
+                        idv, secv, subsv, funcv, sentv, refv = lista
+                        if sentv != 'NULL':
+                            if replaceText:
+                                sentv = container.adjustSentence(sentv, marker_beg, marker_end, replace_where, replace_by)
+                            if dimText:
+                                sentv = container.adjustSentence(sentv, marker_beg, marker_end, "dim", replace_by)
+                            if refv == 'NULL':
+                                refv = 'None'
+                            ptext = sentv + ' Reference: ' + refv
+                            Story.append(Paragraph(ptext,phrase_base))
+                            Story.append(Spacer(1, 12))
+
 
     doc.multiBuild(Story)
