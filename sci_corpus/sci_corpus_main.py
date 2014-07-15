@@ -1142,25 +1142,37 @@ def main():
 
     argv = sys.argv
     app = QApplication(argv)
-    app.setStyle('cleanlooks')
+    app.setStyle('Cleanlooks')
     main_window = MainWindow()
     
     style_sheet = ''
     style_path = ''
-
+    
+    STYLESHEET = "QListView {show-decoration-selected: 1; }\
+               QListView::item:selected {color:#ffffff; background:#006699;} \
+               QListView::item:selected:!active {background:#009999;} \
+               QListView::item:selected:active {color:#ffffff; background:#006699;} \
+               QListView::item:hover {color:#ffffff; background:#003366;}\
+               QTableView {show-decoration-selected: 1; }\
+               QTableView::item:selected {color:#ffffff; background:#006699;} \
+               QTableView::item:selected:!active {background:#009999;} \
+               QTableView::item:selected:active {color:#ffffff; background:#006699;} \
+               QTableView::item:hover {color:#ffffff; background:#003366;}"
+               
     if main_window.preferences['theme'] == 'Black':
         style_path = 'sci_corpus/ui/black_theme.sty'
     else:
         style_path = 'sci_corpus/ui/white_theme.sty'
-
+        
     try:
         with open(os.path.abspath(style_path), 'rb') as style_file:
             style_sheet = str(style_file.read())
-            app.setStyleSheet(style_sheet)
-
     except Exception as e:
         print 'Error in style sheet: ', e
+        app.setStyleSheet(STYLESHEET)
         pass
+    else:
+        app.setStyleSheet(style_sheet+STYLESHEET)
 
     main_window.showMaximized()
     app.exec_()
