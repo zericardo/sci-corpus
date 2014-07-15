@@ -382,7 +382,7 @@ class ContainerDB(QObject):
             replace_by="...",
             mode='Replace'):
         """Adjusts sentences to be displayed on the screen."""
-
+        
         b = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e = [match.end() for match in re.finditer(re.escape(end), sent)]
 

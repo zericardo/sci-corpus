@@ -767,9 +767,9 @@ in an article.'),
                                         sentv,
                                         marker_beg,
                                         marker_end,
-                                        self.preferences['where'],
+                                        self.preferences['replace_where'],
                                         self.preferences['replace_by'],
-                                        mode=self.preferences['mode']))
+                                        self.preferences['mode']))
                         sent_item.setText(new_sent)
                     except Exception:
                         sent_item.setText(str(sentv))
