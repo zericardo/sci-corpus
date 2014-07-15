@@ -41,7 +41,6 @@ class StartDialog(QDialog):
         self.ui.progressBar.setValue(0)
 
         self.setWindowFlags(Qt.SplashScreen |
-                            Qt.WindowStaysOnTopHint |
                             Qt.FramelessWindowHint |
                             Qt.WindowTitleHint)
         self.__delay = delay
