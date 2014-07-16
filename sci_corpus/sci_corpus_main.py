@@ -88,7 +88,7 @@ class MainWindow(QMainWindow):
             'theme': 'White',
             'marker': '{}',
             'replace_by': '...',
-            'where': 'Outside Markers',
+            'where': 'Inside markers',
             'win_workspace':'',
             'lin_workspace':'',
             'mac_workspace':'',
@@ -117,8 +117,6 @@ class MainWindow(QMainWindow):
 
         start.updateProgress(30)
         start.informationProgress('Loading preferences')
-        
-        self.readPreferences()
 
         start.updateProgress(50)
         start.informationProgress('Loading pdfwriter')
@@ -139,7 +137,7 @@ class MainWindow(QMainWindow):
         self.ui.actionTips.triggered.connect(self.tips)
         self.ui.actionPreferences.triggered.connect(
             lambda: preferences_dlg.PreferencesDialog(
-                self.preferences, False,  self).exec_())
+                self.preferences,  self).exec_())
         # Signals
         self.logSig.connect(self.showLogMessage)
 
@@ -302,7 +300,7 @@ class MainWindow(QMainWindow):
         
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
-
+        
         # Cleaning ----------------------------------------------------------
         self.clearAll()
         self.updateSectionView()
@@ -1014,7 +1012,7 @@ in an article.'),
                 config = json.loads(str(text))
         except Exception:
             self.logSig.emit("File scicorpus.ini not found.")
-            preferences_dlg.PreferencesDialog(self.preferences, True,  self).exec_()
+            preferences_dlg.PreferencesDialog(self.preferences, self).exec_()
             pass
         else:
             self.firstTimeOpened = False
@@ -1171,6 +1169,8 @@ def main():
     app = QApplication(argv)
     app.setStyle('Cleanlooks')
     main_window = MainWindow()
+    main_window.showMaximized()
+    main_window.readPreferences()
     
     style_sheet = ''
     style_path = ''
@@ -1201,5 +1201,7 @@ def main():
     else:
         app.setStyleSheet(style_sheet+STYLESHEET)
 
-    main_window.showMaximized()
+
     app.exec_()
+
+

@@ -24,13 +24,13 @@ class PreferencesDialog(QDialog):
 
     """Preferences dialog."""
 
-    def __init__(self, preferences, initial=False, parent=None):
+    def __init__(self, preferences, parent=None):
         """Contructor."""
         super(PreferencesDialog, self).__init__(parent)
         self.ui = preferences_dlg_ui.Ui_Preferences()
         self.ui.setupUi(self)
         self.preferences = preferences
-        self.ui.labelWorkspace.setHidden(True)
+
         try:
             # Signals
             self.ui.pushButtonOk.clicked.connect(self.accept)
@@ -69,15 +69,6 @@ class PreferencesDialog(QDialog):
             self.ui.checkBoxOpenLast.setChecked(self.preferences['open_last'])
             #self.ui.checkBoxCreateDir.setChecked(True)
             self.ui.checkBoxCreateDir.clicked.connect(self.createDir)
-            
-
-
-        if initial:
-            # Put some message to choose the workspace
-            # in initial dialog
-            self.ui.groupBoxAppearance.setHidden(True)
-            self.ui.groupBoxSentence.setHidden(True)
-            self.ui.labelWorkspace.setHidden(False)
 
             
     def createDir(self):
