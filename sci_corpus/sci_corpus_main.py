@@ -519,19 +519,35 @@ scientific text. In summary, they are the titles of each section.'),
         
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs=self.container.listComponents(qsections=sec)
+        subs = sorted(subs)
         subs_all = self.container.listComponents()
         self.ui.listWidgetComponent.clear()
         subs_all = sorted(subs_all)
         
+        # remove from subs
+        if "Not Classified" in subs:
+            subs.remove("Not Classified")
+            
+        # remove from subs_all, put it in the end
         if "Not Classified" in subs_all:
             subs_all.remove("Not Classified")
             subs_all.append("Not Classified")
+            
+        # we need to thing better ways to make this
+        # without for's
         
-        for row, value in enumerate(subs_all):
+        # paint and put first in the view
+        for row, value in enumerate(subs):
             item = QListWidgetItem(str(value))
-            if value in subs:
-                item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+            item.setBackground(QBrush(QColor(0, 0, 255, 30)))
             self.ui.listWidgetComponent.addItem(item)
+            
+        # put some they not have
+        for row, value in enumerate(subs_all):
+            # if we can use set we dont need to use if
+            if value not in subs:
+                item = QListWidgetItem(str(value))
+                self.ui.listWidgetComponent.addItem(item)
         
         self.ui.labelHighlightedComponent.setText(str(len(subs)))
         self.updateStrategyView()
