@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window_mw.ui'
 #
-# Created: Wed Jul 16 11:20:44 2014
+# Created: Wed Jul 16 11:53:34 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1249, 646)
+        MainWindow.resize(1443, 855)
         font = QtGui.QFont()
         MainWindow.setFont(font)
         icon = QtGui.QIcon()
@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1249, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1443, 25))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -392,12 +392,6 @@ class Ui_MainWindow(object):
         self.dockWidgetSentence.setObjectName("dockWidgetSentence")
         self.dockWidgetContentsSentence = QtGui.QWidget()
         self.dockWidgetContentsSentence.setObjectName("dockWidgetContentsSentence")
-        self.verticalLayoutWidget = QtGui.QWidget(self.dockWidgetContentsSentence)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(20, 0, 160, 80))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayoutSentence = QtGui.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayoutSentence.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayoutSentence.setObjectName("verticalLayoutSentence")
         self.dockWidgetSentence.setWidget(self.dockWidgetContentsSentence)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetSentence)
         self.actionOpen = QtGui.QAction(MainWindow)
@@ -606,6 +600,7 @@ class Ui_MainWindow(object):
         self.toolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
         self.dockWidgetLogView.setWindowTitle(QtGui.QApplication.translate("MainWindow", "  Log View", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonClearLog.setText(QtGui.QApplication.translate("MainWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
+        self.dockWidgetSentence.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Sentence Editor", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open...", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+O", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSave.setText(QtGui.QApplication.translate("MainWindow", "Save", None, QtGui.QApplication.UnicodeUTF8))
