@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1249</width>
-    <height>636</height>
+    <height>646</height>
    </rect>
   </property>
   <property name="font">
@@ -59,9 +59,6 @@
           <string>Update</string>
          </property>
         </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="QLineEdit" name="lineEditReference"/>
        </item>
        <item row="4" column="5">
         <widget class="QPushButton" name="pushButtonSentenceAdd">
@@ -133,6 +130,9 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="4" column="2">
+        <widget class="QLineEdit" name="lineEditReference"/>
+       </item>
       </layout>
      </widget>
     </item>
@@ -149,7 +149,7 @@ p, li { white-space: pre-wrap; }
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionOpen"/>
@@ -168,42 +168,42 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionTips"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuSection">
     <property name="title">
-     <string>Section</string>
+     <string>&amp;Section</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionTipsSection"/>
    </widget>
    <widget class="QMenu" name="menuComponent">
     <property name="title">
-     <string>Component</string>
+     <string>&amp;Component</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionTipsComponent"/>
    </widget>
    <widget class="QMenu" name="menuStrategy">
     <property name="title">
-     <string>Strategy</string>
+     <string>S&amp;trategy</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionTipsStrategy"/>
    </widget>
    <widget class="QMenu" name="menuSentence">
     <property name="title">
-     <string>Sentence</string>
+     <string>S&amp;entence</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionTipsSentence"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
-     <string>Settings</string>
+     <string>Sett&amp;ings</string>
     </property>
     <addaction name="actionPreferences"/>
    </widget>
@@ -1072,7 +1072,10 @@ background-color: rgb(0, 0, 0);</string>
      <normaloff>:/File/document-open-7.png</normaloff>:/File/document-open-7.png</iconset>
    </property>
    <property name="text">
-    <string>Open</string>
+    <string>Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionSave">
@@ -1083,6 +1086,9 @@ background-color: rgb(0, 0, 0);</string>
    <property name="text">
     <string>Save</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionSaveAs">
    <property name="icon">
@@ -1090,7 +1096,13 @@ background-color: rgb(0, 0, 0);</string>
      <normaloff>:/File/document-save-as-3.png</normaloff>:/File/document-save-as-3.png</iconset>
    </property>
    <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="toolTip">
     <string>Save As</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionPrint">
@@ -1099,7 +1111,10 @@ background-color: rgb(0, 0, 0);</string>
      <normaloff>:/File/document-print-5.png</normaloff>:/File/document-print-5.png</iconset>
    </property>
    <property name="text">
-    <string>Print to PDF</string>
+    <string>Print to PDF...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
   <action name="actionClose">
@@ -1110,15 +1125,21 @@ background-color: rgb(0, 0, 0);</string>
    <property name="text">
     <string>Close</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
   </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>About...</string>
    </property>
   </action>
   <action name="actionTips">
@@ -1175,6 +1196,9 @@ background-color: rgb(0, 0, 0);</string>
    <property name="text">
     <string>Add</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+A</string>
+   </property>
   </action>
   <action name="actionRemoveSentence">
    <property name="text">
@@ -1192,7 +1216,7 @@ background-color: rgb(0, 0, 0);</string>
      <normaloff>:/File/document-import-2.png</normaloff>:/File/document-import-2.png</iconset>
    </property>
    <property name="text">
-    <string>Import ...</string>
+    <string>Import...</string>
    </property>
   </action>
   <action name="actionExport">
@@ -1201,7 +1225,7 @@ background-color: rgb(0, 0, 0);</string>
      <normaloff>:/File/document-export-4.png</normaloff>:/File/document-export-4.png</iconset>
    </property>
    <property name="text">
-    <string>Export ...</string>
+    <string>Export...</string>
    </property>
   </action>
   <action name="actionTipsSection">
@@ -1224,17 +1248,46 @@ background-color: rgb(0, 0, 0);</string>
     <string>Tips</string>
    </property>
   </action>
-  <action name="actionStripOptions">
-   <property name="text">
-    <string>Strip Options</string>
-   </property>
-  </action>
   <action name="actionPreferences">
    <property name="text">
-    <string>Preferences</string>
+    <string>Preferences...</string>
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>lineEditSection</tabstop>
+  <tabstop>pushButtonSectionAdd</tabstop>
+  <tabstop>pushButtonSectionRemove</tabstop>
+  <tabstop>pushButtonSectionUpdate</tabstop>
+  <tabstop>listWidgetSection</tabstop>
+  <tabstop>lineEditComponent</tabstop>
+  <tabstop>pushButtonComponentAdd</tabstop>
+  <tabstop>pushButtonComponentRemove</tabstop>
+  <tabstop>pushButtonComponentUpdate</tabstop>
+  <tabstop>listWidgetComponent</tabstop>
+  <tabstop>lineEditStrategy</tabstop>
+  <tabstop>pushButtonStrategyAdd</tabstop>
+  <tabstop>pushButtonStrategyRemove</tabstop>
+  <tabstop>pushButtonStrategyUpdate</tabstop>
+  <tabstop>listWidgetStrategy</tabstop>
+  <tabstop>textEditSentence</tabstop>
+  <tabstop>lineEditReference</tabstop>
+  <tabstop>pushButtonSentenceAdd</tabstop>
+  <tabstop>pushButtonSentenceRemove</tabstop>
+  <tabstop>pushButtonSentenceUpdate</tabstop>
+  <tabstop>checkBoxAutoClearReference</tabstop>
+  <tabstop>checkBoxAutoClearSentence</tabstop>
+  <tabstop>pushButtonSelectToMark</tabstop>
+  <tabstop>checkBoxSection</tabstop>
+  <tabstop>checkBoxComponent</tabstop>
+  <tabstop>checkBoxStrategy</tabstop>
+  <tabstop>checkBoxSentence</tabstop>
+  <tabstop>checkBoxReference</tabstop>
+  <tabstop>comboBoxMode</tabstop>
+  <tabstop>tableWidgetSentence</tabstop>
+  <tabstop>pushButtonClearLog</tabstop>
+  <tabstop>textEditLogView</tabstop>
+ </tabstops>
  <resources>
   <include location="icons/sci_corpus_resource.qrc"/>
  </resources>
@@ -1246,12 +1299,12 @@ background-color: rgb(0, 0, 0);</string>
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>879</x>
-     <y>626</y>
+     <x>1115</x>
+     <y>530</y>
     </hint>
     <hint type="destinationlabel">
-     <x>889</x>
-     <y>682</y>
+     <x>1239</x>
+     <y>614</y>
     </hint>
    </hints>
   </connection>
