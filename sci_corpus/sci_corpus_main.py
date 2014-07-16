@@ -306,8 +306,7 @@ class MainWindow(QMainWindow):
         self.updateSectionView()
         self.updateSentenceView()
         
-        if self.preferences['open_last'] and not self.firstTimeOpened:
-            self.openFile(str(self.preferences['last_path']))
+
 
     def getSentFromTable(self, row,  column):
         """
@@ -1198,6 +1197,8 @@ def main():
     main_window = MainWindow()
     main_window.showMaximized()
     main_window.readPreferences()
+    if main_window.preferences['open_last'] and not main_window.firstTimeOpened:
+        main_window.openFile(str(main_window.preferences['last_path']))
     
     style_sheet = ''
     style_path = ''
