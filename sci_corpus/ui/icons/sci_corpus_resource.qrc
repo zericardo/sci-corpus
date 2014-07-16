@@ -29,6 +29,19 @@
     <file>window-close-2.png</file>
     <file>window-close.png</file>
   </qresource>
+  <qresource prefix="Edit">
+    <file>draw-brush.png</file>
+    <file>edit-clear-2.png</file>
+    <file>edit-copy-8.png</file>
+    <file>edit-cut-2.png</file>
+    <file>edit-cut-8.png</file>
+    <file>edit-find-3.png</file>
+    <file>edit-find-and-replace.png</file>
+    <file>edit-paste-8.png</file>
+    <file>edit-redo-8.png</file>
+    <file>edit-select-all.png</file>
+    <file>edit-undo-8.png</file>
+  </qresource>
   <qresource prefix="Window">
     <file>Logo_Sci_Corpus_Without_Version.png</file>
     <file>Icon_Sci_Corpus.png</file>

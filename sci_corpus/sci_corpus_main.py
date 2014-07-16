@@ -17,7 +17,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 
 from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
 from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView, QAction
-from PySide.QtGui import QBrush, QColor,  QDesktopServices, QTextCursor
+from PySide.QtGui import QBrush, QColor,  QDesktopServices, QTextCursor, QMainWindow
 from PySide.QtCore import QSettings, Signal, Qt,  QUrl
 
 from sci_corpus import pdf_writer
@@ -25,6 +25,7 @@ from sci_corpus import start_dlg
 from sci_corpus import preferences_dlg
 from sci_corpus import container
 from sci_corpus.ui import main_window_ui
+from sci_corpus.ui import sentence_mw_ui
 from sci_corpus import pdf_dlg
 
 import os
@@ -63,7 +64,16 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle(__name__+ " "+ __version__)
-
+        self.centralWidget().hide()
+        
+        # sentece main window
+        self.sentence_mw = QMainWindow(self)
+        self.sentence_mw.ui = sentence_mw_ui.Ui_MainWindowSentence()
+        self.sentence_mw.ui.setupUi(self.sentence_mw)
+        self.sentence_mw.setAttribute(Qt.WA_DeleteOnClose)
+        
+        self.ui.dockWidgetSentence.setWidget(self.sentence_mw)
+        
         self.firstTimeOpened = True
         self.workspace = os.path.abspath(os.path.expanduser('~'))
         self.defaultPref = {
@@ -231,23 +241,21 @@ class MainWindow(QMainWindow):
 
         # Sentence ------------------------------------------------------------
         # Buttons
-        self.ui.pushButtonSentenceAdd.clicked.connect(self.addSentence)
-        self.ui.pushButtonSentenceRemove.clicked.connect(self.removeSentence)
-        self.ui.pushButtonSentenceUpdate.clicked.connect(self.updateSentence)
+        self.sentence_mw.ui.pushButtonSentenceAdd.clicked.connect(self.addSentence)
+        self.sentence_mw.ui.pushButtonSentenceRemove.clicked.connect(self.removeSentence)
+        self.sentence_mw.ui.pushButtonSentenceUpdate.clicked.connect(self.updateSentence)
         # Actions
         # Needs changes here
-        self.ui.actionMark = QAction(self)
-        self.ui.actionMark.triggered.connect(self.markSentence)
-        self.ui.actionMark.setShortcut('Ctrl+M')
-        self.ui.pushButtonSelectToMark.clicked.connect(self.markSentence)
-        self.ui.pushButtonSelectToMark.setShortcut('Ctrl+M')
-        # Needs shortcut
-        self.ui.textEditSentence.zoomIn(3)
+        self.sentence_mw.ui.actionMark = QAction(self)
+        self.sentence_mw.ui.actionMark.triggered.connect(self.markSentence)
         
-        self.ui.actionAddSentence.triggered.connect(self.addSentence)
-        self.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
-        self.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
-        self.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
+        # Needs shortcut
+        self.sentence_mw.ui.textEditSentence.zoomIn(3)
+        
+        #self.sentence_mw.ui.actionAddSentence.triggered.connect(self.addSentence)
+        #self.sentence_mw.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
+        #self.sentence_mw.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
+        #self.sentence_mw.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
         # Signals
         self.ui.checkBoxSection.clicked.connect(
             lambda: self.ui.tableWidgetSentence.setColumnHidden(
@@ -271,7 +279,7 @@ class MainWindow(QMainWindow):
         
         self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.getSentFromTableNDisplay)
         self.ui.tableWidgetSentence.cellClicked.connect(self.getSentFromTable)
-        #self.ui.textEditSentence.copyAvailable.connect(self.markSentence)
+        #self.sentence_mw.ui.textEditSentence.copyAvailable.connect(self.markSentence)
         
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
@@ -304,8 +312,8 @@ class MainWindow(QMainWindow):
         #self.ID = int(self.ui.tableWidgetSentence.item(row, 5).text())
         #[(self.sent, self.ref)] = self.container.searchByID(self.ID)
         
-        self.ui.textEditSentence.setText(self.sent)
-        self.ui.lineEditReference.setText(self.ref)
+        self.sentence_mw.ui.textEditSentence.setText(self.sent)
+        self.sentence_mw.ui.lineEditReference.setText(self.ref)
 
 
     def selectedTitles(self, selected_items):
@@ -612,9 +620,9 @@ in an article.'),
 
     def markSentence(self):
         """Mark sentence with marker if marker ir checked."""
-        cursor = QTextCursor(self.ui.textEditSentence.document())
-        begin = self.ui.textEditSentence.textCursor().selectionStart()
-        end = self.ui.textEditSentence.textCursor().selectionEnd()
+        cursor = QTextCursor(self.sentence_mw.ui.textEditSentence.document())
+        begin = self.sentence_mw.ui.textEditSentence.textCursor().selectionStart()
+        end = self.sentence_mw.ui.textEditSentence.textCursor().selectionEnd()
         marker = self.preferences['marker']
         cursor.setPosition(begin, QTextCursor.MoveAnchor);
         cursor.insertText(marker[0])
@@ -628,13 +636,13 @@ in an article.'),
         subs = self.selectedTitles(
             self.ui.listWidgetComponent.selectedItems())
         func = self.selectedTitles(self.ui.listWidgetStrategy.selectedItems())
-        sent = str(self.ui.textEditSentence.toPlainText())
-        ref = str(self.ui.lineEditReference.text())
+        sent = str(self.sentence_mw.ui.textEditSentence.toPlainText())
+        ref = str(self.sentence_mw.ui.lineEditReference.text())
         # Cleaning
-        if self.ui.checkBoxAutoClearSentence.isChecked():
-            self.ui.textEditSentence.clear()
-        if self.ui.checkBoxAutoClearReference.isChecked():
-            self.ui.lineEditReference.clear()
+        if self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked():
+            self.sentence_mw.ui.textEditSentence.clear()
+        if self.sentence_mw.ui.checkBoxAutoClearReference.isChecked():
+            self.sentence_mw.ui.lineEditReference.clear()
 
         if sent != '':
             # Insertting in DB
@@ -658,10 +666,10 @@ in an article.'),
         
         sent = self.sent
         
-        if self.ui.checkBoxAutoClearSentence.isChecked():
-            self.ui.textEditSentence.clear()
-        if self.ui.checkBoxAutoClearReference.isChecked():
-            self.ui.lineEditReference.clear()
+        if self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked():
+            self.sentence_mw.ui.textEditSentence.clear()
+        if self.sentence_mw.ui.checkBoxAutoClearReference.isChecked():
+            self.sentence_mw.ui.lineEditReference.clear()
         
         if sent != '':
             if self.removeQuestion("Sentence", [sent]) == QMessageBox.Yes:
@@ -678,13 +686,13 @@ in an article.'),
         old_sent = self.sent
         old_ref = self.ref
         
-        sent = str(self.ui.textEditSentence.toPlainText())
-        ref = str(self.ui.lineEditReference.text())
+        sent = str(self.sentence_mw.ui.textEditSentence.toPlainText())
+        ref = str(self.sentence_mw.ui.lineEditReference.text())
         
-        if self.ui.checkBoxAutoClearSentence.isChecked():
-            self.ui.textEditSentence.clear()
-        if self.ui.checkBoxAutoClearReference.isChecked():
-            self.ui.lineEditReference.clear()
+        if self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked():
+            self.sentence_mw.ui.textEditSentence.clear()
+        if self.sentence_mw.ui.checkBoxAutoClearReference.isChecked():
+            self.sentence_mw.ui.lineEditReference.clear()
         
         if sent != '' and ref != '' and old_sent != '' and old_ref != '':
             if self.updateQuestion("Sentence", (old_sent, sent)) == QMessageBox.Yes:
@@ -1005,8 +1013,8 @@ in an article.'),
                 self.ui.checkBoxReference.setChecked(self.preferences['reference'])
                 index = self.ui.comboBoxMode.findText(self.preferences['mode'])
                 self.ui.comboBoxMode.setCurrentIndex(index)
-                self.ui.checkBoxAutoClearReference.setChecked(self.preferences['auto_clear_reference'])
-                self.ui.checkBoxAutoClearSentence.setChecked(self.preferences['auto_clear_sentence'])
+                self.sentence_mw.ui.checkBoxAutoClearReference.setChecked(self.preferences['auto_clear_reference'])
+                self.sentence_mw.ui.checkBoxAutoClearSentence.setChecked(self.preferences['auto_clear_sentence'])
             except Exception:
                 pass
             
@@ -1026,8 +1034,8 @@ in an article.'),
         self.preferences['strategy'] = self.ui.checkBoxStrategy.isChecked()
         self.preferences['sentence'] = self.ui.checkBoxSentence.isChecked()
         self.preferences['reference'] = self.ui.checkBoxReference.isChecked()
-        self.preferences['auto_clear_reference'] = self.ui.checkBoxAutoClearReference.isChecked()
-        self.preferences['auto_clear_sentence'] = self.ui.checkBoxAutoClearSentence.isChecked()
+        self.preferences['auto_clear_reference'] = self.sentence_mw.ui.checkBoxAutoClearReference.isChecked()
+        self.preferences['auto_clear_sentence'] = self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked()
         self.preferences['mode'] = self.ui.comboBoxMode.currentText()
         
         with codecs.open(filepath, 'wb', 'utf-8') as pref_file:
@@ -1054,7 +1062,7 @@ in an article.'),
         self.ui.lineEditSection.clear()
         self.ui.lineEditComponent.clear()
         self.ui.lineEditStrategy.clear()
-        self.ui.textEditSentence.clear()
+        self.sentence_mw.ui.textEditSentence.clear()
         # Clear list viewers
         self.ui.listWidgetSection.clear()
         self.ui.listWidgetComponent.clear()
