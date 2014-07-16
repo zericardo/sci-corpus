@@ -382,13 +382,10 @@ class ContainerDB(QObject):
             replace_by="...",
             mode='Replace'):
         """Adjusts sentences to be displayed on the screen."""
-
         
         b = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e = [match.end() for match in re.finditer(re.escape(end), sent)]
 
-        # Just for bebugging
-        print begin, end, replace_where, replace_by, mode
         
         # exception here b and e must have the same size!
         if(len(b) == len(e)):
@@ -429,7 +426,7 @@ class ContainerDB(QObject):
                         if(e[-1] != len(sent)-1):
                             aux += " ..."
                             
-                sent=aux
+                    sent=aux
         else:
             raise AssertionError("Number of delimeters does not match!")
 
