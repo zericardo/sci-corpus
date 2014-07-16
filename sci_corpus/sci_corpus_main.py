@@ -736,6 +736,7 @@ in an article.'),
             section=sections,
             subsection=sub_sections,
             function=strategies)
+        sentences_all = self.container.listSentences()
 
         self.ui.tableWidgetSentence.clearContents()
         self.ui.tableWidgetSentence.setColumnCount(6)
@@ -764,7 +765,7 @@ in an article.'),
         
         self.preferences['mode'] = self.ui.comboBoxMode.currentText()
         
-        for idv, secv, subsv, funcv, sentv, refv in sentences:
+        for idv, secv, subsv, funcv, sentv, refv in sentences_all:
             if sentv != u'NULL':
                 # This must be provided by method of list sentences..not return NULL sentences.
                 # Or maybe, put a check box to choose if will be show or not
@@ -802,6 +803,8 @@ in an article.'),
                         sent_item.setText(str(sentv))
                         # Background red
                         sent_item.setBackground(QBrush(QColor(255, 0, 0, 127)))
+                if sentv in sentences[0]:
+                    sent_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
                 row += 1
 
         self.ui.labelHighlightedSentence.setText(str(row))
