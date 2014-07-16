@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>209</height>
+    <width>748</width>
+    <height>330</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -27,7 +27,7 @@
     <item row="0" column="0">
      <widget class="QWidget" name="widget" native="true">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="3" column="5">
+       <item row="3" column="3">
         <widget class="QPushButton" name="pushButtonSentenceRemove">
          <property name="maximumSize">
           <size>
@@ -40,7 +40,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="4">
+       <item row="3" column="2">
         <widget class="QPushButton" name="pushButtonSentenceAdd">
          <property name="maximumSize">
           <size>
@@ -53,7 +53,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="6">
+       <item row="3" column="4">
         <widget class="QPushButton" name="pushButtonSentenceUpdate">
          <property name="maximumSize">
           <size>
@@ -73,25 +73,21 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="3">
-        <widget class="QCheckBox" name="checkBoxAutoClearSentence">
-         <property name="text">
-          <string>Auto clear sentence</string>
-         </property>
-        </widget>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="lineEditReference"/>
        </item>
-       <item row="0" column="0" colspan="7">
+       <item row="0" column="0" colspan="5">
         <widget class="QTextEdit" name="textEditSentence">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>0</height>
+           <height>50</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>100</height>
+           <height>16777215</height>
           </size>
          </property>
          <property name="html">
@@ -105,16 +101,6 @@ p, li { white-space: pre-wrap; }
           <bool>false</bool>
          </property>
         </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QCheckBox" name="checkBoxAutoClearReference">
-         <property name="text">
-          <string>Auto clear reference</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="lineEditReference"/>
        </item>
       </layout>
      </widget>
@@ -141,7 +127,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionPaste"/>
    <addaction name="separator"/>
    <addaction name="actionSelect_All"/>
-   <addaction name="actionClear"/>
   </widget>
   <widget class="QToolBar" name="toolBarView">
    <property name="windowTitle">
@@ -155,6 +140,19 @@ p, li { white-space: pre-wrap; }
    </attribute>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarClear">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionAutoClearSentence"/>
+   <addaction name="actionAutoClearReference"/>
   </widget>
   <action name="actionMark">
    <property name="icon">
@@ -262,10 +260,6 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionClear">
-   <property name="icon">
-    <iconset resource="icons/sci_corpus_resource.qrc">
-     <normaloff>:/Edit/edit-clear-2.png</normaloff>:/Edit/edit-clear-2.png</iconset>
-   </property>
    <property name="text">
     <string>Clear</string>
    </property>
@@ -328,6 +322,30 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="toolTip">
     <string>Update actual sentence</string>
+   </property>
+  </action>
+  <action name="actionAutoClearSentence">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/Edit/edit-clear-3.png</normaloff>:/Edit/edit-clear-3.png</iconset>
+   </property>
+   <property name="text">
+    <string>Auto Clear Sentence</string>
+   </property>
+  </action>
+  <action name="actionAutoClearReference">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons/sci_corpus_resource.qrc">
+     <normaloff>:/Edit/edit-clear-ref-2.png</normaloff>:/Edit/edit-clear-ref-2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Auto Clear Reference</string>
    </property>
   </action>
  </widget>

@@ -16,8 +16,8 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 
 from PySide.QtGui import QApplication, QMainWindow, QMessageBox, QListWidgetItem
-from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView, QAction
-from PySide.QtGui import QBrush, QColor,  QDesktopServices, QTextCursor, QMainWindow
+from PySide.QtGui import QFileDialog, QTableWidgetItem, QAbstractItemView
+from PySide.QtGui import QBrush, QColor,  QDesktopServices, QTextCursor
 from PySide.QtCore import QSettings, Signal, Qt,  QUrl
 
 from sci_corpus import pdf_writer
@@ -132,8 +132,6 @@ class MainWindow(QMainWindow):
         start.updateProgress(100)
         start.close()
 
-
-
         # Application ---------------------------------------------------------
         # Actions
         self.ui.actionQuit.triggered.connect(self.close)
@@ -247,6 +245,11 @@ class MainWindow(QMainWindow):
         
         # Actions
         self.sentence_mw.ui.textEditSentence.zoomIn(3)
+        self.sentence_mw.ui.actionUndo.setEnabled(False)
+        self.sentence_mw.ui.actionRedo.setEnabled(False)
+        self.sentence_mw.ui.actionCut.setEnabled(False)
+        self.sentence_mw.ui.actionCopy.setEnabled(False)
+        
         self.sentence_mw.ui.actionMark.triggered.connect(self.markSentence)
         
         self.sentence_mw.ui.actionRedo.triggered.connect(self.sentence_mw.ui.textEditSentence.redo)
@@ -267,6 +270,13 @@ class MainWindow(QMainWindow):
         self.sentence_mw.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
         
         # Signals
+        
+        self.sentence_mw.ui.textEditSentence.undoAvailable.connect(self.sentence_mw.ui.actionUndo.setEnabled)
+        self.sentence_mw.ui.textEditSentence.redoAvailable.connect(self.sentence_mw.ui.actionRedo.setEnabled)
+        self.sentence_mw.ui.textEditSentence.copyAvailable.connect(self.sentence_mw.ui.actionPaste.setEnabled)
+        self.sentence_mw.ui.textEditSentence.copyAvailable.connect(self.sentence_mw.ui.actionCut.setEnabled)
+        self.sentence_mw.ui.textEditSentence.copyAvailable.connect(self.sentence_mw.ui.actionCopy.setEnabled)
+
         self.ui.checkBoxSection.clicked.connect(
             lambda: self.ui.tableWidgetSentence.setColumnHidden(
                 0, not self.ui.checkBoxSection.isChecked()))
@@ -289,7 +299,6 @@ class MainWindow(QMainWindow):
         
         self.ui.tableWidgetSentence.cellDoubleClicked.connect(self.getSentFromTableNDisplay)
         self.ui.tableWidgetSentence.cellClicked.connect(self.getSentFromTable)
-        #self.sentence_mw.ui.textEditSentence.copyAvailable.connect(self.markSentence)
         
         # Properties
         self.ui.tableWidgetSentence.setRowCount(0)
@@ -649,9 +658,9 @@ in an article.'),
         sent = str(self.sentence_mw.ui.textEditSentence.toPlainText())
         ref = str(self.sentence_mw.ui.lineEditReference.text())
         # Cleaning
-        if self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked():
+        if self.sentence_mw.ui.actionAutoClearSentence.isChecked():
             self.sentence_mw.ui.textEditSentence.clear()
-        if self.sentence_mw.ui.checkBoxAutoClearReference.isChecked():
+        if self.sentence_mw.ui.actionAutoClearReference.isChecked():
             self.sentence_mw.ui.lineEditReference.clear()
 
         if sent != '':
@@ -676,9 +685,9 @@ in an article.'),
         
         sent = self.sent
         
-        if self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked():
+        if self.sentence_mw.ui.actionAutoClearSentence.isChecked():
             self.sentence_mw.ui.textEditSentence.clear()
-        if self.sentence_mw.ui.checkBoxAutoClearReference.isChecked():
+        if self.sentence_mw.ui.actionBoxAutoClearReference.isChecked():
             self.sentence_mw.ui.lineEditReference.clear()
         
         if sent != '':
@@ -699,9 +708,9 @@ in an article.'),
         sent = str(self.sentence_mw.ui.textEditSentence.toPlainText())
         ref = str(self.sentence_mw.ui.lineEditReference.text())
         
-        if self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked():
+        if self.sentence_mw.ui.actionAutoClearSentence.isChecked():
             self.sentence_mw.ui.textEditSentence.clear()
-        if self.sentence_mw.ui.checkBoxAutoClearReference.isChecked():
+        if self.sentence_mw.ui.actionAutoClearReference.isChecked():
             self.sentence_mw.ui.lineEditReference.clear()
         
         if sent != '' and ref != '' and old_sent != '' and old_ref != '':
@@ -1021,8 +1030,8 @@ in an article.'),
                 self.ui.checkBoxReference.setChecked(self.preferences['reference'])
                 index = self.ui.comboBoxMode.findText(self.preferences['mode'])
                 self.ui.comboBoxMode.setCurrentIndex(index)
-                self.sentence_mw.ui.checkBoxAutoClearReference.setChecked(self.preferences['auto_clear_reference'])
-                self.sentence_mw.ui.checkBoxAutoClearSentence.setChecked(self.preferences['auto_clear_sentence'])
+                self.sentence_mw.ui.actionAutoClearReference.setChecked(self.preferences['auto_clear_reference'])
+                self.sentence_mw.ui.actionAutoClearSentence.setChecked(self.preferences['auto_clear_sentence'])
             except Exception:
                 pass
             
@@ -1042,8 +1051,8 @@ in an article.'),
         self.preferences['strategy'] = self.ui.checkBoxStrategy.isChecked()
         self.preferences['sentence'] = self.ui.checkBoxSentence.isChecked()
         self.preferences['reference'] = self.ui.checkBoxReference.isChecked()
-        self.preferences['auto_clear_reference'] = self.sentence_mw.ui.checkBoxAutoClearReference.isChecked()
-        self.preferences['auto_clear_sentence'] = self.sentence_mw.ui.checkBoxAutoClearSentence.isChecked()
+        self.preferences['auto_clear_reference'] = self.sentence_mw.ui.actionAutoClearReference.isChecked()
+        self.preferences['auto_clear_sentence'] = self.sentence_mw.ui.actionAutoClearSentence.isChecked()
         self.preferences['mode'] = self.ui.comboBoxMode.currentText()
         
         with codecs.open(filepath, 'wb', 'utf-8') as pref_file:

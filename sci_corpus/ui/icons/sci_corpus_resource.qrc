@@ -34,9 +34,10 @@
     <file>zoom-out-3.png</file>
   </qresource>
   <qresource prefix="Edit">
+    <file>edit-clear-ref-2.png</file>
     <file>draw-brush.png</file>
-    <file>edit-clear-2.png</file>
     <file>edit-copy-8.png</file>
+    <file>edit-clear-3.png</file>
     <file>edit-cut-2.png</file>
     <file>edit-cut-8.png</file>
     <file>edit-find-3.png</file>
