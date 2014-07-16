@@ -817,8 +817,16 @@ in an article.'),
                         sent_item.setText(str(sentv))
                         # Background red
                         sent_item.setBackground(QBrush(QColor(255, 0, 0, 127)))
-                if sentv in sentences[0]:
-                    sent_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+                
+                for tupla in sentences:
+                    if sentv in tupla:
+                        sec_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+                        subs_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+                        func_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+                        sent_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+                        ref_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+                        id_item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+                        
                 row += 1
 
         self.ui.labelHighlightedSentence.setText(str(row))
