@@ -29,6 +29,10 @@
     <file>window-close-2.png</file>
     <file>window-close.png</file>
   </qresource>
+  <qresource prefix="View">
+    <file>zoom-in-3.png</file>
+    <file>zoom-out-3.png</file>
+  </qresource>
   <qresource prefix="Edit">
     <file>draw-brush.png</file>
     <file>edit-clear-2.png</file>

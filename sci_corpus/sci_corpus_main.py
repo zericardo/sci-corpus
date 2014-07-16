@@ -244,18 +244,28 @@ class MainWindow(QMainWindow):
         self.sentence_mw.ui.pushButtonSentenceAdd.clicked.connect(self.addSentence)
         self.sentence_mw.ui.pushButtonSentenceRemove.clicked.connect(self.removeSentence)
         self.sentence_mw.ui.pushButtonSentenceUpdate.clicked.connect(self.updateSentence)
+        
         # Actions
-        # Needs changes here
-        self.sentence_mw.ui.actionMark = QAction(self)
+        self.sentence_mw.ui.textEditSentence.zoomIn(3)
         self.sentence_mw.ui.actionMark.triggered.connect(self.markSentence)
         
-        # Needs shortcut
-        self.sentence_mw.ui.textEditSentence.zoomIn(3)
+        self.sentence_mw.ui.actionRedo.triggered.connect(self.sentence_mw.ui.textEditSentence.redo)
+        self.sentence_mw.ui.actionUndo.triggered.connect(self.sentence_mw.ui.textEditSentence.undo)
         
-        #self.sentence_mw.ui.actionAddSentence.triggered.connect(self.addSentence)
-        #self.sentence_mw.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
-        #self.sentence_mw.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
-        #self.sentence_mw.ui.actionTipsSentence.triggered.connect(self.tipsSentence)
+        self.sentence_mw.ui.actionCut.triggered.connect(self.sentence_mw.ui.textEditSentence.cut)
+        self.sentence_mw.ui.actionCopy.triggered.connect(self.sentence_mw.ui.textEditSentence.copy)
+        self.sentence_mw.ui.actionPaste.triggered.connect(self.sentence_mw.ui.textEditSentence.paste)
+        
+        self.sentence_mw.ui.actionSelect_All.triggered.connect(self.sentence_mw.ui.textEditSentence.selectAll)
+        self.sentence_mw.ui.actionClear.triggered.connect(self.sentence_mw.ui.textEditSentence.clear)
+        
+        self.sentence_mw.ui.actionZoom_In.triggered.connect(self.sentence_mw.ui.textEditSentence.zoomIn)
+        self.sentence_mw.ui.actionZoom_Out.triggered.connect(self.sentence_mw.ui.textEditSentence.zoomOut)
+        
+        self.sentence_mw.ui.actionAddSentence.triggered.connect(self.addSentence)
+        self.sentence_mw.ui.actionRemoveSentence.triggered.connect(self.removeSentence)
+        self.sentence_mw.ui.actionUpdateSentence.triggered.connect(self.updateSentence)
+        
         # Signals
         self.ui.checkBoxSection.clicked.connect(
             lambda: self.ui.tableWidgetSentence.setColumnHidden(
