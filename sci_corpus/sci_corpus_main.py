@@ -620,22 +620,37 @@ in an article.'),
         sec = self.selectedTitles(self.ui.listWidgetSection.selectedItems())
         subs = self.selectedTitles(self.ui.listWidgetComponent.selectedItems())
         func = self.container.listStrategies(qsections=sec,qsubsections=subs)
+        func = sorted(func)
         func_all = self.container.listStrategies()
         self.ui.listWidgetStrategy.clear()
         func_all = sorted(func_all)
-
-        self.ui.labelHighlightedStrategy.setText(str(len(func)))
-
+        
+        # remove from func
         if "Not Classified" in func:
+            func.remove("Not Classified")
+            
+        # remove from func_all, and add in the end
+        if "Not Classified" in func_all:
             func_all.remove("Not Classified")
             func_all.append("Not Classified")
 
-        for row, value in enumerate(func_all):
-            item = QListWidgetItem(str(value))
-            if value in func:
-                item.setBackground(QBrush(QColor(0, 0, 255, 30)))
-            self.ui.listWidgetStrategy.addItem(item)
+        # we need to thing better ways to make this
+        # without for's
 
+        # paint and put first in the view
+        for row, value in enumerate(func):
+            item = QListWidgetItem(str(value))
+            item.setBackground(QBrush(QColor(0, 0, 255, 30)))
+            self.ui.listWidgetStrategy.addItem(item)
+        
+        #put some they not have
+        for row, value in enumerate(func_all):
+            # if we can use set we dont need to use if
+            if value not in func:
+                item = QListWidgetItem(str(value))
+                self.ui.listWidgetStrategy.addItem(item)
+
+        self.ui.labelHighlightedStrategy.setText(str(len(func)))
         self.updateSentenceView()
 
     def tipsStrategy(self):
