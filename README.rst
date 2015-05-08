@@ -3,7 +3,7 @@ Sci Corpus
 
 Scientific corpus manager.
 
-Dependences:
+Dependencies:
 
 * Python 2.7 >
 * PySide 1.2 >
@@ -13,15 +13,15 @@ Dependences:
 Installing
 ==========
 
-To install run into sci-corpus folder this following command:
+To install, browse to your sci-corpus folder and run this following command:
 
 # python setup.py install
 
-It will install the dependencies.
+It will automatically install all dependencies.
 
 For Windows users, you need to use CMD as administrator and run inside the sci-corpus the following commands:
 
 # c:\Python27\python.exe setup.py install
 
-But eventually it not works because of its dependencies from Visual Studio for compiler. 
+However, it eventually doesn't work because of its dependencies from Visual Studio for compiler .
 So download the binaries from site.
