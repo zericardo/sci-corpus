@@ -110,7 +110,8 @@ setup(name='Sci Corpus',
       author_email='daniel.pizetta@usp.br, jose.ronqui@usp.br, tiago.campos@usp.br',
       download_url='https://github.com/zericardo182/sci-corpus',
       classifiers=classifiers, 
-      dependency_links=[],
+      dependency_links=[
+-      dependency_links=['http://pypi.python.org/pypi/reportlab', 'http://pypi.python.org/pypi/PySide','http://pypi.python.org/pypi/lxml'],
       packages=['sci_corpus','sci_corpus.ui'],
       install_requires=['reportlab>=3.0', 'lxml>=3.0', 'PySide>=1.2'],
       scripts=['scicorpus.py'])
