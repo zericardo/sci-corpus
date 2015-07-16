@@ -3,7 +3,7 @@ Sci Corpus
 
 Scientific corpus manager.
 
-See [Sci Corpus Wiki](https://github.com/zericardo/sci-corpus/wiki) for information about simple use.
+See `Sci Corpus Wiki <https://github.com/zericardo/sci-corpus/wiki>`_ for information about simple use.
 
 Dependencies:
 
