@@ -3,6 +3,8 @@ Sci Corpus
 
 Scientific corpus manager.
 
+See [Sci Corpus Wiki](https://github.com/zericardo/sci-corpus/wiki) for information about simple use.
+
 Dependencies:
 
 * Python 2.7 >
