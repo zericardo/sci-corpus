@@ -49,3 +49,4 @@ Use this path (or whatever you've found instead) in the next item.
       # ln -s /usr/bin/qmake-qt4 /usr/bin/qmake
 
 Then, retry the installation process and everything should work properly!
+

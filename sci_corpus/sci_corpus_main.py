@@ -37,7 +37,7 @@ import platform
 from time import gmtime, strftime
 
 
-__version__ = 'v.0.12.9'
+__version__ = 'v.0.13'
 __name__ = 'Sci Corpus'
 __ext_name__ = 'Scientific Corpus Manager'
 
@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
 
         start = start_dlg.StartDialog(self)
         start.version(__version__)
-        start.year(2014)
+        start.year(2015)
         start.logSig.connect(self.showLogMessage)
         start.show()
         start.informationProgress('Starting')
@@ -1165,7 +1165,7 @@ in an article.'),
         QMessageBox.information(
             self,
             self.tr('Sorry'),
-            self.tr('We have no implemented this strategy yet.'),
+            self.tr('We have no implemented this yet, sorry.'),
             QMessageBox.Ok)
 
     def removeQuestion(self, category='', who=[]):
@@ -1199,7 +1199,7 @@ in an article.'),
         """About shows the main information about the application."""
         QMessageBox.about(self,
                           self.tr('About {}'.format(__name__)),
-                          self.tr('This software is a corpus manager, that allows you to trainer.\
+                          self.tr('This software is a manager that allows you to practice the way \'learning by doing\'.\
 \n\nFor more information, please, visite the page: <https://github.com/zericardo182/sci-corpus/wiki> \
 \n\nThis software was created by: Daniel C. Pizetta,  Jose R.F. Ronqui and Thiago Campo.\
 \n\n{}'.format(__version__)))

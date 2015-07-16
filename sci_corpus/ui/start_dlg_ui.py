@@ -91,7 +91,7 @@ class Ui_Dialog(object):
         self.labelYear.setText(
             QtGui.QApplication.translate(
                 "Dialog",
-                "<html><head/><body><p><span style=\" font-size:8pt;\">2014</span></p></body></html>",
+                "<html><head/><body><p><span style=\" font-size:8pt;\">2014-2015</span></p></body></html>",
                 None,
                 QtGui.QApplication.UnicodeUTF8))
         self.labelInformationProgress.setText(

@@ -46,7 +46,6 @@ def dependancyChecks():
     print "Checking PySide Library ..."
     try:
         import PySide
-        import PySide.QtCore
     except ImportError as msg:
         print 'Sorry, please install PySide 1.1.0 or higher.'
         print 'You can find here: <http://qt-project.org/wiki/PySide>'
@@ -102,18 +101,34 @@ classifiers=[
     'Topic :: Office/Business']
 
 workspace = os.path.abspath(os.path.join(os.path.expanduser('~'),'Sci Corpus'))
-
+packages=[
+        'sci_corpus',
+        'sci_corpus.ui',
+        'reportlab',
+        'reportlab.graphics.charts',
+        'reportlab.graphics.samples',
+        'reportlab.graphics.widgets',
+        'reportlab.graphics.barcode',
+        'reportlab.graphics',
+        'reportlab.lib',
+        'reportlab.pdfbase',
+        'reportlab.pdfgen',
+        'reportlab.platypus',
+        'reportlab.rl_settings',]
+        
 setup(name='Sci Corpus',
-      version='v.0.12.7',
+      version='v.0.13',
       description='Scientific Corpus Manager',
       author='Daniel Cosmo Pizetta, Jose Ricardo Furlan Ronqui, Tiago de Campos',
       author_email='daniel.pizetta@usp.br, jose.ronqui@usp.br, tiago.campos@usp.br',
       download_url='https://github.com/zericardo182/sci-corpus',
       classifiers=classifiers, 
-      dependency_links=[
--      dependency_links=['http://pypi.python.org/pypi/reportlab', 'http://pypi.python.org/pypi/PySide','http://pypi.python.org/pypi/lxml'],
-      packages=['sci_corpus','sci_corpus.ui'],
-      install_requires=['reportlab>=3.0', 'lxml>=3.0', 'PySide>=1.2'],
+      options = {
+        "py2exe": { "dll_excludes": ["MSVCP90.dll"],
+                    "packages": packages}
+                  },
+      #dependency_links=['http://pypi.python.org/pypi/reportlab', 'http://pypi.python.org/pypi/PySide','http://pypi.python.org/pypi/lxml'],
+      #install_requires=['reportlab>=3.0', 'lxml>=3.0', 'PySide>=1.2'],
       scripts=['scicorpus.py'])
 
 

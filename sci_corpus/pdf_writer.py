@@ -239,7 +239,7 @@ def exportToPDF(path, title, author, description, container,
     Story.append(NextPageTemplate('toc'))
     Story.append(PageBreak())
     
-    Story.append(Paragraph('<b>Table of contents<\b>', centered))  
+    Story.append(Paragraph('Table of contents', centered))  
     toc = TableOfContents()
     toc.levelStyles = [heading_1, heading_2, heading_3]
     Story.append(toc)
