@@ -1,13 +1,15 @@
+from PySide.QtCore import Signal, QObject
+import codecs
+import csv
+import json
+from lxml import etree as ET
 import os
 import re
-import json
-import codecs
-import sqlite3
-import csv
-from lxml import etree as ET
-import StringIO as strio
 from shutil import copy2
-from PySide.QtCore import Signal, QObject
+import sqlite3
+
+import StringIO as strio
+
 
 class ContainerDB(QObject):
 
@@ -20,7 +22,7 @@ class ContainerDB(QObject):
         self.__defaultpath = ''
         self.__isModified = False
         self.createNconnectDB(flag=True)
-        
+
     def createNconnectDB(self, path='', flag=False):
         """
         Create a connection to a sqlite3 database and and a table to store the
@@ -60,14 +62,14 @@ class ContainerDB(QObject):
                             corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
                             func TEXT, phrase TEXT, ref TEXT)''')
                     self.__dbfile.cursor().execute('''INSERT INTO corpus(sec,subsec,func,phrase,ref)
-                     VALUES(?,?,?,?,?)''',('Not Classified','Not Classified','Not Classified','NULL','NULL'))
+                     VALUES(?,?,?,?,?)''', ('Not Classified', 'Not Classified', 'Not Classified', 'NULL', 'NULL'))
                     self.__dbfile.commit()
                 else:
                     self.__dbmem.cursor().execute('''CREATE TABLE IF NOT EXISTS
                             corpus(id INTEGER PRIMARY KEY, sec TEXT, subsec TEXT,
                             func TEXT, phrase TEXT, ref TEXT)''')
                     self.__dbmem.cursor().execute('''INSERT INTO corpus(sec,subsec,func,phrase,ref)
-                     VALUES(?,?,?,?,?)''',('Not Classified','Not Classified','Not Classified','NULL','NULL'))
+                     VALUES(?,?,?,?,?)''', ('Not Classified', 'Not Classified', 'Not Classified', 'NULL', 'NULL'))
                     self.__dbmem.commit()
 
     def importToMemory(self):
@@ -139,72 +141,71 @@ class ContainerDB(QObject):
             funct=['Not Classified'],
             phrase=['NULL'],
             ref=['NULL']):
-       """
-        Add a entry on the corpus table.
-        An entry is composed of: (section, subsection, function, sentence, reference)
-        By default, sect=subsec=funct='Not Classified' and phrase=ref='NULL'. In doing
-        so, we avoid have to pass always all the arguments.
-
-        Parameters:
-        -----------
-        sect: list of strings
-
-              Store all the sections that will be inserted
-
-        secsect: list of strings
-
-              Store all the subsections that will be inserted
-
-        function: list of strings
-
-              Store all the functions that will be inserted
-
-        phrase: list of strings
-
-              Store all the sentences that will be inserted
-
-        ref: list of strings
-
-              Store all the references that will be inserted
-
-        Returns:
-        --------
-        No explicity return, intead this function adds an entry in corpus
-        table of self.__dbmem connection
-
         """
+         Add a entry on the corpus table.
+         An entry is composed of: (section, subsection, function, sentence, reference)
+         By default, sect=subsec=funct='Not Classified' and phrase=ref='NULL'. In doing
+         so, we avoid have to pass always all the arguments.
 
-       cursor = self.__dbmem.cursor()
-       # We need to review this test
-       # But now its working. Actually sect, subsect and funct can be empty
-       # lists or list with empty strings.
-       if (sect == []) or (sect == ['']):
-           sect = ['Not Classified']
-       if (subsect == []) or (subsect == ['']):
-           subsect = ['Not Classified']
-       if (funct == []) or (funct == ['']):
-           funct = ['Not Classified']
-       if phrase == ['']:
-           phrase = ['NULL']
-       if ref == ['']:
-           ref = ['NULL']
+         Parameters:
+         -----------
+         sect: list of strings
 
-       try:
-           whatadd = [
-               (a.strip(), b.strip(), c.strip(), d.strip(), e.strip())
-               for a in sect for b in subsect
-               for c in funct for d in phrase for e in ref]
-           cursor.executemany(
-               '''INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)''',
-               whatadd)
+               Store all the sections that will be inserted
 
-       except sqlite3.Error as err:
-           print "[INFO addDB] %s" % err
+         secsect: list of strings
 
-       else:
-           self.isModified = True
-        
-           
+               Store all the subsections that will be inserted
+
+         function: list of strings
+
+               Store all the functions that will be inserted
+
+         phrase: list of strings
+
+               Store all the sentences that will be inserted
+
+         ref: list of strings
+
+               Store all the references that will be inserted
+
+         Returns:
+         --------
+         No explicity return, intead this function adds an entry in corpus
+         table of self.__dbmem connection
+
+         """
+
+        cursor = self.__dbmem.cursor()
+        # We need to review this test
+        # But now its working. Actually sect, subsect and funct can be empty
+        # lists or list with empty strings.
+        if (sect == []) or (sect == ['']):
+            sect = ['Not Classified']
+        if (subsect == []) or (subsect == ['']):
+            subsect = ['Not Classified']
+        if (funct == []) or (funct == ['']):
+            funct = ['Not Classified']
+        if phrase == ['']:
+            phrase = ['NULL']
+        if ref == ['']:
+            ref = ['NULL']
+
+        try:
+            whatadd = [
+                (a.strip(), b.strip(), c.strip(), d.strip(), e.strip())
+                for a in sect for b in subsect
+                for c in funct for d in phrase for e in ref]
+            cursor.executemany(
+                '''INSERT INTO corpus(sec,subsec,func,phrase,ref) VALUES(?,?,?,?,?)''',
+                whatadd)
+
+        except sqlite3.Error as err:
+            print "[INFO addDB] %s" % err
+
+        else:
+            self.isModified = True
+
     def crazyRepetition(self, sBase="", sConnect="", sItems=[]):
         """
         Combines sentences in one string to make selection easier.
@@ -261,22 +262,21 @@ class ContainerDB(QObject):
 
         return sFinal
 
-    def searchByID(self, searchID = -1):
-    
+    def searchByID(self, searchID=-1):
+
         cursor = self.__dbmem.cursor()
-        
+
         try:
             if searchID > 0:
                 query = 'SELECT DISTINCT phrase, ref FROM corpus WHERE id=?'
-                cursor.execute(query,(searchID,))
-                preRetorno =  cursor.fetchall()
-            
+                cursor.execute(query, (searchID,))
+                preRetorno = cursor.fetchall()
+
         except sqlite3.Error as err:
             print "[INFO search by ID] %s" % err
-        
+
         else:
             return preRetorno
-                
 
     def listCategories(self, section=[], subsection=[], function=[]):
 
@@ -318,60 +318,57 @@ class ContainerDB(QObject):
             final.extend(functions)
             return final
 
-
     def listSections(self):
 
         cursor = self.__dbmem.cursor()
-        
+
         cursor.execute('SELECT DISTINCT sec FROM corpus')
-        
+
         return [a for (a,) in cursor.fetchall()]
 
+    def listComponents(self, qsections=[]):
+        cursor = self.__dbmem.cursor()
+        query = ''
+        if(qsections != []):
+            query = self.crazyRepetition('SELECT DISTINCT subsec FROM corpus WHERE sec=?',
+                                         'INTERSECT', qsections)
+        else:
+            query = 'SELECT DISTINCT subsec FROM corpus'
 
-    def listComponents(self,qsections=[]):
-            cursor = self.__dbmem.cursor()
-            query=''
-            if(qsections!=[]):
-                query=self.crazyRepetition('SELECT DISTINCT subsec FROM corpus WHERE sec=?',
-                                           'INTERSECT', qsections)
-            else:
-                query='SELECT DISTINCT subsec FROM corpus'
+        cursor.execute(query)
+        return [a for (a,) in cursor.fetchall()]
 
-            cursor.execute(query)
-            return [a for (a,) in cursor.fetchall()]
-
-            
     def listStrategies(self, qsections=[], qsubsections=[]):
-           '''
-           Coisa
-           '''
-           cursor = self.__dbmem.cursor()
-           query='' 
-           if(qsections == [] and qsubsections == []):
+        '''
+        Coisa
+        '''
+        cursor = self.__dbmem.cursor()
+        query = ''
+        if(qsections == [] and qsubsections == []):
 
-               query='SELECT DISTINCT func FROM corpus'   
-                            
-           elif(qsections != [] and qsubsections == []):
+            query = 'SELECT DISTINCT func FROM corpus'
 
-               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?',
-                                          'UNION', qsections) 
-           elif(qsections == [] and qsubsections != []):
+        elif(qsections != [] and qsubsections == []):
 
-               query=self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?',
+            query = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?',
+                                         'UNION', qsections)
+        elif(qsections == [] and qsubsections != []):
+
+            query = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?',
+                                         'INTERSECT', qsubsections)
+
+        elif(qsections != [] and qsubsections != []):
+            query1 = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?',
+                                          'INTERSECT', qsections)
+            query2 = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?',
                                           'INTERSECT', qsubsections)
 
-           elif(qsections != [] and qsubsections != []):
-               query1 = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE sec=?',
-                                          'INTERSECT', qsections) 
-               query2 = self.crazyRepetition('SELECT DISTINCT func FROM corpus WHERE subsec=?',
-                                          'INTERSECT', qsubsections)
+            query = query1 + " INTERSECT " + query2
+        else:
+            print "Deu pau Juvenal!"
 
-               query = query1 +" INTERSECT "+query2
-           else:
-              print "Deu pau Juvenal!"
-
-           cursor.execute(query)
-           return [a for (a,) in cursor.fetchall()]
+        cursor.execute(query)
+        return [a for (a,) in cursor.fetchall()]
 
     def adjustSentence(
             self,
@@ -382,11 +379,10 @@ class ContainerDB(QObject):
             replace_by="...",
             mode='Replace'):
         """Adjusts sentences to be displayed on the screen."""
-        
+
         b = [match.start() for match in re.finditer(re.escape(begin), sent)]
         e = [match.end() for match in re.finditer(re.escape(end), sent)]
 
-        
         # exception here b and e must have the same size!
         if(len(b) == len(e)):
             for i in xrange(0, len(b)):
@@ -400,38 +396,37 @@ class ContainerDB(QObject):
 
             if(r != []):
                 if(replace_where == 'Inside markers'):
-                    for i in xrange(0,len(r)):
+                    for i in xrange(0, len(r)):
                         if(mode == 'Bold'):
-                            sent=sent.replace(r[i],r[i].replace(begin,"<b>").replace(end,"</b>"))
+                            sent = sent.replace(r[i], r[i].replace(begin, "<b>").replace(end, "</b>"))
 
                         elif(mode == 'Replace'):
-                            sent=sent.replace(r[i],replace_by)
+                            sent = sent.replace(r[i], replace_by)
 
-                elif(replace_where == 'Outside markers'): 
-                    aux  = ''
-                    
+                elif(replace_where == 'Outside markers'):
+                    aux = ''
+
                     if(mode == 'Bold'):
-                        aux += "<b>" 
-                        aux += sent.replace("{","</b>").replace("}","<b>")
+                        aux += "<b>"
+                        aux += sent.replace("{", "</b>").replace("}", "<b>")
                         aux += "</b>"
-                        
+
                     elif(mode == 'Replace'):
-                        
+
                         if(b[0] != 0):
                             aux += "... "
                         for i in r:
-                            aux += i.replace("{","").replace("}","")
+                            aux += i.replace("{", "").replace("}", "")
                             if(i != r[-1]):
                                 aux += " ... "
-                        if(e[-1] != len(sent)-1):
+                        if(e[-1] != len(sent) - 1):
                             aux += " ..."
-                            
-                    sent=aux
+
+                    sent = aux
         else:
             raise AssertionError("Number of delimeters does not match!")
 
-        return sent.replace("<b></b>","")
-        
+        return sent.replace("<b></b>", "")
 
     def listSentences(self, section=[], subsection=[], function=[]):
 
@@ -477,7 +472,6 @@ class ContainerDB(QObject):
         finally:
             return phrases
 
-
     def listAll(self):
         """
         Dump the database.
@@ -506,7 +500,6 @@ class ContainerDB(QObject):
 
         finally:
             return allInfo
-
 
     def update(
         self, section=[
@@ -580,14 +573,13 @@ class ContainerDB(QObject):
         else:
             self.isModified = True
 
-
     def upSent(self, upSent=(), upRef=()):
         """
         Updates a phrase
 
         This function substitute the value of a sentence and reference by
         a new one.
-    
+
         Parameters:
         -----------
         upSent: tuple of strings
@@ -605,25 +597,24 @@ class ContainerDB(QObject):
         entry on the corpus table.
 
         """
-        
+
         cursor = self.__dbmem.cursor()
-        
+
         whatup = tuple()
-        whatup+=(upSent[1],)
-        whatup+=(upRef[1],)
-        whatup+=(upSent[0],)
-        whatup+=(upRef[0],)
-        
+        whatup += (upSent[1],)
+        whatup += (upRef[1],)
+        whatup += (upSent[0],)
+        whatup += (upRef[0],)
+
         try:
             cursor.execute('''UPDATE corpus
                             SET phrase=?, ref=? WHERE phrase=? AND ref=?''', whatup)
-                            
+
         except sqlite3.Error as err:
             print "[INFO updateSentence] %s" % err
-        
+
         else:
             self.isModified = True
-        
 
     def remove(self, sect=[], subsect=[], funct=[], phrase=[]):
         """
@@ -747,7 +738,7 @@ class ContainerDB(QObject):
         self.sig_modified.emit(state)
         self.__isModified = state
 
-    def write_(self, path='',workspace=''):
+    def write_(self, path='', workspace=''):
         """Writes file in path or in self.path if not passed."""
 
         self.__dbmem.commit()
@@ -755,22 +746,22 @@ class ContainerDB(QObject):
         if path == '':
             path = self.path
             try:
-                self.__defaultpath = os.path.join(workspace,'backup.db')
+                self.__defaultpath = os.path.join(workspace, 'backup.db')
                 if os.path.abspath(self.path) != os.path.abspath(self.__defaultpath):
                     copy2(path, os.path.abspath(self.__defaultpath))
                 if os.path.exists(path):
                     os.remove(path)
             except OSError as e:
-                print ("Error: %s - %s." % (e.filename, e.strerror))
+                print("Error: %s - %s." % (e.filename, e.strerror))
             else:
                 self.createNconnectDB(path)
                 self.importToDBFile()
         else:
             self.path = path
-            
+
             if os.path.exists(path):
                 os.remove(path)
-                
+
             self.createNconnectDB(path)
             self.importToDBFile()
 
@@ -826,10 +817,10 @@ class ContainerDB(QObject):
                     for w in root.findall('INFOPIECE'):
                         sec = w.find('SECTION').text
                         sec = sec.strip()
-                        
+
                         if sec is None:
                             sec = 'Not Classified'
-                            
+
                         try:
                             subs = w.find('SUBSECTION').text
                         except Exception:
@@ -842,7 +833,7 @@ class ContainerDB(QObject):
                         except Exception:
                             func = w.find('STRATEGY').text
                         func = func.strip()
-                        
+
                         if func is None:
                             func = 'Not Classified'
                         sent = w.find('PHRASE').text
@@ -990,5 +981,3 @@ class ContainerDB(QObject):
             else:
                 raise IOError(
                     "Not recognized file type to import. Please, use XML, CSV, JSON or PDF.")
-
-    

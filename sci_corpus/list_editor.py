@@ -5,9 +5,9 @@
 
 """
 
-from PySide.QtGui import *
 from PySide.QtCore import *
-from sci_corpus.ui import listEditor
+from PySide.QtGui import *
+from sci_corpus.ui import list_editor_dlg
 
 
 class ListEditor(QDialog):
@@ -16,8 +16,7 @@ class ListEditor(QDialog):
 
     def __init__(self, name, list, parent=None):
         super(ListEditor, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)
-        self.ui = listEditor.Ui_Dialog()
+        self.ui = list_editor_dlg.Ui_Dialog()
         self.ui.setupUi(self)
 
         self.list = list

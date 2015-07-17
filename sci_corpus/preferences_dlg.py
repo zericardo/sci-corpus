@@ -14,11 +14,12 @@ This script provides a graphical interface for preferences setup.
 
 """
 
+from PySide.QtGui import QDialog, QFileDialog
 import os
 import platform
+
 from sci_corpus.ui import preferences_dlg_ui
 
-from PySide.QtGui import QDialog, QFileDialog
 
 class PreferencesDialog(QDialog):
 
@@ -36,13 +37,13 @@ class PreferencesDialog(QDialog):
             self.ui.pushButtonOk.clicked.connect(self.accept)
             self.ui.pushButtonCancel.clicked.connect(self.reject)
             self.ui.pushButtonWorkspace.clicked.connect(self.searchWorkspace)
-            
+
             index = self.ui.comboBoxTheme.findText(self.preferences['theme'])
             self.ui.comboBoxTheme.setCurrentIndex(index)
 
             index = self.ui.comboBoxMarker.findText(self.preferences['marker'])
             self.ui.comboBoxMarker.setCurrentIndex(index)
-            
+
             index = self.ui.comboBoxMode.findText(self.preferences['mode'])
             self.ui.comboBoxMode.setCurrentIndex(index)
 
@@ -50,7 +51,7 @@ class PreferencesDialog(QDialog):
             self.ui.comboBoxWhere.setCurrentIndex(index)
 
             self.ui.lineEditReplaceBy.setText(str(self.preferences['replace_by']))
-        
+
         except Exception:
             pass
         finally:
@@ -61,16 +62,15 @@ class PreferencesDialog(QDialog):
                 self.workspace = self.preferences['lin_workspace']
             if os_sys == 'Mac':
                 self.workspace = self.preferences['mac_workspace']
-                
+
             if self.workspace == '':
                 self.workspace = os.path.abspath(os.path.expanduser('~'))
-            
+
             self.ui.lineEditWorkspace.setText(str(self.workspace))
             self.ui.checkBoxOpenLast.setChecked(self.preferences['open_last'])
-            #self.ui.checkBoxCreateDir.setChecked(True)
+            # self.ui.checkBoxCreateDir.setChecked(True)
             self.ui.checkBoxCreateDir.clicked.connect(self.createDir)
 
-            
     def createDir(self):
         """Create a directory for workspace."""
         create = self.ui.checkBoxCreateDir.isChecked()
@@ -80,7 +80,6 @@ class PreferencesDialog(QDialog):
         else:
             path = os.path.splitext(os.path.dirname(path))[0]
         self.ui.lineEditWorkspace.setText(path)
-
 
     def searchWorkspace(self):
         """Seach a workspace."""
@@ -92,7 +91,6 @@ class PreferencesDialog(QDialog):
             self.createDir()
             self.workspace = os.path.abspath(path)
             self.ui.lineEditWorkspace.setText(os.path.abspath(path))
-
 
     def accept(self):
         """Accept event."""
@@ -107,17 +105,16 @@ class PreferencesDialog(QDialog):
         if os_sys == 'Windows':
             self.preferences['win_workspace'] = self.workspace
         if os_sys == 'Linux':
-            self.preferences['lin_workspace']= self.workspace
+            self.preferences['lin_workspace'] = self.workspace
         if os_sys == 'Mac':
             self.preferences['mac_workspace'] = self.workspace
-            
+
         self.preferences['open_last'] = self.ui.checkBoxOpenLast.isChecked()
 
         if not os.path.exists(self.workspace):
             os.makedirs(self.workspace)
 
         QDialog.accept(self)
-
 
     def reject(self):
         """Reject event."""

@@ -14,15 +14,17 @@ This script provides a graphical interface for PDF setup.
 
 """
 
-import os
-from sci_corpus.ui import pdf_dlg_ui
 from PySide.QtGui import QDialog, QFileDialog
+import os
+
+from sci_corpus.ui import pdf_dlg_ui
+
 
 class PDFDialog(QDialog):
 
     """PDF dialog."""
 
-    def __init__(self, preferences, workspace,  parent=None):
+    def __init__(self, preferences, workspace, parent=None):
         """Contructor."""
 
         super(PDFDialog, self).__init__(parent)
@@ -35,30 +37,30 @@ class PDFDialog(QDialog):
         self.ui.pushButtonOk.clicked.connect(self.accept)
         self.ui.pushButtonCancel.clicked.connect(self.reject)
         self.ui.pushButtonPath.clicked.connect(self.searchPath)
-        
-        path = os.path.join(str(self.workspace),'MySciCorpus.pdf')
+
+        path = os.path.join(str(self.workspace), 'MySciCorpus.pdf')
         path = os.path.abspath(path)
         self.ui.lineEditPath.setText(path)
-        
+
         try:
             self.ui.lineEditTitle.setText(self.preferences['title'])
             self.ui.lineEditAuthor.setText(self.preferences['author'])
             self.ui.textEditDescription.setText(self.preferences['description'])
-            
-            self.ui.checkBoxAutoOpen.setChecked(self.preferences['pdf']['auto_open'])  
-            
+
+            self.ui.checkBoxAutoOpen.setChecked(self.preferences['pdf']['auto_open'])
+
             index = self.ui.comboBoxMode.findText(self.preferences['pdf']['mode'])
             self.ui.comboBoxMode.setCurrentIndex(index)
-            
+
             self.ui.spinBoxSize.setValue(int(self.preferences['pdf']['size']))
             index = self.ui.comboBoxFont.findText(self.preferences['pdf']['font'])
             self.ui.comboBoxFont.setCurrentIndex(index)
-            
+
             self.ui.doubleSpinBoxLeft.setValue(self.preferences['pdf']['margin_left'])
             self.ui.doubleSpinBoxRight.setValue(self.preferences['pdf']['margin_right'])
             self.ui.doubleSpinBoxTop.setValue(self.preferences['pdf']['margin_top'])
             self.ui.doubleSpinBoxBottom.setValue(self.preferences['pdf']['margin_bottom'])
-            
+
         except Exception:
             pass
 
@@ -68,7 +70,7 @@ class PDFDialog(QDialog):
         path = QFileDialog.getSaveFileName(
             self,
             self.tr('Path to save PDF'),
-            self.tr(self.workspace), 
+            self.tr(self.workspace),
             self.tr('(*.pdf)'))[0]
         if path != '':
             path = os.path.abspath(path)
@@ -76,31 +78,31 @@ class PDFDialog(QDialog):
 
     def accept(self):
         """Accept event."""
-        
+
         while str(self.ui.lineEditPath.text()) == '':
             self.searchPath()
 
         self.preferences['title'] = self.ui.lineEditTitle.text()
         self.preferences['author'] = str(self.ui.lineEditAuthor.text())
         self.preferences['description'] = str(self.ui.textEditDescription.toPlainText())
-        
+
         self.preferences['pdf'] = {}
         self.preferences['pdf']['path'] = str(self.ui.lineEditPath.text())
         self.preferences['pdf']['auto_open'] = self.ui.checkBoxAutoOpen.isChecked()
-        
+
         self.preferences['pdf']['mode'] = self.ui.comboBoxMode.currentText()
-        
+
         self.preferences['pdf']['margin_left'] = self.ui.doubleSpinBoxLeft.value()
         self.preferences['pdf']['margin_right'] = self.ui.doubleSpinBoxRight.value()
         self.preferences['pdf']['margin_top'] = self.ui.doubleSpinBoxTop.value()
         self.preferences['pdf']['margin_bottom'] = self.ui.doubleSpinBoxBottom.value()
-        
+
         self.preferences['pdf']['font'] = self.ui.comboBoxFont.currentText()
         self.preferences['pdf']['size'] = self.ui.spinBoxSize.value()
-        
+
         QDialog.accept(self)
 
     def reject(self):
         """Reject event."""
-        
+
         QDialog.reject(self)

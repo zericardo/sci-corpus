@@ -12,6 +12,7 @@ This script provides a graphical interface for sci-corpus program standalone.
 """
 from sci_corpus import sci_corpus_main
 
+
 if __name__ == '__main__':
-    
+
     sci_corpus_main.main()

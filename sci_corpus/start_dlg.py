@@ -9,10 +9,11 @@
 .. moduleauthor:: Daniel Pizetta <daniel.pizetta@usp.br>
 """
 
-from PySide.QtGui import QDialog
 from PySide.QtCore import Signal, Qt
-from sci_corpus.ui import start_dlg_ui
+from PySide.QtGui import QDialog
 from time import sleep
+
+from sci_corpus.ui import start_dlg_ui
 
 
 class StartDialog(QDialog):
